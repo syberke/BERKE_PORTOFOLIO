@@ -572,7 +572,7 @@ export default function BerkePortfolio() {
               Passionate about clean code, data security, and technology that creates <strong style={{color:P.dark,fontWeight:600}}>real impact for communities</strong> across Indonesia and beyond.
             </p>
             <div className="reveal" style={{display:"flex",flexDirection:"column",gap:".65rem",margin:"1.8rem 0"}}>
-              {[["📍","Bekasi, Indonesia"],["📧","berkejaisyurrohman95@gmail.com"],["📱","+62 895-0614-7763"],["🌐","www.JaisyPorto.com"]].map(([ico,val])=>(
+              {[["📍","Bekasi, Indonesia"],["📧","berkejaisyurrohman95@gmail.com"],["📱","+62 895-0614-7763"],["🌐","www.jaisyporto.com"]].map(([ico,val])=>(
                 <div key={val} className="info-item">
                   <div style={{width:30,height:30,background:"rgba(200,132,92,.1)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{ico}</div>
                   {val}
@@ -732,7 +732,7 @@ export default function BerkePortfolio() {
                 Always open to new opportunities and collaborations. Whether it's a web system, mobile app, or cybersecurity challenge — let's create together.
               </p>
               <div style={{display:"flex",flexDirection:"column",gap:".75rem"}}>
-                {[["✉️","Email","berkejaisyurrohman95@gmail.com"],["📱","Phone","+62 895-0614-7763"],["📍","Location","Bekasi, Indonesia"],["🌐","Website","www.JaisyPorto.com"]].map(([ico,lbl,val])=>(
+                {[["✉️","Email","berkejaisyurrohman95@gmail.com"],["📱","Phone","+62 895-0614-7763"],["📍","Location","Bekasi, Indonesia"],["🌐","Website","www.jaisyporto.com"]].map(([ico,lbl,val])=>(
                   <a key={lbl} href={lbl==="Email"?`mailto:${val}`:"#"} className="ct-link">
                     <div style={{width:34,height:34,background:"rgba(200,132,92,.12)",borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{ico}</div>
                     <div>
