@@ -25,7 +25,7 @@ const PROJECTS = [
   { num:"03", tag:"Mobile", cat:"Mobile", icon:"🏠", name:"Dormitory Attendance App", year:"2024", org:"SMK TI Bazma", desc:"Real-time attendance tracking with secure login, live monitoring, automated reporting, and supervisor notifications.", tech:["React Native","Laravel","MySQL"], color:"var(--violet)", featured:false },
   { num:"04", tag:"E-Commerce", cat:"Web", icon:"🛒", name:"E-Commerce Platform", year:"2024", org:"SMK TI Bazma", desc:"Complete online store with product catalog, cart, checkout, order tracking, and admin dashboard for inventory and analytics.", tech:["Laravel","Blade","MySQL","JS"], color:"var(--gold)", featured:false },
   { num:"05", tag:"Cybersecurity", cat:"Security", icon:"🔐", name:"Bazma Cipher", year:"2024", org:"SMK TI Bazma", desc:"Prototype encryption system with custom cipher algorithms and industry-standard cryptography protecting sensitive application data.", tech:["Python","JavaScript","Crypto"], color:"var(--coral)", featured:false },
-  { num:"06", tag:"AI · Islamic · Mobile", cat:"Mobile", icon:"☪️", name:"KajianQu — AI Qur'an App", year:"2025", org:"Personal Project", desc:"AI-powered Qur'an mobile app: smart Tajweed guidance via ML, spaced-repetition memorization, Arabic OCR, tafsir browser, and offline-first.", tech:["Flutter","Python","AI/ML","TF"], color:"var(--accent)", featured:true },
+  { num:"06", tag:"AI · Islamic · Mobile", cat:"Mobile", icon:"☪️", name:"KajianQu — AI Qur'an App", year:"2025", org:"Personal Project", desc:"AI-powered Qur'an mobile app: smart Tajweed guidance via ML, spaced-repetition memorization, Arabic OCR, tafsir browser, and offline-first.", tech:["Flutter","Python","AI/ML","TF"], color:"var(--accent)", featured:false },
 ];
 
 const SKILLS = [
@@ -45,7 +45,7 @@ const LANGS = [
 
 const TIMELINE = [
   { year:"2025", role:"Personal AI Project", company:"Self-Directed", icon:"🤖", active:true, points:["Developing KajianQu — AI Qur'an mobile app with Flutter + TensorFlow.","Researching ML models for Arabic text recognition and Tajweed correction."] },
-  { year:"2024", role:"Strategy & Operation Intern", company:"SMK TI Bazma · Ciampea, Bogor", icon:"💼", active:false, points:["Built Bazma × Pertamina Bansos web platform for social assistance management.","Developed IQRA multi-role school monitoring system.","Implemented Bazma Cipher encryption and security module.","Delivered 4 production systems used by students, teachers, and staff daily."] },
+  { year:"2024", role:"Software Developer (Project-Based)", company:"SMK TI Bazma · Ciampea, Bogor", icon:"💼", active:false, points:["Built Bazma × Pertamina Bansos web platform for social assistance management.","Developed IQRA multi-role school monitoring system.","Implemented Bazma Cipher encryption and security module.","Delivered 4 production systems used by students, teachers, and staff daily."] },
   { year:"2023", role:"IT Student · Started Journey", company:"SMK TI Bazma", icon:"🎓", active:false, points:["Enrolled in Network Information Systems and Applications program.","Began learning web development, databases, and cybersecurity fundamentals.","First hands-on project: Dormitory Attendance Application."] },
 ];
 
@@ -239,9 +239,71 @@ export default function BerkePortfolio() {
   const [cat, setCat] = useState("All");
   const [sendStatus, setSend] = useState("idle");
 
+  // PRELOADER STATE
+  const [isLoaded, setIsLoaded] = useState(false);
+  const preloaderRef = useRef(null);
+  const progressRef = useRef(null);
+
   const filtered = cat==="All" ? PROJECTS : PROJECTS.filter(p=>p.cat===cat);
 
-  // Scroll progress
+  // Kunci scroll saat loading
+  useEffect(() => {
+    if (!isLoaded) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isLoaded]);
+
+  // Preloader Liquid GSAP Animation
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      let progress = { val: 0 };
+      
+      const tl = gsap.timeline({
+        onComplete: () => {
+           // Slide up preloader jika loading selesai
+           gsap.to(preloaderRef.current, {
+              yPercent: -100,
+              duration: 1.2,
+              ease: "expo.inOut",
+              onComplete: () => {
+                 setIsLoaded(true);
+                 if (preloaderRef.current) preloaderRef.current.style.display = "none";
+              }
+           });
+        }
+      });
+
+      // 1. Animasi Ombak (Kiri-Kanan) - Berjalan terus-menerus
+      gsap.fromTo(".liquid-text", 
+        { "--bg-x": "0%" },
+        { "--bg-x": "-100%", duration: 2.5, ease: "none", repeat: -1 }
+      );
+
+      // 2. Animasi Cairan Naik (DARI BAWAH KE ATAS - FULL RESPONSIVE)
+      // "1.2em" berarti cairan dimulai dari bawah teks (sesuai ukuran font)
+      // "-0.2em" berarti cairan ditarik naik melewati atas teks
+      tl.fromTo(".liquid-text", 
+        { "--bg-y": "1.2em" }, 
+        { "--bg-y": "-0.2em", duration: 3.5, ease: "power2.inOut" }, 
+      0);
+
+      // 3. Angka persentase loading
+      tl.to(progress, {
+        val: 100,
+        duration: 3.5,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          if(progressRef.current) progressRef.current.innerText = Math.round(progress.val) + "%";
+        }
+      }, 0);
+    });
+    
+    return () => ctx.revert();
+  }, []);
+
+  // Scroll progress (Bar biru di atas layar)
   useEffect(() => {
     const bar = document.getElementById("scroll-progress");
     const update = () => {
@@ -253,20 +315,20 @@ export default function BerkePortfolio() {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
-  // GSAP Animations
+  // Main GSAP Animations
   useLayoutEffect(() => {
+    if (!isLoaded) return; // Tunggu preloader selesai baru jalankan!
+
     let ctx = gsap.context(() => {
       
-      // 1. Hero Entrance - Inner content fades in cleanly
-      const tl = gsap.timeline({delay: 0.2});
-      tl.fromTo(".h-badge", { opacity:0, y: 30, scale: 0.9 }, { opacity:1, y:0, scale: 1, duration: 1.2, ease: "expo.out" })
-        .fromTo(".h-title", { opacity:0, y: 50, rotationX: -10 }, { opacity:1, y:0, rotationX: 0, duration: 1.5, ease: "expo.out" }, "-=0.9")
-        .fromTo(".h-para", { opacity:0, y: 30 }, { opacity:1, y:0, duration: 1.2, ease: "expo.out" }, "-=1.1")
-        .fromTo(".h-btns", { opacity:0, y: 20 }, { opacity:1, y:0, duration: 1, ease: "expo.out" }, "-=0.9");
+      // 1. Hero Entrance - Dengan efek blur yang premium
+      const tl = gsap.timeline({delay: 0.1});
+      tl.fromTo(".h-badge", { opacity:0, y: 30, scale: 0.9, filter: "blur(5px)" }, { opacity:1, y:0, scale: 1, filter: "blur(0px)", duration: 1.2, ease: "expo.out" })
+        .fromTo(".h-title", { opacity:0, y: 50, rotationX: -10, filter: "blur(12px)" }, { opacity:1, y:0, rotationX: 0, filter: "blur(0px)", duration: 1.5, ease: "expo.out" }, "-=0.9")
+        .fromTo(".h-para", { opacity:0, y: 30, filter: "blur(8px)" }, { opacity:1, y:0, filter: "blur(0px)", duration: 1.2, ease: "expo.out" }, "-=1.1")
+        .fromTo(".h-btns", { opacity:0, y: 20, filter: "blur(5px)" }, { opacity:1, y:0, filter: "blur(0px)", duration: 1, ease: "expo.out" }, "-=0.9");
 
-      // FIX BUG HERO TEXT MENGHILANG:
-      // Kita aplikasikan efek Scroll parallax (scrub) ke elemen WRAPPER (.hero-parallax-wrapper)
-      // bukan ke elemen individual (.h-title) lagi. Ini memastikan animasi masuk di atas tidak diganggu.
+      // Hero Parallax Scroll
       gsap.to(".hero-parallax-wrapper", { 
         y: -120, 
         opacity: 0, 
@@ -283,45 +345,41 @@ export default function BerkePortfolio() {
         const chapTl = gsap.timeline({
           scrollTrigger: {
             trigger: "#about-chapters",
-            start: "top top", // Diubah menjadi top top agar pas layar dan tidak terpotong
+            start: "top top",
             end: "+=3500", 
             pin: true,
-            scrub: 1, // Smooth scrub
+            scrub: 1, 
           }
         });
 
         chapTl
           .to({}, {duration: 0.5})
-          
-          // Ch 1 -> Ch 2 (dengan efek blur & scale)
           .to(".ch-1", { opacity: 0, y: -100, scale: 0.95, filter: "blur(10px)", duration: 1 }, "step1")
           .fromTo(".ch-2", { opacity: 0, y: 100, scale: 1.05, filter: "blur(10px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1 }, "step1")
           .to({}, {duration: 1.5})
-          
-          // Ch 2 -> Ch 3
           .to(".ch-2", { opacity: 0, y: -100, scale: 0.95, filter: "blur(10px)", duration: 1 }, "step2")
           .fromTo(".ch-3", { opacity: 0, y: 100, scale: 1.05, filter: "blur(10px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1 }, "step2")
           .to({}, {duration: 1.5})
-
-          // Ch 3 -> Ch 4
           .to(".ch-3", { opacity: 0, y: -100, scale: 0.95, filter: "blur(10px)", duration: 1 }, "step3")
           .fromTo(".ch-4", { opacity: 0, y: 100, scale: 1.05, filter: "blur(10px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1 }, "step3")
           .to({}, {duration: 1});
       }
 
-      // 3. Stagger Reveals yang lebih konsisten dan mulus
-      ScrollTrigger.batch(".reveal-card", {
-        onEnter: els => {
-          gsap.fromTo(els, 
-            { opacity: 0, y: 60, rotationX: -8, scale: 0.95 }, 
-            { opacity: 1, y: 0, rotationX: 0, scale: 1, duration: 1.2, stagger: 0.15, ease: "expo.out", overwrite: "auto" }
-          );
-        },
-        start: "top 85%",
-        once: true // Mencegah kedip jika discroll naik turun cepat
+      // 3. Reveal Cards
+      gsap.utils.toArray(".reveal-card").forEach((el) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 85%", once: true }
+          }
+        );
       });
 
-      // 4. Timeline (Experience)
+      // 4. Timeline
       gsap.utils.toArray(".tl-item").forEach((el,i) => {
         gsap.fromTo(el, 
           {opacity: 0, x: -40, scale: 0.95}, 
@@ -336,7 +394,7 @@ export default function BerkePortfolio() {
         gsap.fromTo(".q-author", {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 1, delay: 0.4, ease: "expo.out", scrollTrigger: {trigger: "#quote", start: "top 75%", once: true}});
       }
 
-      // 6. Navbar Blur Smooth
+      // 6. Navbar Smooth Blur
       ScrollTrigger.create({start:"top -80", onUpdate:s => {
         const nav = document.getElementById("main-nav");
         if(!nav) return;
@@ -344,7 +402,7 @@ export default function BerkePortfolio() {
           nav.style.background="rgba(var(--bg-void-rgb), 0.85)"; 
           nav.style.backdropFilter="blur(24px) saturate(180%)"; 
           nav.style.borderBottom="1px solid var(--border)"; 
-          nav.style.padding="0.8rem 3rem"; // Shrink nav
+          nav.style.padding="0.8rem 3rem"; 
         } else { 
           nav.style.background="transparent"; 
           nav.style.backdropFilter="none"; 
@@ -356,7 +414,7 @@ export default function BerkePortfolio() {
 
     setTimeout(() => ScrollTrigger.refresh(), 200);
     return () => ctx.revert();
-  }, [cat]);
+  }, [isLoaded, cat]);
 
   const submit = () => { setSend("sending"); setTimeout(()=>setSend("sent"),1500); setTimeout(()=>setSend("idle"),4500); };
   const W = {maxWidth:1100,margin:"0 auto",width:"100%",position:"relative",zIndex:2};
@@ -426,6 +484,57 @@ export default function BerkePortfolio() {
           opacity: 0.035;
           pointer-events: none;
           z-index: 9999;
+        }
+
+        /* ── PRELOADER CSS ── */
+        .preloader {
+          position: fixed;
+          inset: 0;
+          background: #050508;
+          z-index: 99999;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+        .preloader-grid {
+          position: absolute;
+          inset: 0;
+          background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 40px 40px;
+          pointer-events: none;
+        }
+        
+        /* Outline teks & Layer pembungkus */
+        .liquid-text {
+          --bg-x: 0%;
+          --bg-y: 1.5em; /* Mulai di bawah teks */
+          font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(3.5rem, 12vw, 8.5rem);
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          position: relative;
+          color: transparent;
+          -webkit-text-stroke: 1.5px rgba(255,255,255,0.15);
+        }
+        
+        /* Cairan di dalam teks */
+        .liquid-text::before {
+          content: attr(data-text);
+          position: absolute;
+          inset: 0;
+          color: transparent;
+          -webkit-text-fill-color: transparent;
+          -webkit-text-stroke: 0px;
+          /* SVG Ombak Ganda yang dalam (tinggi 2000) agar bagian bawah cairan tidak terpotong saat ditarik ke atas */
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='2000' viewBox='0 0 1000 2000'%3E%3Cpath d='M0,50 C250,0 250,100 500,50 C750,0 750,100 1000,50 L1000,2000 L0,2000 Z' fill='rgba(232, 163, 79, 0.4)'/%3E%3Cpath d='M0,75 C250,125 250,25 500,75 C750,125 750,25 1000,75 L1000,2000 L0,2000 Z' fill='%23E8A34F'/%3E%3C/svg%3E");
+          background-repeat: repeat-x;
+          background-size: 200% auto;
+          background-position: var(--bg-x) var(--bg-y);
+          -webkit-background-clip: text;
+          background-clip: text;
+          z-index: 2;
         }
 
         /* ── ANIMATIONS ── */
@@ -507,12 +616,12 @@ export default function BerkePortfolio() {
         }
         .proj-card { padding:2rem; }
         .proj-card.featured { border-color:var(--border-hover); background:linear-gradient(145deg, var(--bg-card), color-mix(in srgb, var(--accent) 3%, transparent)); }
-        .feat-badge {
-          position:absolute;top:1.2rem;right:1.2rem;background:color-mix(in srgb, var(--accent) 15%, transparent);
-          color:var(--accent);font-size:.6rem;font-family:'DM Mono',monospace;
-          font-weight:600;letter-spacing:0.12em;padding:.35rem .9rem;border-radius:50px;
-          border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-        }
+          .feat-badge {
+            position:absolute;top:1.2rem;right:1.2rem;background:color-mix(in srgb, var(--accent) 15%, transparent);
+            color:var(--accent);font-size:.6rem;font-family:'DM Mono',monospace;
+            font-weight:600;letter-spacing:0.12em;padding:.35rem .9rem;border-radius:50px;
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+          }
         .ach-badge {
           display:inline-block;padding:.3rem .85rem;border-radius:50px;font-family:'DM Mono',monospace;
           font-size:.65rem;font-weight:600;letter-spacing:0.08em;background:var(--bg-void);color:var(--text-dim);
@@ -562,10 +671,35 @@ export default function BerkePortfolio() {
         }
         @media(max-width:600px){
           .srv-grid{grid-template-columns:1fr}
+          .liquid-text{font-size: 3rem!important}
           section{padding:5rem 1.5rem!important}
           .h-title{font-size: 3rem!important}
         }
       `}</style>
+
+      {/* ══════════════════════════════════════════════════════
+          PRELOADER (LIQUID FILL ANIMATION)
+      ══════════════════════════════════════════════════════ */}
+      <div ref={preloaderRef} className="preloader">
+        <div className="preloader-grid" />
+        
+        {/* Atribut data-text diperlukan agar CSS Content ::before bisa membacanya */}
+        <div className="liquid-text" data-text="PORTFOLIO">PORTFOLIO</div>
+        
+        <div ref={progressRef} style={{
+          position: "absolute",
+          bottom: "10%",
+          fontFamily: "'DM Mono', monospace",
+          fontSize: "1.2rem",
+          fontWeight: 600,
+          color: "#E8A34F",
+          letterSpacing: "0.2em",
+          zIndex: 2,
+          textShadow: "0 0 20px rgba(232, 163, 79, 0.5)"
+        }}>
+          0%
+        </div>
+      </div>
 
       {/* SCRIPT SPLINE NEXT.JS */}
       <Script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.90/build/spline-viewer.js" strategy="lazyOnload" />
@@ -598,7 +732,6 @@ export default function BerkePortfolio() {
       <section id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",padding:"7rem 3rem 4rem",background:"var(--bg-void)",overflow:"hidden",position:"relative"}}>
         
         <div style={{position:"absolute",inset:0,zIndex:0}}>
-          {/* Key trigger mount/unmount ulang di React saat isDark berganti agar Spline tidak error */}
           <spline-viewer 
             key={isDark ? "dark-bg" : "light-bg"}
             url={isDark ? "https://prod.spline.design/vwbI4Bn4uLcKtPs3/scene.splinecode" : "https://prod.spline.design/TOWPhMs1COn4zhG7/scene.splinecode"} 
@@ -606,10 +739,8 @@ export default function BerkePortfolio() {
           ></spline-viewer>
         </div>
 
-        {/* Improved Gradient Overlay */}
         <div style={{position:"absolute",inset:0,zIndex:1,background:`radial-gradient(circle at 50% 50%, transparent 20%, rgba(var(--bg-void-rgb), 0.8) 80%), linear-gradient(180deg, transparent 0%, rgba(var(--bg-void-rgb), 1) 100%)`,pointerEvents:"none"}}/>
 
-        {/* Wrapper untuk parallax scroll (Mencegah bug text tidak muncul) */}
         <div className="hero-parallax-wrapper" style={{position:"relative", zIndex:2, maxWidth: 850, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", pointerEvents:"none"}}>
           
           <div className="h-badge" style={{display:"inline-flex",alignItems:"center",gap:".7rem",padding:".5rem 1.4rem",background:"var(--bg-card)",border:"1px solid var(--border)",borderRadius:50,fontFamily:"'DM Mono',monospace",fontSize:".75rem",fontWeight:500,color:"var(--text-main)",letterSpacing:"0.12em",marginBottom:"2.5rem",opacity:0, boxShadow: "var(--shadow)"}}>
@@ -822,7 +953,7 @@ export default function BerkePortfolio() {
       <section id="quote" style={{...sec("var(--bg-card)"),textAlign:"center",overflow:"hidden",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)", padding:"8rem 2rem"}}>
         <div style={{position:"absolute",width:600,height:600,background:"radial-gradient(circle,color-mix(in srgb, var(--accent) 8%, transparent),transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none"}}/>
         <p className="q-text" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(1.8rem,4vw,3.2rem)",fontStyle:"italic",fontWeight:500,color:"var(--text-main)",lineHeight:1.4,maxWidth:850,margin:"0 auto 2rem",opacity:0}}>
-          "Technology should not just be functional — it should create genuine impact for the people who use it."
+          {"Technology should not just be functional — it should create genuine impact for the people who use it."}
         </p>
         <p className="q-author" style={{fontFamily:"'DM Mono',monospace",fontSize:".8rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.18em",opacity:0}}>
           — Berke Jaisyurrohman · IT Student & Developer
@@ -847,14 +978,14 @@ export default function BerkePortfolio() {
           <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:"6rem",alignItems:"start"}} className="two-col">
             <div>
               <div style={{fontFamily:"'DM Mono',monospace",fontSize:".75rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.22em",textTransform:"uppercase",display:"flex",alignItems:"center",gap:".8rem",marginBottom:"1rem"}}>
-                <span style={{width:30,height:1,background:"var(--accent)",display:"inline-block"}}/>Let's Connect
+                <span style={{width:30,height:1,background:"var(--accent)",display:"inline-block"}}/>{"Let's Connect"}
               </div>
               <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,4.5vw,4rem)",fontWeight:700,color:"var(--text-main)",lineHeight:1.1,marginBottom:"1.8rem"}}>
                 Ready to Build<br/>
                 <em style={{color:"var(--accent)",fontStyle:"italic"}}>Something Great?</em>
               </h2>
               <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1rem",fontWeight:400,color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2.5rem"}}>
-                Always open to new opportunities and collaborations. Whether it's a web system, mobile app, or cybersecurity challenge — let's create together.
+                {"Always open to new opportunities and collaborations. Whether it's a web system, mobile app, or cybersecurity challenge — let's create together."}
               </p>
               <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
                 {[["✉️","Email","berkejaisyurrohman95@gmail.com"],["📱","Phone","+62 895-0614-7763"],["📍","Location","Bekasi, Indonesia"],["🌐","Website","www.jaisyporto.com"]].map(([ico,lbl,val])=>(
@@ -888,15 +1019,12 @@ export default function BerkePortfolio() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          PRE-FOOTER (SPLINE BUG FIXED)
+          PRE-FOOTER 
       ══════════════════════════════════════════════════════ */}
       <section style={{position:"relative", height:"75vh", minHeight:"500px", overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center", borderTop:"1px solid var(--border)"}}>
         
         <div style={{position:"absolute", inset:0, zIndex:0}}>
-          <spline-viewer 
-            url="https://prod.spline.design/9DrCgf37xXig1JJp/scene.splinecode"
-            style={{width: '100%', height: '100%'}}
-          ></spline-viewer>
+          <spline-viewer url="https://prod.spline.design/lPs9-DJQKPd0qXUs/scene.splinecode"></spline-viewer>
         </div>
 
         <div style={{position:"absolute", inset:0, zIndex:1, background:`linear-gradient(to top, var(--bg-void), transparent 60%, var(--bg-void))`, pointerEvents:"none"}} />
@@ -904,15 +1032,15 @@ export default function BerkePortfolio() {
 
         <div style={{position:"relative", zIndex:2, textAlign:"center", padding:"0 2rem", maxWidth:"700px", pointerEvents:"none"}}>
           <h2 style={{fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(3rem, 6vw, 5rem)", fontWeight:700, color:"var(--text-main)", marginBottom:"1.5rem", textShadow:"0 10px 30px rgba(0,0,0,0.5)"}}>
-            Let's Sail <em style={{color:"var(--accent)", fontStyle:"italic"}}>Forward</em>
+            {"Let's Sail"} <em style={{color:"var(--accent)", fontStyle:"italic"}}>Forward</em>
           </h2>
           <p style={{fontFamily:"'Outfit',sans-serif", fontSize:"1.1rem", color:"var(--text-dim)", lineHeight:1.9}}>
-            Thank you for scrolling. I'm always looking for new adventures and challenges. Reach out and let's build something impactful together.
+            {"Thank you for scrolling. I'm always looking for new adventures and challenges. Reach out and let's build something impactful together."}
           </p>
         </div>
       </section>
 
-      {/* ── FOOTER BOTTOM BAR (Sesuai Permintaan Kode Terakhir) ── */}
+      {/* ── FOOTER BOTTOM BAR ── */}
       <footer style={{background:"var(--bg-void)",borderTop:"1px solid var(--border)",padding:"1.8rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"1rem",position:"relative",zIndex:3}}>
         <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>© 2025 <span style={{color:"var(--text-main)"}}>Berke Jaisyurrohman</span>. Bekasi, Indonesia.</p>
         <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>Built with <span style={{color:"var(--accent)"}}>Next.js</span> · <span style={{color:"var(--gold)"}}>GSAP</span> · <span style={{color:"var(--cyan)"}}>Spline</span></p>
