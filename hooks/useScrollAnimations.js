@@ -73,16 +73,19 @@ export function useScrollAnimations(setActive) {
     });
 
     /* ═══════════════════════════════════════════════
-       SLIDE TRANSITIONS — clip-path wipe upward
-       Each scene unclips as it enters the viewport.
-       Previous scene fades out simultaneously.
+       SLIDE TRANSITIONS — enhanced clip-path with scale & blur
+       Incoming scenes unclip + scale with blur fade
+       Outgoing scenes fade with blur applied
     ═══════════════════════════════════════════════ */
     nonHeroScenes.forEach((sel, i) => {
       const prevSel = i === 0 ? "#scene-hero" : nonHeroScenes[i - 1];
 
-      // Incoming scene: clip opens from bottom to top
+      // Incoming scene: clip opens from bottom to top + scale in + blur out
+      gsap.set(sel, { scale: 0.98 });
       gsap.to(sel, {
         clipPath: "inset(0% 0% 0% 0%)",
+        scale: 1,
+        filter: "blur(0px)",
         ease: "expo.inOut",
         scrollTrigger: {
           trigger: sel,
@@ -92,9 +95,11 @@ export function useScrollAnimations(setActive) {
         },
       });
 
-      // Outgoing (previous) scene: fades and slides up slightly
+      // Outgoing (previous) scene: fades + blur + slight skew
       gsap.to(prevSel, {
-        opacity: 0.2,
+        opacity: 0.1,
+        filter: "blur(3px)",
+        skewY: -0.5,
         ease: "none",
         scrollTrigger: {
           trigger: sel,
@@ -106,19 +111,22 @@ export function useScrollAnimations(setActive) {
     });
 
     /* ═══════════════════════════════════════════════
-       HERO — cinematic split entrance
+       HERO — cinematic split entrance with 3D effects
     ═══════════════════════════════════════════════ */
+    gsap.set("#scene-hero .hero-left", { filter: "blur(8px)" });
+    gsap.set("#scene-hero .hero-right", { filter: "blur(8px)" });
+
     const heroTL = gsap.timeline({ delay: 0.3 });
     heroTL
-      .to("#scene-hero .hero-left",  { x: 0, opacity: 1, duration: 1.2, ease: "expo.out" })
-      .to("#scene-hero .hero-right", { x: 0, opacity: 1, duration: 1.2, ease: "expo.out" }, "<0.1")
-      .to("#scene-hero .word",       { y: "0%", opacity: 1, duration: 1.1, stagger: 0.1, ease: "power4.out" }, "<0.2")
-      .to("#hero-eyebrow",           { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.7")
-      .to("#hero-sub",               { opacity: 1, duration: 0.9, ease: "power3.out" }, "-=0.6")
-      .to("#hero-ghost",             { opacity: 1, duration: 1.4, ease: "power3.out" }, "-=0.9")
-      .to("#hero-status",            { opacity: 1, duration: 0.7, ease: "power3.out" }, "-=0.7")
-      .to("#hero-cta",               { opacity: 1, duration: 0.7, ease: "power3.out" }, "-=0.5")
-      .to("#hero-scroll",            { opacity: 1, duration: 0.6, ease: "power3.out" }, "-=0.4");
+      .to("#scene-hero .hero-left",  { x: 0, opacity: 1, filter: "blur(0px)", scale: 1, duration: 1.3, ease: "expo.out" })
+      .to("#scene-hero .hero-right", { x: 0, opacity: 1, filter: "blur(0px)", scale: 1, duration: 1.3, ease: "expo.out" }, "<0.15")
+      .to("#scene-hero .word",       { y: "0%", opacity: 1, scaleX: 1, duration: 1.2, stagger: 0.12, ease: "power4.out" }, "<0.25")
+      .to("#hero-eyebrow",           { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, "-=0.8")
+      .to("#hero-sub",               { opacity: 1, duration: 1, ease: "power3.out" }, "-=0.7")
+      .to("#hero-ghost",             { opacity: 1, duration: 1.5, ease: "power3.out" }, "-=1")
+      .to("#hero-status",            { opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.8")
+      .to("#hero-cta",               { opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.6")
+      .to("#hero-scroll",            { opacity: 1, duration: 0.7, ease: "power3.out" }, "-=0.5");
 
     // Hero rule wipe
     gsap.set("#hero-rule", { scaleX: 0, transformOrigin: "left" });
@@ -126,18 +134,18 @@ export function useScrollAnimations(setActive) {
       scaleX: 1, duration: 1.5, ease: "power3.inOut", delay: 1.2,
     });
 
-    // Hero scroll-out parallax
+    // Hero scroll-out parallax with rotation
     gsap.to("#scene-hero .hero-title", {
       y: -80, ease: "none",
       scrollTrigger: { trigger: "#scene-hero", start: "top top", end: "bottom top", scrub: 1.2 },
     });
+    gsap.to("#hero-ghost", {
+      y: -100, rotationZ: -8, ease: "none",
+      scrollTrigger: { trigger: "#scene-hero", start: "top top", end: "bottom top", scrub: 1.4 },
+    });
     gsap.to("#hero-sub, #hero-status, #hero-cta", {
       y: -40, opacity: 0, ease: "none",
       scrollTrigger: { trigger: "#scene-hero", start: "top top", end: "bottom top", scrub: 1 },
-    });
-    gsap.to("#hero-ghost", {
-      y: -100, ease: "none",
-      scrollTrigger: { trigger: "#scene-hero", start: "top top", end: "bottom top", scrub: 1.4 },
     });
 
     /* ═══════════════════════════════════════════════
@@ -152,45 +160,50 @@ export function useScrollAnimations(setActive) {
         toggleActions: "play none none none",
       },
     })
-    .to(words("#scene-about"),          { y: "0%", duration: 1.1, stagger: 0.1, ease: "power4.out" })
-    .to(".about-eyebrow",               { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.8")
-    .from("#scene-about .about-text",   { y: 24, opacity: 0, duration: 0.9, ease: "power3.out" }, "-=0.5")
-    .from(".info-row",                  { y: 16, opacity: 0, stagger: 0.07, duration: 0.6, ease: "power3.out" }, "-=0.4");
+    .to(words("#scene-about"),          { y: "0%", opacity: 1, scaleX: 1, duration: 1.2, stagger: 0.08, ease: "power4.out" })
+    .to(".about-eyebrow",               { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, "-=0.9")
+    .from("#scene-about .about-text",   { y: 24, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.6")
+    .from(".info-row",                  { y: 16, opacity: 0, stagger: 0.07, duration: 0.7, ease: "power3.out" }, "-=0.5");
 
     // PROJECTS
-    ["scene-proj-1", "scene-proj-2", "scene-proj-3"].forEach((id) => {
+    ["scene-proj-1", "scene-proj-2", "scene-proj-3"].forEach((id, projIdx) => {
       const sel = "#" + id;
 
-      // Emoji + circles parallax
+      // Enhanced emoji parallax with scale
       gsap.to(`${sel} .proj-emoji`, {
-        y: -50, scale: 1.08, ease: "none",
+        y: -60, scale: 1.15, rotationZ: 12, ease: "none",
         scrollTrigger: { trigger: sel, start: "top bottom", end: "bottom top", scrub: 1.2 },
       });
+
+      // Circles with enhanced parallax and rotation
       gsap.utils.toArray(`${sel} .proj-circle`).forEach((c, ci) => {
         gsap.to(c, {
-          y: -30 * (ci + 1), x: 10 * (ci % 2 === 0 ? 1 : -1), ease: "none",
-          scrollTrigger: { trigger: sel, start: "top bottom", end: "bottom top", scrub: 1 + ci * 0.3 },
+          y: -40 * (ci + 1),
+          x: 15 * (ci % 2 === 0 ? 1 : -1),
+          rotationZ: (ci + 1) * 8,
+          ease: "none",
+          scrollTrigger: { trigger: sel, start: "top bottom", end: "bottom top", scrub: 1.3 + ci * 0.2 },
         });
       });
 
-      // Content stagger
+      // Content stagger with 3D effects
       gsap.timeline({
         scrollTrigger: { trigger: sel, start: "top 55%", toggleActions: "play none none none" },
       })
-      .from(`${sel} .proj-accent-bar`, { scaleY: 0, duration: 0.9, ease: "power3.inOut", transformOrigin: "top" })
-      .from(`${sel} .proj-num`,        { opacity: 0, x: -18, duration: 0.6, ease: "power3.out" }, "-=0.4")
-      .from(`${sel} .proj-cat`,        { opacity: 0, x: -12, duration: 0.5, ease: "power3.out" }, "-=0.3")
-      .to(words(sel),                  { y: "0%", duration: 1, stagger: 0.1, ease: "power4.out" }, "-=0.3")
-      .from(`${sel} .proj-org`,        { opacity: 0, duration: 0.5, ease: "power3.out" }, "-=0.5")
-      .from(`${sel} .proj-desc`,       { opacity: 0, y: 18, duration: 0.7, ease: "power3.out" }, "-=0.4")
-      .from(`${sel} .proj-tech`,       { opacity: 0, y: 8, stagger: 0.05, duration: 0.4, ease: "power3.out" }, "-=0.4")
-      .from(`${sel} .proj-link`,       { opacity: 0, x: -12, duration: 0.5, ease: "power3.out" }, "-=0.2")
-      .from(`${sel} .proj-ghost-num`,  { opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.8");
+      .from(`${sel} .proj-accent-bar`, { scaleY: 0, duration: 1, ease: "power3.inOut", transformOrigin: "top" })
+      .from(`${sel} .proj-num`,        { opacity: 0, x: -24, duration: 0.7, ease: "power3.out" }, "-=0.5")
+      .from(`${sel} .proj-cat`,        { opacity: 0, x: -16, rotateX: 90, duration: 0.6, ease: "back.out", transformOrigin: "left" }, "-=0.4")
+      .to(words(sel),                  { y: "0%", opacity: 1, scaleX: 1, duration: 1.1, stagger: 0.1, ease: "power4.out" }, "-=0.4")
+      .from(`${sel} .proj-org`,        { opacity: 0, x: -12, duration: 0.6, ease: "power3.out" }, "-=0.6")
+      .from(`${sel} .proj-desc`,       { opacity: 0, y: 24, rotateX: 80, duration: 0.8, ease: "power3.out", transformOrigin: "left" }, "-=0.5")
+      .from(`${sel} .proj-tech`,       { opacity: 0, y: 12, stagger: 0.06, duration: 0.5, ease: "power3.out" }, "-=0.5")
+      .from(`${sel} .proj-link`,       { opacity: 0, x: -16, duration: 0.6, ease: "power3.out" }, "-=0.3")
+      .from(`${sel} .proj-ghost-num`,  { opacity: 0, duration: 1, ease: "power3.out" }, "-=0.9");
 
-      // Scene rule
+      // Scene rule with enhanced easing
       gsap.set(`${sel} .scene-rule`, { scaleX: 0, transformOrigin: "left" });
       gsap.to(`${sel} .scene-rule`, {
-        scaleX: 1, duration: 1.3, ease: "power3.inOut",
+        scaleX: 1, duration: 1.5, ease: "power3.inOut",
         scrollTrigger: { trigger: sel, start: "top 20%", toggleActions: "play none none none" },
       });
     });
@@ -199,15 +212,27 @@ export function useScrollAnimations(setActive) {
     gsap.timeline({
       scrollTrigger: { trigger: "#scene-skills", start: "top 55%", toggleActions: "play none none none" },
     })
-    .to(words("#scene-skills"),          { y: "0%", duration: 1.1, stagger: 0.12, ease: "power4.out" })
-    .to(".skills-eyebrow",               { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.7")
-    .from(".skill-row",                  { opacity: 0, x: -22, stagger: 0.05, duration: 0.6, ease: "power3.out" }, "-=0.4")
-    .from(".lang-row",                   { opacity: 0, x:  22, stagger: 0.05, duration: 0.5, ease: "power3.out" }, "-=0.8");
+    .to(words("#scene-skills"),          { y: "0%", opacity: 1, scaleX: 1, duration: 1.2, stagger: 0.12, ease: "power4.out" })
+    .to(".skills-eyebrow",               { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, "-=0.9")
+    .from(".skill-row",                  { opacity: 0, x: -28, stagger: 0.08, duration: 0.7, ease: "power3.out" }, "-=0.5")
+    .from(".lang-row",                   { opacity: 0, x: 28, stagger: 0.08, duration: 0.7, ease: "power3.out" }, "-=0.95");
 
-    document.querySelectorAll(".skill-fill").forEach((bar) => {
+    // Enhanced skill bar animations with GSAP + bounce effect
+    document.querySelectorAll(".skill-fill").forEach((bar, idx) => {
       ScrollTrigger.create({
-        trigger: bar, start: "top 92%", once: true,
-        onEnter: () => bar.classList.add("animated"),
+        trigger: bar, start: "top 88%", once: true,
+        onEnter: () => {
+          gsap.to(bar, {
+            transformOrigin: "left",
+            duration: 1.6,
+            ease: "power3.out",
+            overwrite: false,
+            onStart: () => {
+              bar.classList.add("animated");
+              gsap.fromTo(bar, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.6, ease: "power3.out", delay: idx * 0.08 });
+            }
+          });
+        }
       });
     });
 
@@ -215,11 +240,11 @@ export function useScrollAnimations(setActive) {
     gsap.timeline({
       scrollTrigger: { trigger: "#scene-contact", start: "top 55%", toggleActions: "play none none none" },
     })
-    .to(words("#scene-contact"),           { y: "0%", duration: 1.1, stagger: 0.12, ease: "power4.out" })
-    .to(".contact-eyebrow",                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.7")
-    .from(".contact-link-row",             { opacity: 0, x: -18, stagger: 0.07, duration: 0.6, ease: "power3.out" }, "-=0.4")
-    .from(".cf-group",                     { opacity: 0, y: 14, stagger: 0.07, duration: 0.6, ease: "power3.out" }, "-=0.6")
-    .from(".cf-submit",                    { opacity: 0, duration: 0.5, ease: "power3.out" }, "-=0.2");
+    .to(words("#scene-contact"),           { y: "0%", opacity: 1, scaleX: 1, duration: 1.2, stagger: 0.12, ease: "power4.out" })
+    .to(".contact-eyebrow",                { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, "-=0.9")
+    .from(".contact-link-row",             { opacity: 0, x: -24, stagger: 0.08, duration: 0.7, ease: "power3.out" }, "-=0.5")
+    .from(".cf-group",                     { opacity: 0, y: 18, rotateX: 80, stagger: 0.08, duration: 0.7, ease: "power3.out", transformOrigin: "left" }, "-=0.8")
+    .from(".cf-submit",                    { opacity: 0, y: 12, duration: 0.6, ease: "power3.out" }, "-=0.3");
 
     /* ─── mouse parallax per scene ─── */
     document.querySelectorAll(".scene").forEach((sc) => {
