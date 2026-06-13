@@ -7,7 +7,7 @@ import {
   HeroScene, AboutScene, ProjectScene, SkillsScene, ContactScene,
 } from "./Scenes";
 import { useScrollAnimations } from "@/hooks/useScrollAnimations";
-import { PROJECTS, SKILLS } from "@/components/data";
+import { PROJECTS, SKILLS } from "@/app/shared-data";
 
 export default function Portfolio() {
   const [active, setActive]       = useState(0);

@@ -1,6 +1,6 @@
 "use client";
 import { useCallback } from "react";
-import { SCENES } from "@/components/data";
+import { SCENES } from "@/app/shared-data";
 
 export function SlidePips({ active }) {
   const go = useCallback((id) => {

@@ -17,6 +17,14 @@ export const PROJECTS = [
   { num: "05", tag: "Cybersecurity", cat: "Security", icon: "🔐", name: "Bazma Cipher", year: "2024", org: "SMK TI Bazma", desc: "Prototype encryption system with custom cipher algorithms and industry-standard cryptography protecting sensitive application data.", tech: ["Python", "JavaScript", "Crypto"], color: "var(--coral)" },
   { num: "06", tag: "AI · Islamic · Mobile", cat: "Mobile", icon: "☪️", name: "KajianQu — AI Qur'an App", year: "2025", org: "Personal Project", desc: "AI-powered Qur'an mobile app: smart Tajweed guidance via ML, spaced-repetition memorization, Arabic OCR, tafsir browser, and offline-first.", tech: ["Flutter", "Python", "AI/ML", "TF"], color: "var(--accent)" },
 ];
+const TECH_STACK = [
+  {name:"React",icon:"⚛️",color:"var(--accent)"},{name:"Laravel",icon:"🏗️",color:"var(--sage)"},
+  {name:"Flutter",icon:"📱",color:"var(--violet)"},{name:"TypeScript",icon:"📘",color:"var(--cyan)"},
+  {name:"Python",icon:"🐍",color:"var(--gold)"},{name:"MySQL",icon:"🗄️",color:"var(--coral)"},
+  {name:"React Native",icon:"📲",color:"var(--accent)"},{name:"TensorFlow",icon:"🤖",color:"var(--sage)"},
+  {name:"Next.js",icon:"▲",color:"var(--violet)"},{name:"Astro",icon:"🚀",color:"var(--gold)"},
+  {name:"Docker",icon:"🐳",color:"var(--cyan)"},{name:"Firebase",icon:"🔥",color:"var(--coral)"},
+];
 export const SKILLS = [
   { name: "JavaScript", lvl: 90 }, { name: "TypeScript", lvl: 78 },
   { name: "Python", lvl: 70, badge: "Entry" }, { name: "React", lvl: 85 },

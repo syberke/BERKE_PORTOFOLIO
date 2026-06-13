@@ -1,5 +1,5 @@
 "use client";
-import { PROJ_CATS, SHead, W } from "./data";
+import { PROJ_CATS, SHead, W } from "../app/shared-data";
 export default function Projects({ cat, setCat, filtered }) {
   return (
     <section id="projects" style={{ position: "relative", padding: "8rem 3rem", background: "var(--bg-void)" }}>

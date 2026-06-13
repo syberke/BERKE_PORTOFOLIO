@@ -1,5 +1,5 @@
 "use client";
-import { ACHIEVEMENTS, SHead, W } from "./data";
+import { ACHIEVEMENTS, SHead, W } from "../app/shared-data";
 export default function Achievements() {
   return (
     <section id="achievements" style={{ position: "relative", padding: "8rem 3rem", background: "var(--bg-space)" }}>

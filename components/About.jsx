@@ -1,5 +1,5 @@
 "use client";
-import { SLabel, SOFT_SKILLS } from "./data";
+import { SLabel, SOFT_SKILLS } from "../app/shared-data";
 export default function About() {
   return (
     <section id="about" style={{ background: "var(--bg-void)", position: "relative" }}>

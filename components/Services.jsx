@@ -1,5 +1,5 @@
 "use client";
-import { SERVICES, SHead, W } from "./data";
+import { SERVICES, SHead, W } from "../app/shared-data";
 export default function Services() {
   return (
     <section id="services" style={{ position: "relative", padding: "8rem 3rem", background: "var(--bg-space)" }}>

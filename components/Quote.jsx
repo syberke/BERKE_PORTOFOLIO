@@ -1,5 +1,5 @@
 "use client";
-import { sec } from "./data";
+import { sec } from "../app/shared-data";
 export default function Quote() {
   return (
     <section

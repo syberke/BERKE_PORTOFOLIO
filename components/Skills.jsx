@@ -1,5 +1,5 @@
 "use client";
-import { SKILLS, LANGS, SHead, SLabel, sec, W } from "./data";
+import { SKILLS, LANGS, SHead, SLabel, sec, W } from "../app/shared-data";
 const ORBS = [
   ["⚛️", "React", "var(--accent)", { left: "5%", top: "30%" }],
   ["🏗️", "Laravel", "var(--sage)", { left: "18%", top: "55%" }],

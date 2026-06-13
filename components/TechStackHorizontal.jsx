@@ -1,5 +1,5 @@
 "use client";
-import { TECH_STACK, SLabel } from "./data";
+import { TECH_STACK, SLabel } from "../app/shared-data";
 export default function TechStackHorizontal({ horizontalRef }) {
   return (
     <div ref={horizontalRef} className="h-scroll-section">

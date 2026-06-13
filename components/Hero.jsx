@@ -1,5 +1,5 @@
 "use client";
-import { MORPH_SHAPES, MOTION_PATH_D } from "./data";
+import { MORPH_SHAPES, MOTION_PATH_D } from "../app/shared-data";
 export default function Hero({ morphSvgRef, morphPathRef, motionBallRef, heroTitleRef, typewriterRef }) {
   return (
     <section

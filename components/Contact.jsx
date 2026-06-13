@@ -1,5 +1,5 @@
 "use client";
-import { SLabel, sec, W } from "./data";
+import { SLabel, sec, W } from "../app/shared-data";
 const INFO = [
   ["✉️", "Email", "berkejaisyurrohman95@gmail.com"],
   ["📱", "Phone", "+62 895-0614-7763"],

@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useState, useEffect, useRef } from "react";
 
-/* ─── DATA ───────────────────────────────────────────────────────────────── */
+/* ─── DATA REALIGNMENT WITH OFFICIAL LOGOS ───────────────────────────────── */
 const SERVICES = [
   { icon:"🌐", title:"Web Development", desc:"Full-stack web apps with modern frameworks. From landing pages to complex SaaS platforms.", tech:["Laravel","React","MySQL","TypeScript"], color:"var(--accent)" },
-  { icon:"📱", title:"Mobile Development", desc:"Cross-platform mobile apps for iOS and Android with native-quality experiences.", tech:["React Native","Flutter","Firebase"], color:"var(--sage)" },
+  { icon:"📱", title:"Mobile Development", desc:"Cross-platform mobile apps for iOS and Android with modern engines.", tech:["React Native","Flutter","Firebase"], color:"var(--sage)" },
   { icon:"🔐", title:"Cybersecurity", desc:"Data encryption, secure authentication, and security system design to protect sensitive data.", tech:["Python","Cryptography","JWT"], color:"var(--violet)" },
   { icon:"☪️", title:"Islamic Tech", desc:"Apps serving the Muslim community — Qur'an apps, prayer time systems, Islamic learning AI.", tech:["Flutter","AI/ML","Firebase"], color:"var(--gold)" },
   { icon:"🤖", title:"AI Integration", desc:"Integrating ML and AI features into applications — recommendations, NLP, computer vision.", tech:["Python","TensorFlow","OpenAI"], color:"var(--coral)" },
@@ -21,19 +20,39 @@ const PROJECTS = [
   { num:"06", tag:"AI · Islamic · Mobile", cat:"Mobile", icon:"☪️", name:"KajianQu — AI Qur'an App", year:"2025", org:"Personal Project", desc:"AI-powered Qur'an mobile app: smart Tajweed guidance via ML, spaced-repetition memorization, Arabic OCR, tafsir browser, and offline-first.", tech:["Flutter","Python","AI/ML","TF"], color:"var(--accent)" },
 ];
 
-const SKILLS = [
-  { name:"JavaScript", lvl:90 }, { name:"TypeScript", lvl:78 },
-  { name:"Python", lvl:70, badge:"Entry" }, { name:"React", lvl:85 },
-  { name:"Astro", lvl:65, badge:"Entry" }, { name:"Laravel", lvl:88 },
-  { name:"Blade", lvl:82 }, { name:"MySQL", lvl:84 },
-  { name:"React Native", lvl:80 }, { name:"Flutter", lvl:75 }, { name:"SIOT", lvl:70 },
+// Pas untuk susunan Segitiga Besar (Piramida): Tier 1 (1), Tier 2 (2), Tier 3 (3), Tier 4 (4), Tier 5 (5) = Total 15 Nodes
+const TECH_STACK = [
+  // Tier 1 - Apex
+  { id: "javascript", name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", type: "Programming Language", exp: "Dynamic scripting, asynchronous event-loops, ES6+ architectures, and DOM optimization blueprints.", color: "var(--gold)" },
+  
+  // Tier 2
+  { id: "typescript", name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", type: "Programming Language", exp: "Strict type-safety definitions, granular interfaces design, and robust scalable engineering control.", color: "var(--cyan)" },
+  { id: "php", name: "PHP", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg", type: "Programming Language", exp: "Server-side state tracking, object-oriented modern backends, and traditional native scripting loops.", color: "var(--violet)" },
+  
+  // Tier 3
+  { id: "python", name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", type: "Programming Language", exp: "Automation scripts, heavy data-handling routines, cryptographic modules, and core AI processing layers.", color: "var(--sage)" },
+  { id: "c", name: "C Language", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg", type: "Programming Language", exp: "Low-level resource handling, memory allocation pointer configurations, and micro-optimization mechanics.", color: "var(--accent)" },
+  { id: "react", name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", type: "Frontend Framework", exp: "Virtual DOM diffing algorithms, complex state hooks, dynamic component reusability, and SPA layouts.", color: "var(--cyan)" },
+  
+  // Tier 4
+  { id: "reactnative", name: "React Native", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", type: "Mobile Framework", exp: "Cross-platform core bridges, native layout rendering engines, and modular device hardware interfaces.", color: "var(--cyan)" },
+  { id: "nextjs", name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-line.svg", type: "React Framework", exp: "Hybrid SSR / SSG production architectures, atomic route optimization, and secure API middleware pipes.", color: "var(--text-main)" },
+  { id: "laravel", name: "Laravel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg", type: "Backend Framework", exp: "Artisan ecosystem command suites, Eloquent ORM transaction modeling, secure authentication, and jobs scheduling.", color: "var(--coral)" },
+  { id: "flutter", name: "Flutter", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", type: "Mobile Framework", exp: "Dart compilations, high-frequency Skia/Impeller UI rendering, and offline atomic storage synchronizations.", color: "var(--cyan)" },
+  
+  // Tier 5 - Base
+  { id: "tailwindcss", name: "Tailwind CSS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg", type: "CSS Technology", exp: "Utility-first design workflows, responsive responsive breakpoints, component layouts, and strict token implementations.", color: "var(--cyan)" },
+  { id: "vuejs", name: "Vue.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg", type: "Frontend Framework", exp: "Reactive state tracking arrays, declarative templates, and lightweight component view modeling.", color: "var(--sage)" },
+  { id: "mysql", name: "MySQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", type: "Database Engine", exp: "Relational database models, structured querying optimization indexes, and ACID transaction safety rules.", color: "var(--gold)" },
+  { id: "git", name: "Git & GitHub", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg", type: "Version Tools", exp: "Branch management routines, merge conflict operations, remote synchronization, and continuous version actions.", color: "var(--coral)" },
+  { id: "vercel", name: "Vercel & Tools", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg", type: "Deployment Tools", exp: "Serverless server distribution, edge functions deployments, REST API setups, and Midtrans payment gateway hooks.", color: "var(--text-main)" },
 ];
 
-const LANGS = [
-  { lang:"Indonesian", lvl:100, flag:"🇮🇩", label:"Native", color:"var(--sage)" },
-  { lang:"English", lvl:75, flag:"🇬🇧", label:"Professional", color:"var(--accent)" },
-  { lang:"Japanese", lvl:35, flag:"🇯🇵", label:"Basic", color:"var(--violet)" },
-  { lang:"German", lvl:32, flag:"🇩🇪", label:"Basic", color:"var(--gold)" },
+const HUMAN_LANGS = [
+  { id: "id", name: "Indonesian", icon: "🇮🇩", type: "Native Fluency", exp: "Native speaker. Exceptional team leadership, technical documentation, and systemic presentation communication.", color: "var(--coral)" },
+  { id: "en", name: "English", icon: "🇬🇧", type: "Intermediate Fluency", exp: "Proficient comprehension of international engineering documentation, technical stack tracking, and product communication.", color: "var(--accent)" },
+  { id: "de", name: "German", icon: "🇩🇪", type: "Basic Level", exp: "Technical term recognition, foundational text understanding, and fundamental grammar knowledge.", color: "var(--gold)" },
+  { id: "jp", name: "Japanese", icon: "🇯🇵", type: "Basic Level", exp: "Everyday workspace terminology, introductory layout commands, and expanding conversational context.", color: "var(--violet)" },
 ];
 
 const TIMELINE = [
@@ -54,15 +73,6 @@ const ACHIEVEMENTS = [
 const SOFT_SKILLS = [["🧠","Problem Solving"],["🤝","Teamwork"],["🔍","Analytical Thinking"],["⚡","Fast Learner"],["🗣️","Communication"],["📐","System Design"]];
 const PROJ_CATS = ["All","Web","Mobile","Security"];
 
-const TECH_STACK = [
-  {name:"React",icon:"⚛️",color:"var(--accent)"},{name:"Laravel",icon:"🏗️",color:"var(--sage)"},
-  {name:"Flutter",icon:"📱",color:"var(--violet)"},{name:"TypeScript",icon:"📘",color:"var(--cyan)"},
-  {name:"Python",icon:"🐍",color:"var(--gold)"},{name:"MySQL",icon:"🗄️",color:"var(--coral)"},
-  {name:"React Native",icon:"📲",color:"var(--accent)"},{name:"TensorFlow",icon:"🤖",color:"var(--sage)"},
-  {name:"Next.js",icon:"▲",color:"var(--violet)"},{name:"Astro",icon:"🚀",color:"var(--gold)"},
-  {name:"Docker",icon:"🐳",color:"var(--cyan)"},{name:"Firebase",icon:"🔥",color:"var(--coral)"},
-];
-
 const MORPH_SHAPES = [
   "M 200,100 L 300,300 L 100,300 Z",
   "M 200,80 L 320,220 L 260,360 L 140,360 L 80,220 Z",
@@ -73,7 +83,7 @@ const MOTION_PATH_D = "M 0,150 C 150,50 300,250 450,150 S 650,50 800,150 S 950,2
 
 /* ─── STYLING CSS ────────────────────────────────────────────────────────── */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght=0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 .theme-dark{--bg-void:#050508;--bg-void-rgb:5,5,8;--bg-space:#0A0B12;--bg-card:#111322;--border:rgba(255,255,255,0.08);--border-hover:rgba(232,163,79,0.5);--text-main:rgba(255,255,255,0.92);--text-dim:rgba(255,255,255,0.65);--text-muted:rgba(255,255,255,0.4);--accent:#E8A34F;--accent-rgb:232,163,79;--sage:#5FC89B;--violet:#9B7FE8;--cyan:#4FD1E8;--coral:#E86B5F;--gold:#D4A843;--shadow:0 8px 32px rgba(0,0,0,0.4);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
 .theme-light{--bg-void:#FDFAF5;--bg-void-rgb:253,250,245;--bg-space:#F8F4EC;--bg-card:#FFFFFF;--border:rgba(200,180,150,0.4);--border-hover:rgba(200,132,92,0.6);--text-main:#251B12;--text-dim:#5C5042;--text-muted:#9C8C7A;--accent:#C8845C;--accent-rgb:200,132,92;--sage:#6B9472;--violet:#8B7EC8;--cyan:#4FADC8;--coral:#C46B6B;--gold:#B89222;--shadow:0 8px 30px rgba(46,31,15,0.06);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -81,7 +91,6 @@ html{scroll-behavior:auto}
 ::selection{background:rgba(var(--accent-rgb),0.3);color:var(--bg-void)}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg-void)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
 body{-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;top:0;left:0;width:100vw;height:100vh;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.035;pointer-events:none;z-index:9999}
 
 /* PRELOADER */
 .preloader{position:fixed;inset:0;background:#050508;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
@@ -105,60 +114,246 @@ body::before{content:"";position:fixed;top:0;left:0;width:100vw;height:100vh;bac
 .ncta{padding:.5rem 1.5rem;background:var(--text-main);color:var(--bg-void)!important;border-radius:50px;font-weight:600;transition:all 0.4s!important}
 .ncta::after{display:none!important}
 .ncta:hover{background:var(--accent);transform:translateY(-2px)!important;box-shadow:var(--glow)}
-.theme-toggle{background:var(--border);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-main);font-size:1.1rem;transition:all 0.4s}
+.theme-toggle{background:var(--border);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-main);font-size:1.1rem;transition:all 0.4s;cursor:pointer}
 .theme-toggle:hover{background:var(--accent);color:var(--bg-void);transform:rotate(15deg) scale(1.05)}
 .bfill{padding:1rem 2.5rem;background:var(--accent);color:var(--bg-void);border:none;border-radius:50px;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);text-decoration:none;display:inline-block}
 .bfill:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(var(--accent-rgb),0.3)}
 .boutl{padding:1rem 2.5rem;background:transparent;border:1px solid var(--border);color:var(--text-main);border-radius:50px;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all 0.4s;text-decoration:none;display:inline-block}
 .boutl:hover { border-color:var(--accent); background:rgba(232,163,79,0.05); transform:translateY(-3px); }
-.pf-btn{padding:.5rem 1.4rem;border-radius:50px;background:var(--bg-void);border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text-dim);transition:all 0.3s}
-.pf-btn:hover{border-color:var(--border-hover);color:var(--text-main)}
+.pf-btn{padding:.5rem 1.4rem;border-radius:50px;background:var(--bg-void);border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text-dim);transition:all 0.3s;cursor:pointer}
 .pf-btn.on{background:var(--text-main);border-color:var(--text-main);color:var(--bg-void)}
 
 /* CARDS */
-.tilt-card{transform-style:preserve-3d;will-change:transform}
-.srv-card,.proj-card,.ach-card,.lang-card{background:var(--bg-card);border-radius:24px;padding:2.2rem;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;transition:border-color 0.4s,box-shadow 0.4s}
-.srv-card:hover,.proj-card:hover,.ach-card:hover,.lang-card:hover{border-color:var(--border-hover);box-shadow:var(--glow)}
-.proj-card{padding:2rem}
-.feat-badge{position:absolute;top:1.2rem;right:1.2rem;background:rgba(232,163,79,0.15);color:var(--accent);font-size:.6rem;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.12em;padding:.35rem .9rem;border-radius:50px;border:1px solid rgba(232,163,79,0.3)}
-.ach-badge{display:inline-block;padding:.3rem .85rem;border-radius:50px;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:0.08em;background:var(--bg-void);color:var(--text-dim);border:1px solid var(--border)}
+.srv-card,.proj-card,.ach-card{background:var(--bg-card);border-radius:24px;padding:2.2rem;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;transition:border-color 0.4s,box-shadow 0.4s,transform 0.4s}
+.srv-card:hover,.proj-card:hover,.ach-card:hover{border-color:var(--border-hover);box-shadow:var(--glow);transform:translateY(-4px)}
 .info-item,.soft-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;background:var(--bg-card);border-radius:14px;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--text-dim);transition:all 0.4s;cursor:default}
 .info-item:hover{border-color:var(--accent);color:var(--text-main);transform:translateX(6px);box-shadow:var(--glow)}
 .soft-item{padding:.8rem 1rem;gap:.7rem;font-size:.85rem}
 .tl-item{display:grid;grid-template-columns:56px 1fr;gap:1.8rem;margin-bottom:3rem}
 .tl-content{background:var(--bg-card);border-radius:24px;padding:1.8rem;border:1px solid var(--border);box-shadow:var(--shadow);transition:all 0.4s}
-.tl-content:hover{border-color:var(--border-hover);box-shadow:var(--glow)}
-.ct-link{display:flex;align-items:center;gap:1.1rem;padding:.9rem 1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--text-dim);text-decoration:none;transition:all 0.4s}
-.ct-link:hover{background:rgba(232,163,79,0.08);border-color:var(--accent);color:var(--text-main);transform:translateX(6px);box-shadow:var(--glow)}
-.cf-label{display:block;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem}
-.cf-in{width:100%;background:var(--bg-space);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--text-main);outline:none;transition:all 0.3s;resize:none}
-.cf-in:focus{border-color:var(--accent);background:var(--bg-card);box-shadow:0 0 0 4px rgba(232,163,79,0.15)}
-.cf-in::placeholder{color:var(--text-muted);font-size:.88rem}
 
-/* GRIDS */
+/* FREESTYLE GIANT TRIANGLE CANVAS STYLES */
+.pyramid-freestyle-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 720px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Bound particles inside */
+  padding: 4rem 0;
+  border-radius: 40px;
+}
+/* Giant Triangle Shape Layer Behind */
+.pyramid-freestyle-canvas::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 820px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.05) 0%, rgba(var(--accent-rgb), 0.005) 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  z-index: 1;
+}
+
+/* Floating Particle Animations */
+@keyframes floatParticle1 { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; } 50% { transform: translateY(-30px) scale(1.2); opacity: 0.6; } }
+@keyframes floatParticle2 { 0%, 100% { transform: translate(0, 0); opacity: 0.3; } 50% { transform: translate(20px, -40px); opacity: 0.7; } }
+
+.canvas-particle {
+  position: absolute;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(1px);
+}
+
+.pyramid-freestyle-grid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.freestyle-tier-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+}
+.pyramid-freestyle-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  width: 95px;
+  height: 95px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+/* Official Logo Base Grayscale & Opacity Switch */
+.pyramid-freestyle-node .node-img-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.25);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pyramid-freestyle-node .node-hover-tag {
+  position: absolute;
+  bottom: -32px;
+  background: var(--bg-space);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  padding: 3px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow);
+}
+
+/* Interactive Node Focus Action Flows */
+.pyramid-freestyle-node:hover {
+  transform: scale(1.22) translateY(-8px);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  z-index: 12;
+}
+.pyramid-freestyle-node:hover .node-img-logo {
+  filter: grayscale(0) opacity(1);
+}
+.pyramid-freestyle-node:hover .node-hover-tag {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--text-main);
+}
+
+/* HUMAN LANGUAGES HORIZONTAL CARD STYLES */
+.lang-horizontal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.lang-premium-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lang-premium-card:hover {
+  transform: translateX(6px);
+  border-color: var(--border-hover);
+  box-shadow: var(--glow);
+}
+.lang-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.lang-flag-box {
+  font-size: 2.5rem;
+}
+.lang-title-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.lang-badge-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+/* PREMIUM RIGHT-SIDE SLIDE COMPONENT DRAWER */
+.premium-sidebar-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 440px;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-void));
+  border-left: 1px solid var(--border);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  padding: 3.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(105%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.premium-sidebar-drawer.drawer-active {
+  transform: translateX(0);
+}
+.drawer-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 8, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.drawer-overlay-backdrop.backdrop-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.drawer-close-trigger {
+  align-self: flex-end;
+  background: var(--border);
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.drawer-close-trigger:hover {
+  background: var(--accent);
+  color: var(--bg-void);
+  transform: rotate(90deg);
+}
+
+/* GRIDS & LAYOUT RESPONSIVE */
 .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
 .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
-.lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
-
-/* HORIZONTAL SCROLL */
-.h-scroll-section{overflow:hidden;position:relative;height:100vh;background:var(--bg-space)}
-.h-track{display:flex;gap:2rem;padding:0 3rem;align-items:center;white-space:nowrap;will-change:transform}
-.h-tech-card{flex-shrink:0;width:200px;height:220px;background:var(--bg-card);border:1px solid var(--border);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:border-color 0.3s;white-space:normal}
-.h-tech-card:hover{border-color:var(--border-hover)}
-
-/* WEBGL CANVAS WORKSPACE */
-.story-3d-workspace{position:relative;height:100vh;overflow:hidden;background:var(--bg-space)}
-.narrative-layer{position:absolute;inset:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:0 7rem;pointer-events:none}
-.story-block{pointer-events:auto;max-width:380px}
 
 /* DRAW SVG */
 .draw-svg-path{stroke-dasharray:1000;stroke-dashoffset:1000;fill:none;stroke:var(--accent);stroke-width:2;opacity:0.5}
-
-/* DRAGGABLE */
-.draggable-container{position:relative;height:250px;overflow:hidden;border-radius:24px;background:var(--bg-card);border:1px solid var(--border)}
-.draggable-orb{position:absolute;width:80px;height:80px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.3rem;cursor:grab;touch-action:none;user-select:none;border:2px solid var(--border);box-shadow:var(--shadow);will-change:transform}
-.draggable-orb:active{cursor:grabbing}
 
 .hover-image-text{display:inline-block;position:relative}
 .hover-image-text::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent);transition:width 0.4s ease}
@@ -167,113 +362,23 @@ body::before{content:"";position:fixed;top:0;left:0;width:100vw;height:100vh;bac
 /* SCRAMBLE & TYPEWRITER */
 .scramble-label{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
 .typewriter-wrap{font-family:'DM Mono',monospace;font-size:.85rem;color:var(--accent);letter-spacing:0.1em;margin-bottom:1rem;min-height:1.2em}
-
-/* MORPH BG */
 .morph-bg{position:absolute;right:3%;top:50%;transform:translateY(-50%);z-index:0;opacity:0.1;pointer-events:none}
 
-@media(max-width:900px){.srv-grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr!important;gap:3rem!important}.nav-links{display:none}.narrative-layer{flex-direction:column;justify-content:center;gap:3rem;padding:2rem}}
-@media(max-width:600px){.srv-grid{grid-template-columns:1fr}section{padding:5rem 1.5rem!important}.h-title{font-size:3rem!important}}
-`;
-
-/* ─── WEBGL SHADER SHAPES SUB-COMPONENT ─────────────────────────────────── */
-function FluidBlobMesh() {
-  const meshRef = useRef(null);
-  
-  const uniforms = useMemo(() => ({
-    u_time: { value: 0 },
-    u_intensity: { value: 0.35 }
-  }), []);
-
-  useFrame((state) => {
-    const { clock } = state;
-    if (meshRef.current) {
-      meshRef.current.material.uniforms.u_time.value = clock.getElapsedTime();
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} position={[0, 0, 0]}>
-      <icosahedronGeometry args={[2, 20]} />
-      <shaderMaterial
-        vertexShader={`
-          uniform float u_time;
-          uniform float u_intensity;
-          varying vec2 vUv;
-          varying vec3 vNormal;
-
-          vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-          vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-          vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-          vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-          
-          float snoise(vec3 v) {
-            const vec2 C = vec2(1.0/6.0, 1.0/3.0) ;
-            const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
-            vec3 i  = floor(v + dot(v, C.yyy) );
-            vec3 x0 =   v - i + dot(i, C.xxx) ;
-            vec3 g = step(x0.yzx, x0.xyz);
-            vec3 l = 1.0 - g;
-            vec3 i1 = min( g.xyz, l.zxy );
-            vec3 i2 = max( g.xyz, l.zxy );
-            vec3 x1 = x0 - i1 + C.xxx;
-            vec3 x2 = x0 - i2 + C.yyy;
-            vec3 x3 = x0 - D.yyy;
-            i = mod289(i);
-            vec4 p = permute( permute( permute(
-                        i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-                      + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
-                      + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-            float n_ = 0.142857142857;
-            vec3 ns = n_ * D.wyz - D.xzx;
-            vec4 j = p - 49.0 * floor(p * ns.z);
-            vec4 x_ = floor(j * ns.z);
-            vec4 y_ = floor(j - 7.0 * x_ );
-            vec4 x = x_ *ns.x + ns.yyyy;
-            vec4 y = y_ *ns.x + ns.yyyy;
-            vec4 h = 1.0 - abs(x) - abs(y);
-            vec4 b0 = vec4( x.xy, y.xy );
-            vec4 b1 = vec4( x.zw, y.zw );
-            vec4 s0 = floor(b0)*2.0 + 1.0;
-            vec4 s1 = floor(b1)*2.0 + 1.0;
-            vec4 sh = -step(h, vec4(0.0));
-            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-            vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
-            vec3 p0 = vec3(a0.xy,h.x);
-            vec3 p1 = vec3(a0.zw,h.y);
-            vec3 p2 = vec3(a1.xy,h.z);
-            vec3 p3 = vec3(a1.zw,h.w);
-            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-            p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
-            vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-            m = m * m;
-            return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
-          }
-
-          void main() {
-            vUv = uv;
-            vNormal = normal;
-            float noise = snoise(vec3(position * 1.5 + u_time * 0.4));
-            vec3 newPosition = position + normal * noise * u_intensity;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-          }
-        `}
-        fragmentShader={`
-          varying vec2 vUv;
-          varying vec3 vNormal;
-          void main() {
-            vec3 lightDirection = normalize(vec3(1.0, 1.0, 1.0));
-            float lighting = dot(vNormal, lightDirection);
-            vec3 baseColor = vec3(0.91, 0.64, 0.31); 
-            vec3 finalColor = baseColor * (lighting * 0.6 + 0.5);
-            gl_FragColor = vec4(finalColor, 0.88);
-          }
-        `}
-        uniforms={uniforms}
-        transparent={true}
-      />
-    </mesh>
-  );
+@media(max-width:1024px) {
+  .srv-grid{grid-template-columns:1fr 1fr}
+  .premium-sidebar-drawer{width:400px}
 }
+@media(max-width:768px) {
+  .lang-horizontal-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .premium-sidebar-drawer{width:100%}
+}
+@media(max-width:600px) {
+  .srv-grid{grid-template-columns:1fr}
+  section{padding:5rem 1.5rem!important}
+  .h-title{font-size:3rem!important}
+}
+`;
 
 /* ─── MAIN PORTFOLIO COMPONENT ───────────────────────────────────────────── */
 export default function BerkePortfolio() {
@@ -282,6 +387,10 @@ export default function BerkePortfolio() {
   const [sendStatus, setSend] = useState("idle");
   const [isLoaded, setIsLoaded] = useState(false);
   const [gsapReady, setGsapReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Detail Drawer Target Element State Node
+  const [activeDetail, setActiveDetail] = useState(null);
 
   const preloaderRef = useRef(null);
   const progressRef  = useRef(null);
@@ -292,10 +401,24 @@ export default function BerkePortfolio() {
   const morphPathRef  = useRef(null);
   const morphSvgRef   = useRef(null);
   const motionBallRef = useRef(null);
-  const horizontalRef = useRef(null);
   const gsapRef       = useRef(null);
 
   const filtered = cat === "All" ? PROJECTS : PROJECTS.filter(p => p.cat === cat);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add("theme-dark");
+      root.classList.remove("theme-light");
+    } else {
+      root.classList.add("theme-light");
+      root.classList.remove("theme-dark");
+    }
+  }, [isDark]);
 
   /* ─── 0. Unified Load & Context Setup ──────────────────────────────────── */
   useEffect(() => {
@@ -370,7 +493,7 @@ export default function BerkePortfolio() {
   /* ─── 2. MAIN CORE ANIMATIONS ─────────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady || !gsapRef.current) return;
-    const { gsap, ScrollTrigger, SplitText, DrawSVGPlugin, MorphSVGPlugin, MotionPathPlugin, ScrollSmoother, Observer } = gsapRef.current;
+    const { gsap, ScrollTrigger, SplitText, ScrollSmoother, Observer } = gsapRef.current;
 
     let ctx = gsap.context(() => {
       if (ScrollSmoother && document.querySelector("#smooth-wrapper") && document.querySelector("#smooth-content")) {
@@ -491,51 +614,6 @@ export default function BerkePortfolio() {
           .to({}, { duration: 0.5 });
       }
 
-      if (horizontalRef.current) {
-        const track = horizontalRef.current.querySelector(".h-track");
-        if (track) {
-          gsap.to(track, {
-            x: () => -(track.scrollWidth - window.innerWidth + 60),
-            ease: "none",
-            scrollTrigger: {
-              trigger: horizontalRef.current, start: "top top",
-              end: () => `+=${track.scrollWidth - window.innerWidth + 200}`,
-              pin: true, scrub: 1,
-            }
-          });
-        }
-      }
-
-      // 12. WEBGL INTERACTIVE CANVAS SEQUENCER
-      if (document.querySelector("#story-3d-trigger")) {
-        const meshTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: "#story-3d-trigger", start: "top top", end: "+=4000", pin: true, scrub: 1
-          }
-        });
-
-        meshTimeline.to("#webgl-layer-canvas", { x: "22vw", rotation: 15, scale: 1.1, duration: 1.2, ease: "power2.inOut" }, "scene1")
-                    .fromTo(".story-node-1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.6 }, "scene1+=0.4")
-                    .to({}, { duration: 1.5 })
-                    
-                    .to(".story-node-1", { opacity: 0, x: -40, duration: 0.4 }, "scene2")
-                    .to("#webgl-layer-canvas", { x: "-22vw", rotation: -15, scale: 0.95, duration: 1.4, ease: "power2.inOut" }, "scene2")
-                    .fromTo(".story-node-2", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.6 }, "scene2+=0.5")
-                    .to({}, { duration: 1.5 })
-                    
-                    .to("#webgl-layer-canvas", { x: "0vw", rotation: 0, scale: 1.25, duration: 1.2, ease: "back.out(1.1)" }, "scene3")
-                    .to(".story-node-1", { opacity: 1, x: 0, duration: 0.5 }, "scene3+=0.4")
-                    .to(".story-node-2", { opacity: 1, x: 0, duration: 0.5 }, "scene3+=0.4")
-                    .to({}, { duration: 0.5 });
-      }
-
-      if (document.querySelector(".skills-pin-label") && document.querySelector("#skills")) {
-        ScrollTrigger.create({
-          trigger: "#skills", start: "top top",
-          end: "+=400", pin: ".skills-pin-label", pinSpacing: false
-        });
-      }
-
       document.querySelectorAll("a[href^='#']").forEach(a => {
         a.addEventListener("click", e => {
           e.preventDefault();
@@ -561,13 +639,10 @@ export default function BerkePortfolio() {
       const revealCards = Array.from(document.querySelectorAll(".reveal-card"));
       revealCards.forEach(el => {
         if (!el) return;
-        switch (true) {
-          default:
-            gsap.fromTo(el, { opacity: 0, y: 50 }, {
-              opacity: 1, y: 0, duration: 1, ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 85%", once: true }
-            });
-        }
+        gsap.fromTo(el, { opacity: 0, y: 50 }, {
+          opacity: 1, y: 0, duration: 1, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true }
+        });
       });
       
       const timelineItems = Array.from(document.querySelectorAll(".tl-item"));
@@ -579,121 +654,22 @@ export default function BerkePortfolio() {
         });
       });
 
-      if (document.querySelector("#quote")) {
-        gsap.fromTo(".q-text", { opacity: 0, y: 40, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, ease: "expo.out", scrollTrigger: { trigger: "#quote", start: "top 75%", once: true } });
-        gsap.fromTo(".q-author", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 0.4, ease: "expo.out", scrollTrigger: { trigger: "#quote", start: "top 75%", once: true } });
+      // Pyramid Freestyle Stagger Reveal Animation Trigger
+      const pyramidNodes = gsap.utils.toArray(".pyramid-freestyle-node");
+      if (pyramidNodes.length > 0) {
+        gsap.fromTo(pyramidNodes, 
+          { opacity: 0, scale: 0.5, y: 40, rotation: -15 },
+          { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 1.2, stagger: 0.05, ease: "elastic.out(1, 0.6)", scrollTrigger: { trigger: ".freestyle-trigger-hook", start: "top 75%" } }
+        );
       }
-
-      const skillFills = Array.from(document.querySelectorAll(".skill-fill"));
-      skillFills.forEach(f => {
-        if (!f) return;
-        gsap.set(f, { scaleX: 0, transformOrigin: "left" });
-        gsap.to(f, {
-          scaleX: 1, duration: 1.5, ease: "expo.out",
-          scrollTrigger: { trigger: f, start: "top 88%", once: true }
-        });
-      });
-
-      const tiltCards = Array.from(document.querySelectorAll(".tilt-card"));
-      tiltCards.forEach(el => {
-        if (!el) return;
-        const handleMove = e => {
-          const r = el.getBoundingClientRect();
-          gsap.to(el, { rotateX: (e.clientY - r.top - r.height / 2) / r.height * -10, rotateY: (e.clientX - r.left - r.width / 2) / r.width * 10, duration: 0.5, ease: "power3.out", transformPerspective: 1000 });
-        };
-        const handleLeave = () => {
-          gsap.to(el, { rotateX: 0, rotateY: 0, duration: 1.2, ease: "elastic.out(1,0.3)" });
-        };
-        el.addEventListener("mousemove", handleMove);
-        el.addEventListener("mouseleave", handleLeave);
-      });
-
-      ScrollTrigger.create({
-        start: "top -80",
-        onUpdate: s => {
-          const nav = document.getElementById("main-nav");
-          if (!nav) return;
-          if (s.direction === 1) {
-            Object.assign(nav.style, { 
-              background: isDark ? "rgba(5,5,8,0.9)" : "rgba(253,250,245,0.9)", 
-              backdropFilter: "blur(24px)", borderBottom: "1px solid var(--border)", padding: "0.8rem 3rem"
-            });
-            nav.querySelectorAll(".nlink, .nav-logo-text").forEach(el => {
-              if (!el.classList.contains("ncta")) { el.style.color = isDark ? "rgba(255,255,255,0.92)" : "#251B12"; }
-            });
-          } else {
-            Object.assign(nav.style, { 
-              background: "transparent", backdropFilter: "none", borderBottom: "1px solid transparent", padding: "1.1rem 3rem"
-            });
-            nav.querySelectorAll(".nlink, .nav-logo-text").forEach(el => {
-              if (!el.classList.contains("ncta")) { el.style.color = ""; }
-            });
-          }
-        }
-      });
 
       ScrollTrigger.refresh();
     });
 
     return () => ctx.revert();
-  }, [isLoaded, gsapReady, isDark]);
-
-  /* ─── 3. DRAGGABLE ISOLATED ENGINE ─── */
-  useEffect(() => {
-    if (!isLoaded || !gsapReady || !gsapRef.current) return;
-    const { gsap, Draggable } = gsapRef.current;
-    if (!Draggable) return;
-
-    const orbs = document.querySelectorAll(".draggable-orb");
-    const container = document.querySelector(".draggable-container");
-    let draggableInstances = [];
-
-    if (orbs.length > 0 && container) {
-      try {
-        draggableInstances = Draggable.create(orbs, {
-          type: "x,y", bounds: ".draggable-container",
-          inertia: !!gsapRef.current.InertiaPlugin, edgeResistance: 0.65,
-          onDragStart() { gsap.to(this.target, { scale: 1.2, duration: 0.3, ease: "back.out(2)" }); },
-          onDragEnd() { gsap.to(this.target, { scale: 1, duration: 0.5, ease: "elastic.out(1,0.4)" }); }
-        });
-      } catch (err) {}
-    }
-
-    return () => {
-      if (draggableInstances.length > 0) {
-        draggableInstances.forEach(instance => { if (instance && typeof instance.kill === "function") instance.kill(); });
-      }
-    };
   }, [isLoaded, gsapReady]);
 
-  /* ─── 4. MOUSE MOVE MAGNETIC ENGINE FOR SKILLS ─── */
-  useEffect(() => {
-    if (!isLoaded || !gsapReady || !gsapRef.current) return;
-    const { gsap } = gsapRef.current;
-    const orbs = document.querySelectorAll(".draggable-orb");
-
-    const onMouseMoveMagnetic = (e) => {
-      orbs.forEach(orb => {
-        const rect = orb.getBoundingClientRect();
-        const orbX = rect.left + rect.width / 2;
-        const orbY = rect.top + rect.height / 2;
-        const distX = e.clientX - orbX;
-        const distY = e.clientY - orbY;
-        const distance = Math.hypot(distX, distY);
-
-        if (distance < 120) {
-          gsap.to(orb, { x: `+=${distX * 0.18}`, y: `+=${distY * 0.18}`, duration: 0.4, ease: "power2.out" });
-        } else {
-          gsap.to(orb, { x: 0, y: 0, duration: 0.7, ease: "power3.out" });
-        }
-      });
-    };
-
-    window.addEventListener("mousemove", onMouseMoveMagnetic);
-    return () => window.removeEventListener("mousemove", onMouseMoveMagnetic);
-  }, [isLoaded, gsapReady]);
-
-  /* ─── 5. TYPEWRITER SUB-MODULE ──────────────────── */
+  /* ─── 3. TYPEWRITER SUB-MODULE ──────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady || !typewriterRef.current) return;
     const roles = ["Full-Stack Developer", "Mobile App Engineer", "Cybersecurity Builder", "Islamic Tech Pioneer", "AI Integration Specialist"];
@@ -735,7 +711,7 @@ export default function BerkePortfolio() {
     };
   }, [isLoaded, gsapReady]);
 
-  /* ─── 6. FLIP ON CATEGORY CHANGE ────────────────── */
+  /* ─── 4. FLIP ON CATEGORY CHANGE ────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady) return;
     const { gsap, Flip } = gsapRef.current;
@@ -753,7 +729,7 @@ export default function BerkePortfolio() {
     });
   }, [cat, isLoaded, gsapReady]);
 
-  /* ─── 7. GLOBAL EVENT DELEGATION CURSOR ────────── */
+  /* ─── 5. CURSOR EVENT ENGINE ────────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady) return;
     const { gsap } = gsapRef.current;
@@ -777,15 +753,15 @@ export default function BerkePortfolio() {
     window.addEventListener("mousemove", onMove);
 
     const onMouseOverGlobal = (e) => {
-      const target = e.target.closest("a, button, .tilt-card, .draggable-orb, .srv-card, .proj-card, .ach-card, .lang-card");
+      const target = e.target.closest("a, button, .tilt-card, .srv-card, .proj-card, .ach-card, .pyramid-freestyle-node, .lang-premium-card, .contact-hub-link");
       if (target && ring && dot) {
-        gsap.to(ring, { scale: 2.5, opacity: 0.4, duration: 0.35, ease: "power2.out" });
+        gsap.to(ring, { scale: 2.3, opacity: 0.45, duration: 0.35, ease: "power2.out" });
         gsap.to(dot, { scale: 0, duration: 0.25 });
       }
     };
 
     const onMouseOutGlobal = (e) => {
-      const target = e.target.closest("a, button, .tilt-card, .draggable-orb, .srv-card, .proj-card, .ach-card, .lang-card");
+      const target = e.target.closest("a, button, .tilt-card, .srv-card, .proj-card, .ach-card, .pyramid-freestyle-node, .lang-premium-card, .contact-hub-link");
       if (target && ring && dot) {
         gsap.to(ring, { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" });
         gsap.to(dot, { scale: 1, duration: 0.25 });
@@ -802,6 +778,8 @@ export default function BerkePortfolio() {
       cancelAnimationFrame(raf);
     };
   }, [isLoaded, gsapReady]);
+
+  if (!mounted) return null;
 
   const W   = { maxWidth:1100, margin:"0 auto", width:"100%", position:"relative", zIndex:2 };
   const sec = bg => ({ position:"relative", padding:"8rem 3rem", background: bg || "var(--bg-void)" });
@@ -822,7 +800,7 @@ export default function BerkePortfolio() {
   );
 
   return (
-    <div className={isDark?"theme-dark":"theme-light"} style={{fontFamily:"'Outfit',sans-serif",background:"var(--bg-void)",color:"var(--text-main)",overflowX:"hidden",transition:"background 0.5s,color 0.5s"}}>
+    <div style={{fontFamily:"'Outfit',sans-serif",background:"var(--bg-void)",color:"var(--text-main)",overflowX:"hidden",transition:"background 0.5s,color 0.5s"}}>
       <style>{CSS}</style>
 
       {/* Cursors */}
@@ -839,6 +817,38 @@ export default function BerkePortfolio() {
         <div ref={progressRef} style={{position:"absolute",bottom:"10%",fontFamily:"'DM Mono',monospace",fontSize:"1.2rem",fontWeight:600,color:"#E8A34F",letterSpacing:"0.2em",zIndex:2,textShadow:"0 0 20px rgba(232,163,79,0.5)"}}>0%</div>
       </div>
 
+      {/* SIDEBAR DETAIL DRAWER CONTAINER */}
+      <div className={`drawer-overlay-backdrop ${activeDetail ? "backdrop-active" : ""}`} onClick={() => setActiveDetail(null)} />
+      <div className={`premium-sidebar-drawer ${activeDetail ? "drawer-active" : ""}`}>
+        <button className="drawer-close-trigger" onClick={() => setActiveDetail(null)}>✕</button>
+        {activeDetail && (
+          <div style={{marginTop: "3.5rem", display:"flex", flexDirection:"column", height:"100%"}}>
+            {activeDetail.logo ? (
+              <div style={{width: "80px", height: "80px", marginBottom: "1.2rem", filter: `drop-shadow(0 0 15px ${activeDetail.color})`}}>
+                <img src={activeDetail.logo} alt={activeDetail.name} style={{width:"100%", height:"100%", objectFit:"contain"}}/>
+              </div>
+            ) : (
+              <div style={{fontSize: "5rem", marginBottom: "1.2rem", filter: `drop-shadow(0 0 15px ${activeDetail.color})` }}>{activeDetail.icon}</div>
+            )}
+            <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize: "2.6rem", fontWeight: 700, color: "var(--text-main)", lineHeight: 1.2}}>{activeDetail.name}</div>
+            <div style={{fontFamily:"'DM Mono',monospace", fontSize: "0.85rem", color: activeDetail.color, letterSpacing: "0.12em", marginTop: "0.5rem", textTransform: "uppercase"}}>{activeDetail.type}</div>
+            
+            <div style={{width: "50px", height: "2px", background: activeDetail.color, margin: "2.5rem 0"}} />
+            
+            <p style={{fontFamily: "'Outfit', sans-serif", fontSize: "1.05rem", color: "var(--text-dim)", lineHeight: 1.85}}>
+              {activeDetail.exp}
+            </p>
+            
+            <div style={{marginTop:"auto", background:"var(--bg-space)", padding:"1.5rem", borderRadius:"18px", border:"1px solid var(--border)"}}>
+              <div style={{fontFamily:"'DM Mono',monospace", fontSize:"0.7rem", color:"var(--text-muted)", textTransform:"uppercase", marginBottom:"6px"}}>Status</div>
+              <div style={{fontSize:"0.95rem", fontWeight:600, color:"var(--text-main)", display:"flex", alignItems:"center", gap:"8px"}}>
+                <span style={{width:"10px", height:"10px", background:"var(--sage)", borderRadius:"50%"}}/> Verified Production Ready
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div id="smooth-wrapper" style={{overflow:"hidden"}}>
         <div id="smooth-content">
 
@@ -849,8 +859,8 @@ export default function BerkePortfolio() {
             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", borderBottom: "2px solid transparent", background: "transparent" 
           }}>
             <div className="nav-logo-text" style={{ 
-              fontSize: "1.5rem", letterSpacing: "-0.5px", color: isDark ? "var(--text-main)" : "#251B12",
-              fontFamily:"'Cormorant Garamond',serif", fontWeight:700, transition: "color 0.4s ease" 
+              fontSize: "1.5rem", letterSpacing: "-0.5px", color: isDark ? "rgba(255,255,255,0.92)" : "#251B12",
+              fontFamily:"'Cormorant Garamond',serif", fontWeight:700, transition: "color 0.4s ease", cursor: "pointer"
             }}>
               Berke<span style={{ color: "var(--accent)" }}>.dev</span>
             </div>
@@ -1012,23 +1022,6 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* HORIZONTAL SCROLL */}
-          <div ref={horizontalRef} className="h-scroll-section">
-            <div style={{position:"absolute",top:"3rem",left:"3rem",zIndex:5}}>
-              <SLabel text="Tech Stack"/>
-              <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2rem,3vw,2.8rem)",fontWeight:600,color:"var(--text-main)"}}>Scroll & Discover →</h2>
-            </div>
-            <div className="h-track" style={{paddingTop:"10rem"}}>
-              {TECH_STACK.map(t=>(
-                <div key={t.name} className="h-tech-card tilt-card">
-                  <div style={{fontSize:"3rem"}}>{t.icon}</div>
-                  <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.3rem",fontWeight:600,color:"var(--text-main)"}}>{t.name}</div>
-                  <div style={{width:40,height:3,borderRadius:4,background:t.color}}/>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* SERVICES */}
           <section id="services" style={{ position:"relative", padding:"8rem 3rem", background:"var(--bg-space)" }}>
             <div style={W}>
@@ -1048,39 +1041,6 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* THE CREATIVE LAYER MESH TRANSITION (PODIUM ENGINE) */}
-          <div id="story-3d-trigger" className="story-3d-workspace">
-            
-            {/* LAYER 1: TEXT CONTENT (DEPAN) */}
-            <div className="narrative-layer">
-              <div className="story-block story-node-1" style={{ opacity: 0 }}>
-                <SLabel text="Visionary Engineering"/>
-                <h3 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "2.5rem", color: "var(--accent)", marginBottom: "1rem" }}>Premium UX Aesthetics</h3>
-                <p style={{ fontFamily: "'Outfit',sans-serif", color: "var(--text-dim)", lineHeight: 1.8 }}>
-                  Menggabungkan rancangan matematika shader WebGL dengan logika Next.js untuk menciptakan interaksi website yang kaya, adaptif, dan responsif.
-                </p>
-              </div>
-
-              <div className="story-block story-node-2" style={{ opacity: 0 }}>
-                <SLabel text="Secure Infrastructure"/>
-                <h3 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "2.5rem", color: "var(--sage)", marginBottom: "1rem" }}>Data Masking Protection</h3>
-                <p style={{ fontFamily: "'Outfit',sans-serif", color: "var(--text-dim)", lineHeight: 1.8 }}>
-                  Fokus penuh pada enkripsi data sensitif (Bazma Cipher) untuk perlindungan backend sistem, memastikan seluruh gerak data dienkripsi dengan standar industri tinggi.
-                </p>
-              </div>
-            </div>
-
-            {/* LAYER 2: WEBGL INTERACTIVE CANVAS LAYER (BELAKANG) */}
-            <div id="webgl-layer-canvas" style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none" }}>
-              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[10, 10, 5]} intensity={1.5} />
-                <FluidBlobMesh />
-              </Canvas>
-            </div>
-
-          </div>
-
           {/* PROJECTS */}
           <section id="projects" style={{ position:"relative", padding:"8rem 3rem", background:"var(--bg-void)" }}>    
             <div style={W}>
@@ -1090,7 +1050,7 @@ export default function BerkePortfolio() {
                   {PROJ_CATS.map(c=><button key={c} className={`pf-btn${cat===c?" on":""}`} onClick={()=>setCat(c)}>{c}</button>)}
                 </div>
               </div>
-              <div className="proj-grid">
+              <div className="proj-grid" key={cat}>
                 {filtered.map(p=>(
                   <div key={p.num} className="proj-card tilt-card reveal-card">
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.2rem"}}>
@@ -1117,16 +1077,106 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* SKILLS */}
-          <section id="skills" style={sec("var(--bg-space)")}>
+          {/* SECTION 1: CORE TECH STACK (ANIMATED PYRAMID SELECTION) */}
+          <section id="skills-tech" style={sec("var(--bg-space)")}>
             <div style={W}>
-              <div className="skills-pin-label" style={{marginBottom:"1rem"}}>
-                <SLabel text="Expertise"/>
+              <div className="freestyle-trigger-hook" style={{marginBottom:"1rem"}}>
+                <SLabel text="The Core Matrix"/>
               </div>
-              <SHead label="" title="Tech Stack &<br/><em style='color:var(--accent);font-style:italic'>Languages</em>"/>
+              <SHead label="" title="Giant Animated Triangle<br/><em style='color:var(--accent);font-style:italic'>Tech Stack Ecosystem</em>"/>
 
-              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1.5rem",marginBottom:"4rem"}} className="two-col">
-                {[["90","Skills Mastered","%"],["6","Projects Shipped",""],["2","Years Coding","+"],["11","Technologies",""]].map(([n,l,s])=>(
+              <div className="pyramid-freestyle-canvas">
+                
+                {/* Embedded Ambient Particle Fields */}
+                <div className="canvas-particle" style={{width: 6, height: 6, left: "25%", top: "40%", animation: "floatParticle1 6s infinite ease-in-out"}}/>
+                <div className="canvas-particle" style={{width: 4, height: 4, right: "30%", top: "25%", animation: "floatParticle2 8s infinite ease-in-out"}}/>
+                <div className="canvas-particle" style={{width: 8, height: 8, left: "45%", bottom: "15%", animation: "floatParticle1 7s infinite ease-in-out", background: "var(--sage)"}}/>
+                <div className="canvas-particle" style={{width: 5, height: 5, right: "20%", bottom: "35%", animation: "floatParticle2 5s infinite ease-in-out", background: "var(--cyan)"}}/>
+
+                <div className="pyramid-freestyle-grid">
+                  
+                  {/* Tier 1: Apex (1 Node) */}
+                  <div className="freestyle-tier-row">
+                    <button className="pyramid-freestyle-node" onClick={() => setActiveDetail(TECH_STACK[0])}>
+                      <img className="node-img-logo" src={TECH_STACK[0].logo} alt={TECH_STACK[0].name} />
+                      <span className="node-hover-tag">{TECH_STACK[0].name}</span>
+                    </button>
+                  </div>
+
+                  {/* Tier 2: Slope (2 Nodes) */}
+                  <div className="freestyle-tier-row">
+                    {[TECH_STACK[1], TECH_STACK[2]].map(node => (
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
+                        <img className="node-img-logo" src={node.logo} alt={node.name} />
+                        <span className="node-hover-tag">{node.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tier 3: Core Inner (3 Nodes) */}
+                  <div className="freestyle-tier-row">
+                    {[TECH_STACK[3], TECH_STACK[4], TECH_STACK[5]].map(node => (
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
+                        <img className="node-img-logo" src={node.logo} alt={node.name} />
+                        <span className="node-hover-tag">{node.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tier 4: Foundation (4 Nodes) */}
+                  <div className="freestyle-tier-row">
+                    {[TECH_STACK[6], TECH_STACK[7], TECH_STACK[8], TECH_STACK[9]].map(node => (
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
+                        <img className="node-img-logo" src={node.logo} alt={node.name} />
+                        <span className="node-hover-tag">{node.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tier 5: Giant Base Floor Floor (5 Nodes) */}
+                  <div className="freestyle-tier-row">
+                    {[TECH_STACK[10], TECH_STACK[11], TECH_STACK[12], TECH_STACK[13], TECH_STACK[14]].map(node => (
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
+                        <img className="node-img-logo" src={node.logo} alt={node.name} />
+                        <span className="node-hover-tag">{node.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 2: HUMAN LANGUAGES (PREMIUM HORIZONTAL CARD SECTION) */}
+          <section id="skills-languages" style={sec("var(--bg-void)")}>
+            <div style={W}>
+              <div style={{marginBottom:"1rem"}}>
+                <SLabel text="Global Communications"/>
+              </div>
+              <SHead label="" title="Premium Linguistics<br/><em style='color:var(--accent);font-style:italic'>Human Languages</em>"/>
+
+              {/* Grid Horizontal Layout Clean Definition without Triangle */}
+              <div className="lang-horizontal-grid">
+                {HUMAN_LANGS.map(lang => (
+                  <div key={lang.id} className="lang-premium-card reveal-card" onClick={() => setActiveDetail(lang)}>
+                    <div className="lang-meta-left">
+                      <div className="lang-flag-box">{lang.icon}</div>
+                      <div>
+                        <div className="lang-title-text">{lang.name}</div>
+                        <div className="lang-badge-status">{lang.type}</div>
+                      </div>
+                    </div>
+                    <div style={{fontSize:"0.85rem", color:"var(--accent)", opacity: 0.7}}>
+                      View Detail ↗
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* OVERVIEW DATA METRICS FIELD ROW */}
+              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1.5rem",marginTop:"6rem"}} className="two-col">
+                {[["15","Skills Mastered",""],["6","Projects Shipped",""],["2","Years Coding","+"],["4","Human Languages",""]].map(([n,l,s])=>(
                   <div key={l} style={{background:"var(--bg-card)",borderRadius:20,padding:"1.5rem",textAlign:"center",border:"1px solid var(--border)",boxShadow:"var(--shadow)"}}>
                     <div className="counter-anim" data-to={parseInt(n)} data-suffix={s} style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"3rem",fontWeight:700,color:"var(--accent)"}}>{n}{s}</div>
                     <div style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.08em",marginTop:".4rem"}}>{l}</div>
@@ -1134,71 +1184,11 @@ export default function BerkePortfolio() {
                 ))}
               </div>
 
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4.5rem",marginBottom:"5rem"}} className="two-col">
-                <div>{SKILLS.slice(0,6).map(s=>(
-                  <div key={s.name} style={{marginBottom:"1.5rem"}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8}}>
-                        <span style={{fontFamily:"'Outfit',sans-serif",fontSize:".92rem",fontWeight:500,color:"var(--text-main)"}}>{s.name}</span>
-                        {s.badge&&<span style={{fontSize:".58rem",padding:".2rem .6rem",borderRadius:50,background:"rgba(212,168,67,0.15)",color:"var(--gold)",fontFamily:"'DM Mono',monospace",border:"1px solid var(--border)"}}>{s.badge}</span>}
-                      </div>
-                      <span style={{fontFamily:"'DM Mono',monospace",fontSize:".75rem",color:"var(--accent)"}}>{s.lvl}%</span>
-                    </div>
-                    <div style={{height:6,background:"var(--border)",borderRadius:50,overflow:"hidden"}}>
-                      <div className="skill-fill" data-lvl={s.lvl} style={{height:"100%",width:s.lvl+"%",borderRadius:50,background:"linear-gradient(90deg,var(--accent),var(--cyan))"}}/>
-                    </div>
-                  </div>
-                ))}</div>
-                <div>{SKILLS.slice(6).map(s=>(
-                  <div key={s.name} style={{marginBottom:"1.5rem"}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                      <span style={{fontFamily:"'Outfit',sans-serif",fontSize:".92rem",fontWeight:500,color:"var(--text-main)"}}>{s.name}</span>
-                      <span style={{fontFamily:"'DM Mono',monospace",fontSize:".75rem",color:"var(--accent)"}}>{s.lvl}%</span>
-                    </div>
-                    <div style={{height:6,background:"var(--border)",borderRadius:50,overflow:"hidden"}}>
-                      <div className="skill-fill" data-lvl={s.lvl} style={{height:"100%",width:s.lvl+"%",borderRadius:50,background:"linear-gradient(90deg,var(--sage),var(--cyan))"}}/>
-                    </div>
-                  </div>
-                ))}</div>
-              </div>
-
-              {/* DRAGGABLE SKILLS CONTAINER */}
-              <div style={{marginBottom:"3rem"}}>
-                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",fontWeight:600,color:"var(--text-main)",marginBottom:".5rem"}}>Drag & Explore Skills</div>
-                <p style={{fontFamily:"'Outfit',sans-serif",fontSize:".85rem",color:"var(--text-muted)",marginBottom:"1.5rem"}}>These skill orbs are draggable — grab and throw them around!</p>
-                <div className="draggable-container">
-                  {[["⚛️","React","var(--accent)",{left:"5%",top:"30%"}],["🏗️","Laravel","var(--sage)",{left:"18%",top:"55%"}],["📱","Flutter","var(--violet)",{left:"32%",top:"20%"}],["📘","TS","var(--gold)",{left:"46%",top:"50%"}],["🐍","Python","var(--coral)",{left:"60%",top:"18%"}],["🗄️","MySQL","var(--cyan)",{left:"72%",top:"55%"}],["📲","RN","var(--accent)",{left:"84%",top:"28%"}]].map(([ico,name,color,pos])=>(
-                    <div key={name} className="draggable-orb" style={{...pos,background:`var(--bg-card)`,borderColor:color}}>
-                      <div style={{fontSize:"1.3rem"}}>{ico}</div>
-                      <div style={{fontFamily:"'DM Mono',monospace",fontSize:".45rem",color:"var(--text-muted)",marginTop:"2px"}}>{name}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",fontWeight:700,color:"var(--text-main)",marginBottom:"2rem"}}>Human Languages</div>
-              <div className="lang-grid">
-                {LANGS.map(l=>(
-                  <div key={l.lang} className="lang-card tilt-card reveal-card">
-                    <div style={{display:"flex",alignItems:"center",gap:".9rem",marginBottom:"1rem"}}>
-                      <span style={{fontSize:"1.8rem"}}>{l.flag}</span>
-                      <div style={{flex:1}}>
-                        <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".95rem",fontWeight:500,color:"var(--text-main)"}}>{l.lang}</div>
-                        <div style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:500,color:l.color,marginTop:2}}>{l.label}</div>
-                      </div>
-                      <span style={{fontFamily:"'DM Mono',monospace",fontSize:".75rem",color:"var(--accent)"}}>{l.lvl}%</span>
-                    </div>
-                    <div style={{height:5,background:"var(--border)",borderRadius:50,overflow:"hidden"}}>
-                      <div className="lang-fill" data-lvl={l.lvl} style={{height:"100%",width:"0%",borderRadius:50,background:`linear-gradient(90deg,${l.color},var(--accent))`}}/>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </section>
 
           {/* EXPERIENCE */}
-          <section id="experience" style={{ position:"relative", padding:"8rem 3rem", background:"var(--bg-void)" }}>
+          <section id="experience" style={{ position:"relative", padding:"8rem 3rem", background:"var(--bg-space)" }}>
             <div style={W}>
               <SHead label="Career Timeline" title="My <em style='color:var(--accent);font-style:italic'>Journey</em>" center/>
               <div style={{display:"flex",justifyContent:"center",marginBottom:"2rem"}}>
@@ -1214,7 +1204,7 @@ export default function BerkePortfolio() {
                       {t.icon}
                     </div>
                     <div className="tl-content">
-                      <div style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:".5rem"}}>{t.year}</div>
+                      <div style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:"5rem"}}>{t.year}</div>
                       <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontWeight:700,color:"var(--text-main)",marginBottom:".3rem"}}>{t.role}</div>
                       <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".9rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>{t.company}</div>
                       <ul style={{listStyle:"none",display:"flex",flexDirection:"column",gap:".7rem"}}>
@@ -1235,10 +1225,10 @@ export default function BerkePortfolio() {
           {/* QUOTE */}
           <section id="quote" style={{...sec("var(--bg-card)"),textAlign:"center",overflow:"hidden",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",padding:"8rem 2rem"}}>
             <div style={{position:"absolute",width:600,height:600,background:"radial-gradient(circle,rgba(232,163,79,0.08),transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none"}}/>
-            <p className="q-text" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(1.8rem,4vw,3.2rem)",fontStyle:"italic",fontWeight:500,color:"var(--text-main)",lineHeight:1.4,maxWidth:850,margin:"0 auto 2rem",opacity:0}}>
+            <p className="q-text" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(1.8rem,4vw,3.2rem)",fontStyle:"italic",fontWeight:500,color:"var(--text-main)",lineHeight:1.4,maxWidth:850,margin:"0 auto 2rem"}}>
               "Technology should not just be functional — it should create genuine impact for the people who use it."
             </p>
-            <p className="q-author" style={{fontFamily:"'DM Mono',monospace",fontSize:".8rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.18em",opacity:0}}>
+            <p className="q-author" style={{fontFamily:"'DM Mono',monospace",fontSize:".8rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.18em"}}>
               — Berke Jaisyurrohman · IT Student & Developer
             </p>
           </section>
@@ -1260,59 +1250,83 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* CONTACT */}
-          <section id="contact" style={{...sec("var(--bg-card)"),overflow:"hidden"}}>
-            <div style={{position:"absolute",width:600,height:600,background:"radial-gradient(circle,rgba(232,163,79,0.12),transparent 70%)",top:-150,right:-150,pointerEvents:"none"}}/>
-            <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(95,200,155,0.12),transparent 70%)",bottom:-150,left:-150,pointerEvents:"none"}}/>
-            <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden"}}>
-              <svg width="100%" height="100%" style={{position:"absolute",inset:0}}>
-                <path className="draw-svg-path" d="M0,300 C300,100 600,500 900,300 S1200,100 1500,300" stroke="var(--accent)" strokeWidth="1.5" opacity="0.2"/>
-              </svg>
-            </div>
+          {/* PREMIUM CONTACT SECTION */}
+          <section id="contact" style={{...sec("var(--bg-void)"), overflow:"hidden"}}>
+            <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(232,163,79,0.08),transparent 75%)",top:-100,right:-100,pointerEvents:"none"}}/>
+            <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(95,200,155,0.06),transparent 75%)",bottom:-150,left:-150,pointerEvents:"none"}}/>
+            
             <div style={W}>
-              <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:"6rem",alignItems:"start"}} className="two-col">
-                <div>
-                  <SLabel text="Let's Connect"/>
-                  <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,4.5vw,4rem)",fontWeight:700,color:"var(--text-main)",lineHeight:1.1,marginBottom:"1.8rem"}}>
-                    Ready to Build<br/><em style={{color:"var(--accent)",fontStyle:"italic"}}>Something Great?</em>
-                  </h2>
-                  <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2.5rem"}}>
-                    Always open to opportunities and collaborations. Web system, mobile app, or cybersecurity challenge — let's create together.
-                  </p>
-                  <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-                    {[["✉️","Email","berkejaisyurrohman95@gmail.com"],["📱","Phone","+62 895-0614-7763"],["📍","Location","Bekasi, Indonesia"],["🌐","Website","www.jaisyporto.com"]].map(([ico,lbl,val])=>(
-                      <a key={lbl} href={lbl==="Email"?`mailto:${val}`:"#"} className="ct-link">
-                        <div style={{width:40,height:40,background:"rgba(232,163,79,0.15)",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:"1.2rem"}}>{ico}</div>
+              <div className="premium-contact-wrapper">
+                
+                {/* LEFT SIDE PANEL */}
+                <div className="contact-glass-panel reveal-card">
+                  <div>
+                    <SLabel text="Let's Connect"/>
+                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,4.2vw,3.8rem)",fontWeight:700,color:"var(--text-main)",lineHeight:1.1,marginBottom:"1.5rem"}}>
+                      Ready to Build<br/><em style={{color:"var(--accent)",fontStyle:"italic"}}>Something Great?</em>
+                    </h2>
+                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"3rem",maxWidth:"440px"}}>
+                      Always open to digital innovations, systems architecture designs, or mobile developments challenge. Let's start the dialogue.
+                    </p>
+                  </div>
+
+                  <div style={{display:"flex",flexDirection:"column",gap:"1.1rem"}}>
+                    {[
+                      ["✉️","Email","berkejaisyurrohman95@gmail.com","mailto:berkejaisyurrohman95@gmail.com"],
+                      ["📱","Phone","+62 895-0614-7763","tel:+6289506147763"],
+                      ["📍","Location","Bekasi, Indonesia","#"],
+                      ["🌐","Website","www.berkeja.dev","https://www.berkeja.dev"]
+                    ].map(([ico,lbl,val,linkUrl])=>(
+                      <a key={lbl} href={linkUrl} target={linkUrl.startsWith("http")?"_blank":"_self"} className="contact-hub-link">
+                        <div className="hub-icon-box">{ico}</div>
                         <div>
-                          <div style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.14em",textTransform:"uppercase",marginBottom:3}}>{lbl}</div>
+                          <div style={{fontFamily:"'DM Mono',monospace",fontSize:".62rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:2}}>{lbl}</div>
                           <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".95rem",fontWeight:500,color:"var(--text-main)"}}>{val}</div>
                         </div>
                       </a>
                     ))}
                   </div>
                 </div>
-                <div style={{display:"flex",flexDirection:"column",gap:"1.4rem",background:"var(--bg-void)",padding:"2.5rem",borderRadius:"24px",border:"1px solid var(--border)",boxShadow:"var(--shadow)"}}>
-                  {["Name","Email","Subject"].map(f=>(
-                    <div key={f}>
-                      <label className="cf-label">{f}</label>
-                      <input suppressHydrationWarning type={f==="Email"?"email":"text"} className="cf-in" placeholder={f==="Name"?"Your name":f==="Email"?"your@email.com":"Project idea..."}/>
+
+                {/* RIGHT SIDE PANEL */}
+                <div className="contact-form-panel reveal-card">
+                  <div style={{display:"flex",flexDirection:"column",gap:"1.5rem"}}>
+                    {["Name","Email","Subject"].map(f=>(
+                      <div key={f}>
+                        <input suppressHydrationWarning type={f==="Email"?"email":"text"} className="cf-in" placeholder={f==="Name"?"Your full name":f==="Email"?"your@email.com":"Project architectural scope..."}/>
+                      </div>
+                    ))}
+                    <div>
+                      <textarea suppressHydrationWarning className="cf-in" rows={5} placeholder="Describe your project idea or message summary..."/>
                     </div>
-                  ))}
-                  <div>
-                    <label className="cf-label">Message</label>
-                    <textarea suppressHydrationWarning className="cf-in" rows={5} placeholder="Tell me about your project..."/>
+                    
+                    <button 
+                      onClick={() => {
+                        setSend("sending");
+                        setTimeout(() => setSend("sent"), 1500);
+                        setTimeout(() => setSend("idle"), 4500);
+                      }}
+                      style={{
+                        padding:"1.1rem 2.5rem",
+                        background:sendStatus==="sent"?"var(--sage)":"var(--text-main)",
+                        color:"var(--bg-void)",
+                        border:"none",
+                        borderRadius:50,
+                        fontFamily:"'Outfit',sans-serif",
+                        fontSize:".95rem",
+                        fontWeight:600,
+                        opacity:sendStatus==="sending"?.65:1,
+                        marginTop:".5rem",
+                        boxShadow: sendStatus==="sent"?"0 8px 20px rgba(95,200,155,0.3)":"none",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease"
+                      }}
+                    >
+                      {sendStatus==="idle"?"Send Message ✦":sendStatus==="sending"?"Sending Package…":"Sent Successfully! ✓"}
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => {
-                      setSend("sending");
-                      setTimeout(() => setSend("sent"), 1500);
-                      setTimeout(() => setSend("idle"), 4500);
-                    }}
-                    style={{padding:"1.1rem 2.5rem",background:sendStatus==="sent"?"var(--sage)":"var(--text-main)",color:"var(--bg-void)",border:"none",borderRadius:50,fontFamily:"'Outfit',sans-serif",fontSize:".95rem",fontWeight:600,opacity:sendStatus==="sending"?.65:1,marginTop:".5rem"}}
-                  >
-                    {sendStatus==="idle"?"Send Message ✦":sendStatus==="sending"?"Sending…":"Sent! ✓"}
-                  </button>
                 </div>
+
               </div>
             </div>
           </section>
@@ -1320,7 +1334,7 @@ export default function BerkePortfolio() {
           {/* FOOTER */}
           <footer style={{background:"var(--bg-void)",borderTop:"1px solid var(--border)",padding:"1.8rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"1rem",position:"relative",zIndex:3}}>
             <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>© 2026 <span style={{color:"var(--text-main)"}}>Berke Jaisyurrohman</span>. Bekasi, Indonesia.</p>
-            <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>Built with <span style={{color:"var(--accent)"}}>Next.js</span> · <span style={{color:"var(--gold)"}}>GSAP</span> · <span style={{color:"var(--cyan)"}}>20 Animations ✓</span></p>
+            <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>Built with <span style={{color:"var(--accent)"}}>Next.js</span> · <span style={{color:"var(--gold)"}}>GSAP</span> · <span style={{color:"var(--cyan)"}}>Interactive Workspace ✓</span></p>
             <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)",display:"flex",alignItems:"center",gap:".5rem"}}><span style={{color:"var(--sage)"}}>●</span> Available for collaboration</p>
           </footer>
 

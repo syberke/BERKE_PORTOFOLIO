@@ -1,5 +1,5 @@
 "use client";
-import { TIMELINE, SHead, W } from "./data";
+import { TIMELINE, SHead, W } from "../app/shared-data";
 export default function Experience() {
   return (
     <section id="experience" style={{ position: "relative", padding: "8rem 3rem", background: "var(--bg-void)" }}>
