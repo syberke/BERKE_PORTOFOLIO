@@ -1,6 +1,6 @@
 "use client";
 import WordReveal from "./WordReveal";
-import { ABOUT_INFO, LANGUAGES, SOFT_SKILLS } from "@/lib/data";
+import { ABOUT_INFO, LANGUAGES, SOFT_SKILLS } from "@/components/data";
 
 /* ══════════════════════════════════════════════════════════════
    SCENE 1 — HERO
