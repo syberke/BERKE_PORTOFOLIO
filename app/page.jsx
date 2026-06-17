@@ -10,7 +10,7 @@ const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 const SERVICES = [
   { icon:"🌐", title:"Web Development", desc:"Full-stack web apps with modern frameworks. From landing pages to complex SaaS platforms.", tech:["Laravel","React","MySQL","TypeScript"], color:"var(--accent)" },
   { icon:"📱", title:"Mobile Development", desc:"Cross-platform mobile apps for iOS and Android with modern engines.", tech:["React Native","Flutter","Firebase"], color:"var(--sage)" },
-  { icon:"📱", title:"Cybersecurity", desc:"Data encryption, secure authentication, and security system design to protect sensitive data.", tech:["Python","Cryptography","JWT"], color:"var(--violet)" },
+  { icon:"🔐", title:"Cybersecurity", desc:"Data encryption, secure authentication, and security system design to protect sensitive data.", tech:["Python","Cryptography","JWT"], color:"var(--violet)" },
   { icon:"☪️", title:"Islamic Tech", desc:"Apps serving the Muslim community — Qur'an apps, prayer time systems, Islamic learning AI.", tech:["Flutter","AI/ML","Firebase"], color:"var(--gold)" },
   { icon:"🤖", title:"AI Integration", desc:"Integrating ML and AI features into applications — recommendations, NLP, computer vision.", tech:["Python","TensorFlow","OpenAI"], color:"var(--coral)" },
   { icon:"🏗️", title:"System Architecture", desc:"Scalable, maintainable architectures including microservices, REST APIs, and database design.", tech:["Docker","REST API","MySQL"], color:"var(--accent)" },
@@ -78,7 +78,7 @@ const MOTION_PATH_D = "M 0,150 C 150,50 300,250 450,150 S 650,50 800,150 S 950,2
 
 /* ─── STYLING CSS (DENGAN PERBAIKAN CONTACT & ACCESSIBILITY) ─────────────── */
 const CSS = `
-.theme-dark{--bg-void:#050508;--bg-void-rgb:5,5,8;--bg-space:#0A0B12;--bg-card:#111322;--border:rgba(255,255,255,0.08);--border-hover:rgba(232,163,79,0.5);--text-main:rgba(255,255,255,0.92);--text-dim:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.55);--accent:#E8A34F;--accent-rgb:232,163,79;--sage:#5FC89B;--violet:#9B7FE8;--cyan:#4FD1E8;--coral:#E86B5F;--gold:#D4A843;--shadow:0 8px 32px rgba(0,0,0,0.4);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
+.theme-dark{--bg-void:#050508;--bg-void-rgb:5,5,8;--bg-space:#0A0B12;--bg-card:#111322;--border:rgba(255,255,255,0.08);--border-hover:rgba(232,163,79,0.5);--text-main:rgba(255,255,255,0.92);--text-dim:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.6);--accent:#E8A34F;--accent-rgb:232,163,79;--sage:#5FC89B;--violet:#9B7FE8;--cyan:#4FD1E8;--coral:#E86B5F;--gold:#D4A843;--shadow:0 8px 32px rgba(0,0,0,0.4);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
 .theme-light{--bg-void:#FDFAF5;--bg-void-rgb:253,250,245;--bg-space:#F8F4EC;--bg-card:#FFFFFF;--border:rgba(200,180,150,0.4);--border-hover:rgba(200,132,92,0.6);--text-main:#251B12;--text-dim:#4A3E31;--text-muted:#6B5E4F;--accent:#B36336;--accent-rgb:179,99,54;--sage:#4E7354;--violet:#6D5FA8;--cyan:#2E8BA1;--coral:#A84E4E;--gold:#947113;--shadow:0 8px 30px rgba(46,31,15,0.06);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
@@ -88,7 +88,7 @@ html{scroll-behavior:auto}
 /* PRELOADER */
 .preloader{position:fixed;inset:0;background:#050508;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
 .preloader-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-.liquid-text{--bg-x:0%;--bg-y:1.5em;font-size:clamp(3.5rem,12vw,8.5rem);font-weight:700;letter-spacing:0.05em;position:relative;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.15)}
+.liquid-text{--bg-x:0%;--bg-y:1.5em;font-weight:700;letter-spacing:0.05em;position:relative;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.15)}
 .liquid-text::before{content:attr(data-text);position:absolute;inset:0;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:0px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='2000' viewBox='0 0 1000 2000'%3E%3Cpath d='M0,50 C250,0 250,100 500,50 C750,0 750,100 1000,50 L1000,2000 L0,2000 Z' fill='rgba(232,163,79,0.4)'/%3E%3Cpath d='M0,75 C250,125 250,25 500,75 C750,125 750,25 1000,75 L1000,2000 L0,2000 Z' fill='%23E8A34F'/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:200% auto;background-position:var(--bg-x) var(--bg-y);-webkit-background-clip:text;background-clip:text;z-index:2}
 
 /* ANIMATIONS */
@@ -313,7 +313,7 @@ html{scroll-behavior:auto}
   align-self: flex-end;
   background: var(--border);
   border: none;
-  width: 44px; /* Touch target optimized */
+  width: 44px;
   height: 44px;
   border-radius: 50%;
   color: var(--text-main);
@@ -330,7 +330,7 @@ html{scroll-behavior:auto}
   transform: rotate(90deg);
 }
 
-/* ─── FIXES FOR PREMIUM CONTACT SECTION ─── */
+/* ─── PREMIUM CONTACT SECTION STYLES ─── */
 .premium-contact-wrapper {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -362,7 +362,7 @@ html{scroll-behavior:auto}
   border: 1px solid var(--border);
   text-decoration: none;
   transition: all 0.3s ease;
-  min-height: 48px; /* Touch Target Optimization */
+  min-height: 48px;
 }
 .contact-hub-link:hover {
   border-color: var(--accent);
@@ -389,7 +389,7 @@ html{scroll-behavior:auto}
   color: var(--text-main);
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  min-height: 48px; /* Touch Target Optimization */
+  min-height: 48px;
 }
 .cf-in:focus {
   outline: none;
@@ -773,23 +773,39 @@ export default function BerkePortfolio() {
     });
   }, [cat, isLoaded, gsapReady]);
 
+  /* ─── HARDWARE-ACCELERATED MOUSE ENGINE ─── */
   useEffect(() => {
     if (!isLoaded || !gsapReady) return;
+    
+    const isMobileDevice = window.innerWidth < 768;
+    if (isMobileDevice) {
+      if (cursorDotRef.current) cursorDotRef.current.style.display = "none";
+      if (cursorRingRef.current) cursorRingRef.current.style.display = "none";
+      return; 
+    }
+
     const { gsap } = gsapRef.current;
     const dot = cursorDotRef.current, ring = cursorRingRef.current;
     if (!dot || !ring) return;
 
     const pos = { x: 0, y: 0 }, rp = { x: 0, y: 0 };
+    let ringScale = 1;
+    let ringOpacity = 1;
     let raf;
 
     const onMove = e => {
       pos.x = e.clientX; pos.y = e.clientY;
-      if (dot) { dot.style.left = e.clientX + "px"; dot.style.top = e.clientY + "px"; }
+      if (dot) { 
+        dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`; 
+      }
     };
     
     const animRing = () => {
       rp.x += (pos.x - rp.x) * 0.14; rp.y += (pos.y - rp.y) * 0.14;
-      if (ring) { ring.style.left = rp.x + "px"; ring.style.top = rp.y + "px"; }
+      if (ring) { 
+        ring.style.transform = `translate3d(${rp.x}px, ${rp.y}px, 0) translate(-50%, -50%) scale(${ringScale})`;
+        ring.style.opacity = ringOpacity;
+      }
       raf = requestAnimationFrame(animRing);
     };
     animRing();
@@ -798,7 +814,8 @@ export default function BerkePortfolio() {
     const onMouseOverGlobal = (e) => {
       const target = e.target.closest("a, button, .tilt-card, .srv-card, .proj-card, .ach-card, .pyramid-freestyle-node, .lang-premium-card, .contact-hub-link");
       if (target && ring && dot) {
-        gsap.to(ring, { scale: 2.3, opacity: 0.45, duration: 0.35, ease: "power2.out" });
+        ringScale = 2.3;
+        ringOpacity = 0.45;
         gsap.to(dot, { scale: 0, duration: 0.25 });
       }
     };
@@ -806,7 +823,8 @@ export default function BerkePortfolio() {
     const onMouseOutGlobal = (e) => {
       const target = e.target.closest("a, button, .tilt-card, .srv-card, .proj-card, .ach-card, .pyramid-freestyle-node, .lang-premium-card, .contact-hub-link");
       if (target && ring && dot) {
-        gsap.to(ring, { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" });
+        ringScale = 1;
+        ringOpacity = 1;
         gsap.to(dot, { scale: 1, duration: 0.25 });
       }
     };
@@ -825,7 +843,7 @@ export default function BerkePortfolio() {
   if (!mounted) return null;
 
   const W   = { maxWidth:1100, margin:"0 auto", width:"100%", position:"relative", zIndex:2 };
-  const sec = bg => ({ position:"relative", padding:"8rem 3rem", background: bg || "var(--bg-void)" });
+  const sec = (bg) => ({ position:"relative", padding:"8rem 3rem", background: bg || "var(--bg-void)" });
 
   const SLabel = ({text}) => (  
     <div className={`scramble-label ${dmMono.className}`}>
@@ -846,9 +864,9 @@ export default function BerkePortfolio() {
     <div className={`${outfit.className}`} style={{background:"var(--bg-void)",color:"var(--text-main)",overflowX:"hidden",transition:"background 0.5s,color 0.5s"}}>
       <style>{CSS}</style>
 
-      {/* Cursors */}
-      <div ref={cursorDotRef} style={{position:"fixed",width:6,height:6,background:"var(--accent)",borderRadius:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",zIndex:9999}}/>
-      <div ref={cursorRingRef} style={{position:"fixed",width:32,height:32,border:"1.5px solid rgba(232,163,79,0.6)",borderRadius:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",zIndex:9998,backdropFilter:"invert(0.08)"}}/>
+      {/* Kursor GPU acceleration settings */}
+      <div ref={cursorDotRef} style={{position:"fixed",width:6,height:6,background:"var(--accent)",borderRadius:"50%",transform:"translate3d(0,0,0) translate(-50%,-50%)",pointerEvents:"none",zIndex:9999,top:0,left:0}}/>
+      <div ref={cursorRingRef} style={{position:"fixed",width:32,height:32,border:"1.5px solid rgba(232,163,79,0.6)",borderRadius:"50%",transform:"translate3d(0,0,0) translate(-50%,-50%)",pointerEvents:"none",zIndex:9998,top:0,left:0,backdropFilter:"invert(0.08)",transition:"transform 0.2s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.2s ease"}}/>
 
       {/* Scroll progress bar */}
       <div id="scroll-progress" style={{position:"fixed",top:0,left:0,height:"4px",background:"linear-gradient(90deg,var(--accent),var(--sage),var(--cyan))",zIndex:999,width:"0%",pointerEvents:"none"}}/>
@@ -1053,7 +1071,7 @@ export default function BerkePortfolio() {
                   <div style={{maxWidth:700}}>
                     <SLabel text="Chapter 04"/>
                     <h2 style={{fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Philosophy</em></h2>
-                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2 Guan"}}>Technology is only as good as the mind wielding it. Clear communication, analytical thinking, and team synergy turn ideas into reality.</p>
+                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2rem"}}>Technology is only as good as the mind wielding it. Clear communication, analytical thinking, and team synergy turn ideas into reality.</p>
                     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem"}}>
                       {SOFT_SKILLS.map(([ico,s])=>(
                         <div key={s} className="soft-item"><span style={{fontSize:"1.4rem"}}>{ico}</span><span style={{fontSize:"1rem",fontWeight:500}}>{s}</span></div>
@@ -1126,7 +1144,7 @@ export default function BerkePortfolio() {
               <div className="freestyle-trigger-hook" style={{marginBottom:"1rem"}}>
                 <SLabel text="The Core Matrix"/>
               </div>
-              <SHead label="" title="Triangle<br/><em style='color:var(--accent);font-style:italic'>Tech Stack Ecosystem</em>"/>
+              <SHead label="" title="Giant Animated Triangle<br/><em style='color:var(--accent);font-style:italic'>Tech Stack Ecosystem</em>"/>
 
               <div className="pyramid-freestyle-canvas">
                 <div className="canvas-particle" style={{width: 6, height: 6, left: "25%", top: "40%", animation: "floatParticle1 6s infinite ease-in-out"}}/>
@@ -1240,7 +1258,7 @@ export default function BerkePortfolio() {
                       <div style={{fontSize:".9rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>{t.company}</div>
                       <ul style={{listStyle:"none",display:"flex",flexDirection:"column",gap:".7rem"}}>
                         {t.points.map((pt,j)=>(
-                          <li key={j} style={{display:"flex",gap:".8rem",fontSize:"0.95rem",color:"var(--text-dim)",lineHeight:1.75}}>
+                          <li key={j} style={{display:"flex",gap:"0.8rem",fontSize:"0.95rem",color:"var(--text-dim)",lineHeight:1.75}}>
                             <div style={{width:6,height:6,background:"var(--accent)",borderRadius:"50%",flexShrink:0,marginTop:".6rem"}}/>
                             {pt}
                           </li>
@@ -1281,7 +1299,7 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* OPTIMIZED CONTACT SECTION (DENGAN REFRESH TAMPILAN) */}
+          {/* PREMIUM CONTACT SECTION */}
           <section id="contact" style={{...sec("var(--bg-void)"), overflow:"hidden"}}>
             <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(232,163,79,0.08),transparent 75%)",top:-100,right:-100,pointerEvents:"none"}}/>
             <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(95,200,155,0.06),transparent 75%)",bottom:-150,left:-150,pointerEvents:"none"}}/>
