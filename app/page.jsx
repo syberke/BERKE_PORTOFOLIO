@@ -1,11 +1,16 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+// Menggunakan font bawaan Next.js untuk menghilangkan error render-blocking & Best Practices Google Fonts
+import { Outfit, DM_Mono } from "next/font/google";
+
+const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
 /* ─── DATA REALIGNMENT WITH OFFICIAL LOGOS ───────────────────────────────── */
 const SERVICES = [
   { icon:"🌐", title:"Web Development", desc:"Full-stack web apps with modern frameworks. From landing pages to complex SaaS platforms.", tech:["Laravel","React","MySQL","TypeScript"], color:"var(--accent)" },
   { icon:"📱", title:"Mobile Development", desc:"Cross-platform mobile apps for iOS and Android with modern engines.", tech:["React Native","Flutter","Firebase"], color:"var(--sage)" },
-  { icon:"🔐", title:"Cybersecurity", desc:"Data encryption, secure authentication, and security system design to protect sensitive data.", tech:["Python","Cryptography","JWT"], color:"var(--violet)" },
+  { icon:"📱", title:"Cybersecurity", desc:"Data encryption, secure authentication, and security system design to protect sensitive data.", tech:["Python","Cryptography","JWT"], color:"var(--violet)" },
   { icon:"☪️", title:"Islamic Tech", desc:"Apps serving the Muslim community — Qur'an apps, prayer time systems, Islamic learning AI.", tech:["Flutter","AI/ML","Firebase"], color:"var(--gold)" },
   { icon:"🤖", title:"AI Integration", desc:"Integrating ML and AI features into applications — recommendations, NLP, computer vision.", tech:["Python","TensorFlow","OpenAI"], color:"var(--coral)" },
   { icon:"🏗️", title:"System Architecture", desc:"Scalable, maintainable architectures including microservices, REST APIs, and database design.", tech:["Docker","REST API","MySQL"], color:"var(--accent)" },
@@ -20,27 +25,17 @@ const PROJECTS = [
   { num:"06", tag:"AI · Islamic · Mobile", cat:"Mobile", icon:"☪️", name:"KajianQu — AI Qur'an App", year:"2025", org:"Personal Project", desc:"AI-powered Qur'an mobile app: smart Tajweed guidance via ML, spaced-repetition memorization, Arabic OCR, tafsir browser, and offline-first.", tech:["Flutter","Python","AI/ML","TF"], color:"var(--accent)" },
 ];
 
-// Pas untuk susunan Segitiga Besar (Piramida): Tier 1 (1), Tier 2 (2), Tier 3 (3), Tier 4 (4), Tier 5 (5) = Total 15 Nodes
 const TECH_STACK = [
-  // Tier 1 - Apex
   { id: "javascript", name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", type: "Programming Language", exp: "Dynamic scripting, asynchronous event-loops, ES6+ architectures, and DOM optimization blueprints.", color: "var(--gold)" },
-  
-  // Tier 2
   { id: "typescript", name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", type: "Programming Language", exp: "Strict type-safety definitions, granular interfaces design, and robust scalable engineering control.", color: "var(--cyan)" },
   { id: "php", name: "PHP", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg", type: "Programming Language", exp: "Server-side state tracking, object-oriented modern backends, and traditional native scripting loops.", color: "var(--violet)" },
-  
-  // Tier 3
   { id: "python", name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", type: "Programming Language", exp: "Automation scripts, heavy data-handling routines, cryptographic modules, and core AI processing layers.", color: "var(--sage)" },
   { id: "c", name: "C Language", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg", type: "Programming Language", exp: "Low-level resource handling, memory allocation pointer configurations, and micro-optimization mechanics.", color: "var(--accent)" },
   { id: "react", name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", type: "Frontend Framework", exp: "Virtual DOM diffing algorithms, complex state hooks, dynamic component reusability, and SPA layouts.", color: "var(--cyan)" },
-  
-  // Tier 4
   { id: "reactnative", name: "React Native", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", type: "Mobile Framework", exp: "Cross-platform core bridges, native layout rendering engines, and modular device hardware interfaces.", color: "var(--cyan)" },
   { id: "nextjs", name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-line.svg", type: "React Framework", exp: "Hybrid SSR / SSG production architectures, atomic route optimization, and secure API middleware pipes.", color: "var(--text-main)" },
   { id: "laravel", name: "Laravel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg", type: "Backend Framework", exp: "Artisan ecosystem command suites, Eloquent ORM transaction modeling, secure authentication, and jobs scheduling.", color: "var(--coral)" },
   { id: "flutter", name: "Flutter", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", type: "Mobile Framework", exp: "Dart compilations, high-frequency Skia/Impeller UI rendering, and offline atomic storage synchronizations.", color: "var(--cyan)" },
-  
-  // Tier 5 - Base
   { id: "tailwindcss", name: "Tailwind CSS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg", type: "CSS Technology", exp: "Utility-first design workflows, responsive responsive breakpoints, component layouts, and strict token implementations.", color: "var(--cyan)" },
   { id: "vuejs", name: "Vue.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg", type: "Frontend Framework", exp: "Reactive state tracking arrays, declarative templates, and lightweight component view modeling.", color: "var(--sage)" },
   { id: "mysql", name: "MySQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", type: "Database Engine", exp: "Relational database models, structured querying optimization indexes, and ACID transaction safety rules.", color: "var(--gold)" },
@@ -81,21 +76,19 @@ const MORPH_SHAPES = [
 
 const MOTION_PATH_D = "M 0,150 C 150,50 300,250 450,150 S 650,50 800,150 S 950,250 1100,150";
 
-/* ─── STYLING CSS ────────────────────────────────────────────────────────── */
+/* ─── STYLING CSS (DENGAN PERBAIKAN CONTACT & ACCESSIBILITY) ─────────────── */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght=0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-.theme-dark{--bg-void:#050508;--bg-void-rgb:5,5,8;--bg-space:#0A0B12;--bg-card:#111322;--border:rgba(255,255,255,0.08);--border-hover:rgba(232,163,79,0.5);--text-main:rgba(255,255,255,0.92);--text-dim:rgba(255,255,255,0.65);--text-muted:rgba(255,255,255,0.4);--accent:#E8A34F;--accent-rgb:232,163,79;--sage:#5FC89B;--violet:#9B7FE8;--cyan:#4FD1E8;--coral:#E86B5F;--gold:#D4A843;--shadow:0 8px 32px rgba(0,0,0,0.4);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
-.theme-light{--bg-void:#FDFAF5;--bg-void-rgb:253,250,245;--bg-space:#F8F4EC;--bg-card:#FFFFFF;--border:rgba(200,180,150,0.4);--border-hover:rgba(200,132,92,0.6);--text-main:#251B12;--text-dim:#5C5042;--text-muted:#9C8C7A;--accent:#C8845C;--accent-rgb:200,132,92;--sage:#6B9472;--violet:#8B7EC8;--cyan:#4FADC8;--coral:#C46B6B;--gold:#B89222;--shadow:0 8px 30px rgba(46,31,15,0.06);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
+.theme-dark{--bg-void:#050508;--bg-void-rgb:5,5,8;--bg-space:#0A0B12;--bg-card:#111322;--border:rgba(255,255,255,0.08);--border-hover:rgba(232,163,79,0.5);--text-main:rgba(255,255,255,0.92);--text-dim:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.55);--accent:#E8A34F;--accent-rgb:232,163,79;--sage:#5FC89B;--violet:#9B7FE8;--cyan:#4FD1E8;--coral:#E86B5F;--gold:#D4A843;--shadow:0 8px 32px rgba(0,0,0,0.4);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
+.theme-light{--bg-void:#FDFAF5;--bg-void-rgb:253,250,245;--bg-space:#F8F4EC;--bg-card:#FFFFFF;--border:rgba(200,180,150,0.4);--border-hover:rgba(200,132,92,0.6);--text-main:#251B12;--text-dim:#4A3E31;--text-muted:#6B5E4F;--accent:#B36336;--accent-rgb:179,99,54;--sage:#4E7354;--violet:#6D5FA8;--cyan:#2E8BA1;--coral:#A84E4E;--gold:#947113;--shadow:0 8px 30px rgba(46,31,15,0.06);--glow:0 0 40px rgba(var(--accent-rgb),0.15)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
 ::selection{background:rgba(var(--accent-rgb),0.3);color:var(--bg-void)}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg-void)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-body{-webkit-font-smoothing:antialiased}
 
 /* PRELOADER */
 .preloader{position:fixed;inset:0;background:#050508;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
 .preloader-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-.liquid-text{--bg-x:0%;--bg-y:1.5em;font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,12vw,8.5rem);font-weight:700;letter-spacing:0.05em;position:relative;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.15)}
+.liquid-text{--bg-x:0%;--bg-y:1.5em;font-size:clamp(3.5rem,12vw,8.5rem);font-weight:700;letter-spacing:0.05em;position:relative;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.15)}
 .liquid-text::before{content:attr(data-text);position:absolute;inset:0;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:0px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='2000' viewBox='0 0 1000 2000'%3E%3Cpath d='M0,50 C250,0 250,100 500,50 C750,0 750,100 1000,50 L1000,2000 L0,2000 Z' fill='rgba(232,163,79,0.4)'/%3E%3Cpath d='M0,75 C250,125 250,25 500,75 C750,125 750,25 1000,75 L1000,2000 L0,2000 Z' fill='%23E8A34F'/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:200% auto;background-position:var(--bg-x) var(--bg-y);-webkit-background-clip:text;background-clip:text;z-index:2}
 
 /* ANIMATIONS */
@@ -108,25 +101,25 @@ body{-webkit-font-smoothing:antialiased}
 .cursor-blink::after{content:'|';animation:cursorBlink 1s infinite;color:var(--accent);margin-left:2px}
 
 /* NAV */
-.nlink{font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;color:var(--text-dim);text-decoration:none;position:relative;transition:color .3s;letter-spacing:.02em}
+.nlink{font-size:.9rem;font-weight:500;color:var(--text-dim);text-decoration:none;position:relative;transition:color .3s;letter-spacing:.02em}
 .nlink::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width 0.4s cubic-bezier(0.16,1,0.3,1);border-radius:2px}
 .nlink:hover{color:var(--text-main)}.nlink:hover::after{width:100%}
-.ncta{padding:.5rem 1.5rem;background:var(--text-main);color:var(--bg-void)!important;border-radius:50px;font-weight:600;transition:all 0.4s!important}
+.ncta{padding:.6rem 1.6rem;background:var(--text-main);color:var(--bg-void)!important;border-radius:50px;font-weight:600;transition:all 0.4s!important}
 .ncta::after{display:none!important}
 .ncta:hover{background:var(--accent);transform:translateY(-2px)!important;box-shadow:var(--glow)}
-.theme-toggle{background:var(--border);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-main);font-size:1.1rem;transition:all 0.4s;cursor:pointer}
+.theme-toggle{background:var(--border);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--text-main);font-size:1.1rem;transition:all 0.4s;cursor:pointer}
 .theme-toggle:hover{background:var(--accent);color:var(--bg-void);transform:rotate(15deg) scale(1.05)}
-.bfill{padding:1rem 2.5rem;background:var(--accent);color:var(--bg-void);border:none;border-radius:50px;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);text-decoration:none;display:inline-block}
+.bfill{padding:1rem 2.5rem;background:var(--accent);color:var(--bg-void);border:none;border-radius:50px;font-size:.9rem;font-weight:600;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);text-decoration:none;display:inline-block}
 .bfill:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(var(--accent-rgb),0.3)}
-.boutl{padding:1rem 2.5rem;background:transparent;border:1px solid var(--border);color:var(--text-main);border-radius:50px;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all 0.4s;text-decoration:none;display:inline-block}
+.boutl{padding:1rem 2.5rem;background:transparent;border:1px solid var(--border);color:var(--text-main);border-radius:50px;font-size:.9rem;font-weight:600;transition:all 0.4s;text-decoration:none;display:inline-block}
 .boutl:hover { border-color:var(--accent); background:rgba(232,163,79,0.05); transform:translateY(-3px); }
-.pf-btn{padding:.5rem 1.4rem;border-radius:50px;background:var(--bg-void);border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text-dim);transition:all 0.3s;cursor:pointer}
+.pf-btn{padding:.6rem 1.5rem;border-radius:50px;background:var(--bg-void);border:1px solid var(--border);font-size:.85rem;font-weight:500;color:var(--text-dim);transition:all 0.3s;cursor:pointer}
 .pf-btn.on{background:var(--text-main);border-color:var(--text-main);color:var(--bg-void)}
 
 /* CARDS */
 .srv-card,.proj-card,.ach-card{background:var(--bg-card);border-radius:24px;padding:2.2rem;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;transition:border-color 0.4s,box-shadow 0.4s,transform 0.4s}
 .srv-card:hover,.proj-card:hover,.ach-card:hover{border-color:var(--border-hover);box-shadow:var(--glow);transform:translateY(-4px)}
-.info-item,.soft-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;background:var(--bg-card);border-radius:14px;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--text-dim);transition:all 0.4s;cursor:default}
+.info-item,.soft-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;background:var(--bg-card);border-radius:14px;border:1px solid var(--border);font-size:.88rem;color:var(--text-dim);transition:all 0.4s;cursor:default}
 .info-item:hover{border-color:var(--accent);color:var(--text-main);transform:translateX(6px);box-shadow:var(--glow)}
 .soft-item{padding:.8rem 1rem;gap:.7rem;font-size:.85rem}
 .tl-item{display:grid;grid-template-columns:56px 1fr;gap:1.8rem;margin-bottom:3rem}
@@ -140,11 +133,10 @@ body{-webkit-font-smoothing:antialiased}
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Bound particles inside */
+  overflow: hidden;
   padding: 4rem 0;
   border-radius: 40px;
 }
-/* Giant Triangle Shape Layer Behind */
 .pyramid-freestyle-canvas::before {
   content: '';
   position: absolute;
@@ -160,7 +152,6 @@ body{-webkit-font-smoothing:antialiased}
   z-index: 1;
 }
 
-/* Floating Particle Animations */
 @keyframes floatParticle1 { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; } 50% { transform: translateY(-30px) scale(1.2); opacity: 0.6; } }
 @keyframes floatParticle2 { 0%, 100% { transform: translate(0, 0); opacity: 0.3; } 50% { transform: translate(20px, -40px); opacity: 0.7; } }
 
@@ -203,8 +194,6 @@ body{-webkit-font-smoothing:antialiased}
   box-shadow: var(--shadow);
   padding: 18px;
 }
-
-/* Official Logo Base Grayscale & Opacity Switch */
 .pyramid-freestyle-node .node-img-logo {
   width: 100%;
   height: 100%;
@@ -212,14 +201,12 @@ body{-webkit-font-smoothing:antialiased}
   filter: grayscale(1) opacity(0.25);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .pyramid-freestyle-node .node-hover-tag {
   position: absolute;
   bottom: -32px;
   background: var(--bg-space);
   border: 1px solid var(--border);
   color: var(--text-dim);
-  font-family: 'DM Mono', monospace;
   font-size: 0.68rem;
   padding: 3px 12px;
   border-radius: 8px;
@@ -230,8 +217,6 @@ body{-webkit-font-smoothing:antialiased}
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: var(--shadow);
 }
-
-/* Interactive Node Focus Action Flows */
 .pyramid-freestyle-node:hover {
   transform: scale(1.22) translateY(-8px);
   border-color: var(--accent);
@@ -280,13 +265,11 @@ body{-webkit-font-smoothing:antialiased}
   font-size: 2.5rem;
 }
 .lang-title-text {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-main);
 }
 .lang-badge-status {
-  font-family: 'DM Mono', monospace;
   font-size: 0.72rem;
   color: var(--accent);
   letter-spacing: 0.05em;
@@ -330,8 +313,8 @@ body{-webkit-font-smoothing:antialiased}
   align-self: flex-end;
   background: var(--border);
   border: none;
-  width: 38px;
-  height: 38px;
+  width: 44px; /* Touch target optimized */
+  height: 44px;
   border-radius: 50%;
   color: var(--text-main);
   font-size: 0.95rem;
@@ -347,6 +330,73 @@ body{-webkit-font-smoothing:antialiased}
   transform: rotate(90deg);
 }
 
+/* ─── FIXES FOR PREMIUM CONTACT SECTION ─── */
+.premium-contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3.5rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+.contact-glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow);
+}
+.contact-form-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 3rem;
+  box-shadow: var(--shadow);
+}
+.contact-hub-link {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: var(--bg-void);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-height: 48px; /* Touch Target Optimization */
+}
+.contact-hub-link:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+  box-shadow: var(--glow);
+}
+.hub-icon-box {
+  width: 44px;
+  height: 44px;
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--accent);
+}
+.cf-in {
+  width: 100%;
+  padding: 1.1rem 1.4rem;
+  background: var(--bg-void);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  min-height: 48px; /* Touch Target Optimization */
+}
+.cf-in:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.15);
+}
+
 /* GRIDS & LAYOUT RESPONSIVE */
 .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
@@ -360,13 +410,14 @@ body{-webkit-font-smoothing:antialiased}
 .hover-image-text:hover::after{width:100%}
 
 /* SCRAMBLE & TYPEWRITER */
-.scramble-label{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
-.typewriter-wrap{font-family:'DM Mono',monospace;font-size:.85rem;color:var(--accent);letter-spacing:0.1em;margin-bottom:1rem;min-height:1.2em}
+.scramble-label{font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
+.typewriter-wrap{font-size:.85rem;color:var(--accent);letter-spacing:0.1em;margin-bottom:1rem;min-height:1.2em}
 .morph-bg{position:absolute;right:3%;top:50%;transform:translateY(-50%);z-index:0;opacity:0.1;pointer-events:none}
 
 @media(max-width:1024px) {
   .srv-grid{grid-template-columns:1fr 1fr}
   .premium-sidebar-drawer{width:400px}
+  .premium-contact-wrapper{grid-template-columns:1fr}
 }
 @media(max-width:768px) {
   .lang-horizontal-grid{grid-template-columns:1fr}
@@ -377,6 +428,7 @@ body{-webkit-font-smoothing:antialiased}
   .srv-grid{grid-template-columns:1fr}
   section{padding:5rem 1.5rem!important}
   .h-title{font-size:3rem!important}
+  .contact-form-panel{padding: 1.8rem;}
 }
 `;
 
@@ -388,8 +440,6 @@ export default function BerkePortfolio() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [gsapReady, setGsapReady] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  // Detail Drawer Target Element State Node
   const [activeDetail, setActiveDetail] = useState(null);
 
   const preloaderRef = useRef(null);
@@ -420,7 +470,6 @@ export default function BerkePortfolio() {
     }
   }, [isDark]);
 
-  /* ─── 0. Unified Load & Context Setup ──────────────────────────────────── */
   useEffect(() => {
     const loadGSAP = async () => {
       const { gsap } = await import("gsap");
@@ -459,7 +508,6 @@ export default function BerkePortfolio() {
     loadGSAP();
   }, []);
 
-  /* ─── 1. PRELOADER ENGINE ──────────────────────────────────── */
   useEffect(() => {
     if (!gsapReady || !gsapRef.current) return;
     const { gsap } = gsapRef.current;
@@ -490,7 +538,6 @@ export default function BerkePortfolio() {
     return () => tl.kill();
   }, [gsapReady]);
 
-  /* ─── 2. MAIN CORE ANIMATIONS ─────────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady || !gsapRef.current) return;
     const { gsap, ScrollTrigger, SplitText, ScrollSmoother, Observer } = gsapRef.current;
@@ -654,7 +701,6 @@ export default function BerkePortfolio() {
         });
       });
 
-      // Pyramid Freestyle Stagger Reveal Animation Trigger
       const pyramidNodes = gsap.utils.toArray(".pyramid-freestyle-node");
       if (pyramidNodes.length > 0) {
         gsap.fromTo(pyramidNodes, 
@@ -669,7 +715,6 @@ export default function BerkePortfolio() {
     return () => ctx.revert();
   }, [isLoaded, gsapReady]);
 
-  /* ─── 3. TYPEWRITER SUB-MODULE ──────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady || !typewriterRef.current) return;
     const roles = ["Full-Stack Developer", "Mobile App Engineer", "Cybersecurity Builder", "Islamic Tech Pioneer", "AI Integration Specialist"];
@@ -711,7 +756,6 @@ export default function BerkePortfolio() {
     };
   }, [isLoaded, gsapReady]);
 
-  /* ─── 4. FLIP ON CATEGORY CHANGE ────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady) return;
     const { gsap, Flip } = gsapRef.current;
@@ -729,7 +773,6 @@ export default function BerkePortfolio() {
     });
   }, [cat, isLoaded, gsapReady]);
 
-  /* ─── 5. CURSOR EVENT ENGINE ────────────────────── */
   useEffect(() => {
     if (!isLoaded || !gsapReady) return;
     const { gsap } = gsapRef.current;
@@ -785,7 +828,7 @@ export default function BerkePortfolio() {
   const sec = bg => ({ position:"relative", padding:"8rem 3rem", background: bg || "var(--bg-void)" });
 
   const SLabel = ({text}) => (  
-    <div className="scramble-label">
+    <div className={`scramble-label ${dmMono.className}`}>
       <span style={{width:24,height:1,background:"var(--accent)",display:"inline-block",flexShrink:0}}/>
       <span className="scramble-text">{text}</span>
     </div>
@@ -794,13 +837,13 @@ export default function BerkePortfolio() {
   const SHead = ({label,title,center=false}) => (
     <div style={{textAlign:center?"center":"left",marginBottom:"1rem"}}>
       <SLabel text={label}/>
-      <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,4.5vw,3.6rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.1,marginBottom:"2.8rem"}}
+      <h2 style={{fontSize:"clamp(2.5rem,4.5vw,3.6rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.1,marginBottom:"2.8rem"}}
         dangerouslySetInnerHTML={{__html:title}}/>
     </div>
   );
 
   return (
-    <div style={{fontFamily:"'Outfit',sans-serif",background:"var(--bg-void)",color:"var(--text-main)",overflowX:"hidden",transition:"background 0.5s,color 0.5s"}}>
+    <div className={`${outfit.className}`} style={{background:"var(--bg-void)",color:"var(--text-main)",overflowX:"hidden",transition:"background 0.5s,color 0.5s"}}>
       <style>{CSS}</style>
 
       {/* Cursors */}
@@ -814,7 +857,7 @@ export default function BerkePortfolio() {
       <div ref={preloaderRef} className="preloader">
         <div className="preloader-grid"/>
         <div className="liquid-text" data-text="PORTFOLIO">PORTFOLIO</div>
-        <div ref={progressRef} style={{position:"absolute",bottom:"10%",fontFamily:"'DM Mono',monospace",fontSize:"1.2rem",fontWeight:600,color:"#E8A34F",letterSpacing:"0.2em",zIndex:2,textShadow:"0 0 20px rgba(232,163,79,0.5)"}}>0%</div>
+        <div ref={progressRef} className={`${dmMono.className}`} style={{position:"absolute",bottom:"10%",fontSize:"1.2rem",fontWeight:600,color:"#E8A34F",letterSpacing:"0.2em",zIndex:2,textShadow:"0 0 20px rgba(232,163,79,0.5)"}}>0%</div>
       </div>
 
       {/* SIDEBAR DETAIL DRAWER CONTAINER */}
@@ -825,22 +868,22 @@ export default function BerkePortfolio() {
           <div style={{marginTop: "3.5rem", display:"flex", flexDirection:"column", height:"100%"}}>
             {activeDetail.logo ? (
               <div style={{width: "80px", height: "80px", marginBottom: "1.2rem", filter: `drop-shadow(0 0 15px ${activeDetail.color})`}}>
-                <img src={activeDetail.logo} alt={activeDetail.name} style={{width:"100%", height:"100%", objectFit:"contain"}}/>
+                <img src={activeDetail.logo} alt="" style={{width:"100%", height:"100%", objectFit:"contain"}}/>
               </div>
             ) : (
               <div style={{fontSize: "5rem", marginBottom: "1.2rem", filter: `drop-shadow(0 0 15px ${activeDetail.color})` }}>{activeDetail.icon}</div>
             )}
-            <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize: "2.6rem", fontWeight: 700, color: "var(--text-main)", lineHeight: 1.2}}>{activeDetail.name}</div>
-            <div style={{fontFamily:"'DM Mono',monospace", fontSize: "0.85rem", color: activeDetail.color, letterSpacing: "0.12em", marginTop: "0.5rem", textTransform: "uppercase"}}>{activeDetail.type}</div>
+            <div style={{fontSize: "2.6rem", fontWeight: 700, color: "var(--text-main)", lineHeight: 1.2}}>{activeDetail.name}</div>
+            <div className={`${dmMono.className}`} style={{fontSize: "0.85rem", color: activeDetail.color, letterSpacing: "0.12em", marginTop: "0.5rem", textTransform: "uppercase"}}>{activeDetail.type}</div>
             
             <div style={{width: "50px", height: "2px", background: activeDetail.color, margin: "2.5rem 0"}} />
             
-            <p style={{fontFamily: "'Outfit', sans-serif", fontSize: "1.05rem", color: "var(--text-dim)", lineHeight: 1.85}}>
+            <p style={{fontSize: "1.05rem", color: "var(--text-dim)", lineHeight: 1.85}}>
               {activeDetail.exp}
             </p>
             
             <div style={{marginTop:"auto", background:"var(--bg-space)", padding:"1.5rem", borderRadius:"18px", border:"1px solid var(--border)"}}>
-              <div style={{fontFamily:"'DM Mono',monospace", fontSize:"0.7rem", color:"var(--text-muted)", textTransform:"uppercase", marginBottom:"6px"}}>Status</div>
+              <div className={`${dmMono.className}`} style={{fontSize:"0.7rem", color:"var(--text-muted)", textTransform:"uppercase", marginBottom:"6px"}}>Status</div>
               <div style={{fontSize:"0.95rem", fontWeight:600, color:"var(--text-main)", display:"flex", alignItems:"center", gap:"8px"}}>
                 <span style={{width:"10px", height:"10px", background:"var(--sage)", borderRadius:"50%"}}/> Verified Production Ready
               </div>
@@ -860,7 +903,7 @@ export default function BerkePortfolio() {
           }}>
             <div className="nav-logo-text" style={{ 
               fontSize: "1.5rem", letterSpacing: "-0.5px", color: isDark ? "rgba(255,255,255,0.92)" : "#251B12",
-              fontFamily:"'Cormorant Garamond',serif", fontWeight:700, transition: "color 0.4s ease", cursor: "pointer"
+              fontWeight:700, transition: "color 0.4s ease", cursor: "pointer"
             }}>
               Berke<span style={{ color: "var(--accent)" }}>.dev</span>
             </div>
@@ -868,7 +911,7 @@ export default function BerkePortfolio() {
               <ul className="nav-links" style={{ display: "flex", gap: "2rem", listStyle: "none", alignItems: "center" }}>
                 {["About", "Services", "Projects", "Skills", "Contact"].map(s => (
                   <li key={s}>
-                    <a href={`#${s.toLowerCase()}`} className={`nlink ${s === "Contact" ? "ncta" : ""}`} style={{ color: s !== "Contact" && !isDark ? "#251B12" : "" }}>
+                    <a href={s === "Skills" ? "#skills-tech" : `#${s.toLowerCase()}`} className={`nlink ${s === "Contact" ? "ncta" : ""}`} style={{ color: s !== "Contact" && !isDark ? "#251B12" : "" }}>
                       {s === "Contact" ? "Hire Me ↗" : s}
                     </a>
                   </li>
@@ -905,21 +948,21 @@ export default function BerkePortfolio() {
             <div style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(circle at 50% 50%,transparent 20%,rgba(var(--bg-void-rgb),0.75) 80%),linear-gradient(180deg,transparent 0%,rgba(var(--bg-void-rgb),1) 100%)",pointerEvents:"none"}}/>
 
             <div className="hero-parallax-wrapper" style={{position:"relative",zIndex:2,maxWidth:850,textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",pointerEvents:"none"}}>
-              <div className="h-badge" style={{display:"inline-flex",alignItems:"center",gap:".7rem",padding:".5rem 1.4rem",background:"var(--bg-card)",border:"1px solid var(--border)",borderRadius:50,fontFamily:"'DM Mono',monospace",fontSize:".75rem",fontWeight:500,color:"var(--text-main)",letterSpacing:"0.12em",marginBottom:"1.5rem",opacity:0,boxShadow:"var(--shadow)"}}>
+              <div className="h-badge" style={{display:"inline-flex",alignItems:"center",gap:".7rem",padding:".5rem 1.4rem",background:"var(--bg-card)",border:"1px solid var(--border)",borderRadius:50,fontSize:".75rem",fontWeight:500,color:"var(--text-main)",letterSpacing:"0.12em",marginBottom:"1.5rem",opacity:0,boxShadow:"var(--shadow)"}}>
                 <div className="live-dot" style={{width:8,height:8,background:"var(--sage)",borderRadius:"50%",flexShrink:0,boxShadow:"0 0 10px var(--sage)"}}/>
                 Available for Collaboration
               </div>
 
-              <div className="h-typewriter typewriter-wrap" style={{marginBottom:"1rem"}}>
+              <div className={`h-typewriter typewriter-wrap ${dmMono.className}`} style={{marginBottom:"1rem"}}>
                 <span ref={typewriterRef} className="cursor-blink">Full-Stack Developer</span>
               </div>
 
-              <h1 ref={heroTitleRef} className="h-title" style={{fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(3.8rem, 8vw, 7.2rem)", fontWeight: 700, lineHeight: 1.05, color: "var(--text-main)", marginBottom: "1.8rem", letterSpacing: "-.02em", opacity: 0, textShadow: "0 10px 40px rgba(0,0,0,0.5)"}}>
+              <h1 ref={heroTitleRef} className="h-title" style={{fontSize: "clamp(3.8rem, 8vw, 7.2rem)", fontWeight: 700, lineHeight: 1.05, color: "var(--text-main)", marginBottom: "1.8rem", letterSpacing: "-.02em", opacity: 0, textShadow: "0 10px 40px rgba(0,0,0,0.5)"}}>
                 Qiageng <em style={{color:"var(--accent)", fontStyle:"italic", fontWeight:600}}>Berke</em><br/>
                 Jaisyurrohman
               </h1>
               
-              <p className="h-para" style={{fontFamily:"'Outfit',sans-serif",fontSize:"1.15rem",fontWeight:400,color:"var(--text-dim)",lineHeight:1.8,maxWidth:600,marginBottom:"3.5rem",opacity:0}}>
+              <p className="h-para" style={{fontSize:"1.15rem",fontWeight:400,color:"var(--text-dim)",lineHeight:1.8,maxWidth:600,marginBottom:"3.5rem",opacity:0}}>
                 A passionate <strong style={{color:"var(--text-main)",fontWeight:600}}>Full-Stack Developer & IT Student</strong>. Building web systems, mobile apps, and cybersecurity solutions that create real impact.
               </p>
 
@@ -930,7 +973,7 @@ export default function BerkePortfolio() {
             </div>
 
             <div style={{position:"absolute",bottom:"3rem",left:"50%",transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",gap:8,animation:"fadeInUp 1s 2.5s both",zIndex:2,pointerEvents:"none"}}>
-              <span style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.25em",textTransform:"uppercase"}}>Scroll</span>
+              <span className={`${dmMono.className}`} style={{fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.25em",textTransform:"uppercase"}}>Scroll</span>
               <div style={{width:1,height:50,background:"linear-gradient(180deg,var(--accent),transparent)"}}/>
             </div>
           </section>
@@ -940,7 +983,7 @@ export default function BerkePortfolio() {
             <div className="mq-track" style={{display:"flex",gap:"3.5rem",whiteSpace:"nowrap"}}>
               {[...Array(2)].map((_,r)=>["Web Development","Mobile Apps","Cybersecurity","Laravel","React","Flutter","MySQL","TypeScript","AI/ML","SIOT","React Native","Python","Astro","Full-Stack"].map((t,i)=>(
                 <div key={`${r}-${i}`} style={{display:"flex",alignItems:"center",gap:"1.2rem",flexShrink:0}}>
-                  <span style={{fontFamily:"'DM Mono',monospace",fontSize:".8rem",fontWeight:500,color:"var(--text-dim)",letterSpacing:"0.16em",textTransform:"uppercase"}}>{t}</span>
+                  <span className={`${dmMono.className}`} style={{fontSize:".8rem",fontWeight:500,color:"var(--text-dim)",letterSpacing:"0.16em",textTransform:"uppercase"}}>{t}</span>
                   <div style={{width:5,height:5,background:"var(--accent)",borderRadius:"50%",flexShrink:0}}/>
                 </div>
               )))}
@@ -954,9 +997,9 @@ export default function BerkePortfolio() {
                 <div className="ch-1" style={{position:"absolute",width:"100%",left:0,padding:"0 3rem"}}>
                   <div style={{maxWidth:700}}>
                     <SLabel text="Chapter 01"/>
-                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Origin</em> Story</h2>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"1.2rem"}}>A highly motivated IT student specializing in <strong style={{color:"var(--text-main)",fontWeight:600}}>Web Development, Mobile Applications, and Cybersecurity</strong>. Berke has built real-world systems serving actual users in production.</p>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2.2rem"}}>Passionate about clean code, data security, and technology that creates <strong style={{color:"var(--text-main)",fontWeight:600}}>real impact for communities</strong>.</p>
+                    <h2 style={{fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Origin</em> Story</h2>
+                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"1.2rem"}}>A highly motivated IT student specializing in <strong style={{color:"var(--text-main)",fontWeight:600}}>Web Development, Mobile Applications, and Cybersecurity</strong>. Berke has built real-world systems serving actual users in production.</p>
+                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2.2rem"}}>Passionate about clean code, data security, and technology that creates <strong style={{color:"var(--text-main)",fontWeight:600}}>real impact for communities</strong>.</p>
                     <div style={{display:"flex",flexWrap:"wrap",gap:".8rem"}}>
                       {[["📍","Bekasi, Indonesia"],["📧","berkejaisyurrohman95@gmail.com"],["📱","+62 895-0614-7763"]].map(([ico,val])=>(
                         <div key={val} className="info-item" style={{padding:"0.6rem 1.2rem",fontSize:"0.85rem"}}>
@@ -970,15 +1013,15 @@ export default function BerkePortfolio() {
                 <div className="ch-2" style={{position:"absolute",width:"100%",left:0,padding:"0 3rem",opacity:0}}>
                   <div style={{maxWidth:700}}>
                     <SLabel text="Chapter 02"/>
-                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>My <em style={{color:"var(--accent)",fontStyle:"italic"}}>Roots</em></h2>
+                    <h2 style={{fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>My <em style={{color:"var(--accent)",fontStyle:"italic"}}>Roots</em></h2>
                     <div className="tilt-card" style={{background:"var(--bg-card)",borderRadius:24,padding:"2.2rem",border:"1px solid var(--border)",boxShadow:"var(--shadow)",position:"relative",overflow:"hidden"}}>
                       <div style={{position:"absolute",top:0,left:0,width:4,height:"100%",background:"linear-gradient(180deg,var(--accent),var(--gold))",borderRadius:"4px 0 0 4px"}}/>
-                      <div style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:".6rem"}}>JUNE 2023 – PRESENT</div>
-                      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.8rem",fontWeight:700,color:"var(--text-main)",marginBottom:".4rem"}}>SMK TI Bazma</div>
-                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:"1rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>Network Information Systems & Applications · Bogor</div>
+                      <div className={`${dmMono.className}`} style={{fontSize:".7rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:".6rem"}}>JUNE 2023 – PRESENT</div>
+                      <div style={{fontSize:"1.8rem",fontWeight:700,color:"var(--text-main)",marginBottom:".4rem"}}>SMK TI Bazma</div>
+                      <div style={{fontSize:"1rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>Network Information Systems & Applications · Bogor</div>
                       <div style={{display:"flex",flexWrap:"wrap",gap:".4rem"}}>
                         {["Web Dev","Database","Networking","Cybersecurity"].map(t=>(
-                          <span key={t} style={{padding:".35rem 1rem",background:"var(--bg-void)",border:"1px solid var(--border)",borderRadius:50,fontSize:".75rem",fontFamily:"'DM Mono',monospace",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>
+                          <span key={t} className={`${dmMono.className}`} style={{padding:".35rem 1rem",background:"var(--bg-void)",border:"1px solid var(--border)",borderRadius:50,fontSize:".75rem",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>
                         ))}
                       </div>
                     </div>
@@ -988,18 +1031,18 @@ export default function BerkePortfolio() {
                 <div className="ch-3" style={{position:"absolute",width:"100%",left:0,padding:"0 3rem",opacity:0}}>
                   <div style={{maxWidth:700}}>
                     <SLabel text="Chapter 03"/>
-                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Arsenal</em></h2>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"1.8rem"}}>My daily drivers — modern frameworks and robust backend technologies for seamless, secure digital experiences.</p>
+                    <h2 style={{fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Arsenal</em></h2>
+                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"1.8rem"}}>My daily drivers — modern frameworks and robust backend technologies for seamless, secure digital experiences.</p>
                     <div style={{display:"flex",flexWrap:"wrap",gap:".6rem",marginBottom:"2.5rem"}}>
                       {[["var(--accent)","React"],["var(--sage)","Flutter"],["var(--violet)","Laravel"],["var(--gold)","TypeScript"],["var(--accent)","MySQL"],["var(--sage)","Python"],["var(--violet)","React Native"],["var(--gold)","Next.js"],["var(--accent)","Astro"]].map(([c,t])=>(
-                        <span key={t} style={{padding:".45rem 1rem",borderRadius:50,background:`rgba(232,163,79,0.1)`,fontSize:".85rem",fontFamily:"'DM Mono',monospace",fontWeight:500,color:c,border:`1px solid var(--border)`}}>{t}</span>
+                        <span key={t} className={`${dmMono.className}`} style={{padding:".45rem 1rem",borderRadius:50,background:`rgba(232,163,79,0.1)`,fontSize:".85rem",fontWeight:500,color:c,border:`1px solid var(--border)`}}>{t}</span>
                       ))}
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem"}}>
                       {[["6","Projects"],["2","Years"],["4","Languages"]].map(([n,l])=>(
                         <div key={l} style={{background:"var(--bg-card)",borderRadius:16,padding:"1.2rem",textAlign:"center",border:"1px solid var(--border)"}}>
-                          <div className="counter-anim" data-to={parseInt(n)} data-suffix="+" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.4rem",fontWeight:700,color:"var(--text-main)"}}>{n}+</div>
-                          <div style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:600,color:"var(--text-muted)"}}>{l}</div>
+                          <div className="counter-anim" data-to={parseInt(n)} data-suffix="+" style={{fontSize:"2.4rem",fontWeight:700,color:"var(--text-main)"}}>{n}+</div>
+                          <div className={`${dmMono.className}`} style={{fontSize:".7rem",fontWeight:600,color:"var(--text-muted)"}}>{l}</div>
                         </div>
                       ))}
                     </div>
@@ -1009,8 +1052,8 @@ export default function BerkePortfolio() {
                 <div className="ch-4" style={{position:"absolute",width:"100%",left:0,padding:"0 3rem",opacity:0}}>
                   <div style={{maxWidth:700}}>
                     <SLabel text="Chapter 04"/>
-                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Philosophy</em></h2>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2rem"}}>Technology is only as good as the mind wielding it. Clear communication, analytical thinking, and team synergy turn ideas into reality.</p>
+                    <h2 style={{fontSize:"clamp(3rem,5vw,4.2rem)",fontWeight:600,color:"var(--text-main)",lineHeight:1.05,marginBottom:"1.8rem"}}>The <em style={{color:"var(--accent)",fontStyle:"italic"}}>Philosophy</em></h2>
+                    <p style={{fontSize:"1.1rem",color:"var(--text-dim)",lineHeight:1.9,marginBottom:"2 Guan"}}>Technology is only as good as the mind wielding it. Clear communication, analytical thinking, and team synergy turn ideas into reality.</p>
                     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem"}}>
                       {SOFT_SKILLS.map(([ico,s])=>(
                         <div key={s} className="soft-item"><span style={{fontSize:"1.4rem"}}>{ico}</span><span style={{fontSize:"1rem",fontWeight:500}}>{s}</span></div>
@@ -1030,10 +1073,10 @@ export default function BerkePortfolio() {
                 {SERVICES.map(s=>(
                   <div key={s.title} className="srv-card tilt-card reveal-card">
                     <div style={{width:55,height:55,borderRadius:16,background:`rgba(232,163,79,0.1)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.6rem",marginBottom:"1.5rem",border:`1px solid var(--border)`}}>{s.icon}</div>
-                    <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.35rem",fontWeight:600,color:"var(--text-main)",marginBottom:".6rem"}}>{s.title}</div>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:".88rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{s.desc}</p>
+                    <div style={{fontSize:"1.35rem",fontWeight:600,color:"var(--text-main)",marginBottom:".6rem"}}>{s.title}</div>
+                    <p style={{fontSize:".88rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{s.desc}</p>
                     <div style={{display:"flex",flexWrap:"wrap",gap:".35rem"}}>
-                      {s.tech.map(t=><span key={t} style={{padding:".25rem .75rem",borderRadius:50,background:"var(--bg-void)",border:"1px solid var(--border)",fontSize:".65rem",fontFamily:"'DM Mono',monospace",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>)}
+                      {s.tech.map(t=><span key={t} className={`${dmMono.className}`} style={{padding:".25rem .75rem",borderRadius:50,background:"var(--bg-void)",border:"1px solid var(--border)",fontSize:".65rem",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>)}
                     </div>
                   </div>
                 ))}
@@ -1055,21 +1098,21 @@ export default function BerkePortfolio() {
                   <div key={p.num} className="proj-card tilt-card reveal-card">
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.2rem"}}>
                       <div style={{width:50,height:50,borderRadius:16,background:`rgba(232,163,79,0.15)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.5rem",border:`1px solid var(--border)`}}>{p.icon}</div>
-                      <span style={{fontFamily:"'DM Mono',monospace",fontSize:".6rem",fontWeight:500,color:"var(--text-muted)",background:"var(--bg-void)",border:"1px solid var(--border)",padding:".3rem .8rem",borderRadius:50}}>{p.year}</span>
+                      <span className={`${dmMono.className}`} style={{fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",background:"var(--bg-void)",border:"1px solid var(--border)",padding:".3rem .8rem",borderRadius:50}}>{p.year}</span>
                     </div>
-                    <div style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:500,letterSpacing:"0.14em",textTransform:"uppercase",color:p.color,marginBottom:".5rem"}}>{p.tag}</div>
+                    <div className={`${dmMono.className}`} style={{fontSize:".65rem",fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:p.color,marginBottom:".5rem"}}>{p.tag}</div>
                     
-                    <div className="hover-image-text" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontWeight:600,color:"var(--text-main)",marginBottom:".4rem",lineHeight:1.2,display:"inline-block"}}>
+                    <div className="hover-image-text" style={{fontSize:"1.4rem",fontWeight:600,color:"var(--text-main)",marginBottom:".4rem",lineHeight:1.2,display:"inline-block"}}>
                       {p.name}
                     </div>
                     
-                    <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".75rem",color:"var(--text-muted)",marginBottom:".85rem"}}>{p.org}</div>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:".86rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{p.desc}</p>
+                    <div style={{fontSize:".75rem",color:"var(--text-muted)",marginBottom:".85rem"}}>{p.org}</div>
+                    <p style={{fontSize:".86rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{p.desc}</p>
                     <div style={{display:"flex",flexWrap:"wrap",gap:".35rem",marginBottom:"1.4rem"}}>
-                      {p.tech.map(t=><span key={t} style={{padding:".25rem .75rem",borderRadius:50,background:"var(--bg-void)",border:"1px solid var(--border)",fontSize:".65rem",fontFamily:"'DM Mono',monospace",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>)}
+                      {p.tech.map(t=><span key={t} className={`${dmMono.className}`} style={{padding:".25rem .75rem",borderRadius:50,background:"var(--bg-void)",border:"1px solid var(--border)",fontSize:".65rem",fontWeight:500,color:"var(--text-dim)"}}>{t}</span>)}
                     </div>
                     <div style={{display:"flex",gap:"1.2rem"}}>
-                      {["Demo ↗","Code ↗"].map(l=><a key={l} href="#" style={{fontFamily:"'Outfit',sans-serif",fontSize:".8rem",fontWeight:500,color:"var(--accent)",textDecoration:"none"}}>{l}</a>)}
+                      {["Demo ↗","Code ↗"].map(l=><a key={l} href="#" style={{fontSize:".85rem",fontWeight:600,color:"var(--accent)",textDecoration:"none"}}>{l}</a>)}
                     </div>
                   </div>
                 ))}
@@ -1077,78 +1120,69 @@ export default function BerkePortfolio() {
             </div>
           </section>
 
-          {/* SECTION 1: CORE TECH STACK (ANIMATED PYRAMID SELECTION) */}
+          {/* SKILLS MATRIX (PYRAMID) */}
           <section id="skills-tech" style={sec("var(--bg-space)")}>
             <div style={W}>
               <div className="freestyle-trigger-hook" style={{marginBottom:"1rem"}}>
                 <SLabel text="The Core Matrix"/>
               </div>
-              <SHead label="" title="Giant Animated Triangle<br/><em style='color:var(--accent);font-style:italic'>Tech Stack Ecosystem</em>"/>
+              <SHead label="" title="Triangle<br/><em style='color:var(--accent);font-style:italic'>Tech Stack Ecosystem</em>"/>
 
               <div className="pyramid-freestyle-canvas">
-                
-                {/* Embedded Ambient Particle Fields */}
                 <div className="canvas-particle" style={{width: 6, height: 6, left: "25%", top: "40%", animation: "floatParticle1 6s infinite ease-in-out"}}/>
                 <div className="canvas-particle" style={{width: 4, height: 4, right: "30%", top: "25%", animation: "floatParticle2 8s infinite ease-in-out"}}/>
                 <div className="canvas-particle" style={{width: 8, height: 8, left: "45%", bottom: "15%", animation: "floatParticle1 7s infinite ease-in-out", background: "var(--sage)"}}/>
                 <div className="canvas-particle" style={{width: 5, height: 5, right: "20%", bottom: "35%", animation: "floatParticle2 5s infinite ease-in-out", background: "var(--cyan)"}}/>
 
                 <div className="pyramid-freestyle-grid">
-                  
-                  {/* Tier 1: Apex (1 Node) */}
                   <div className="freestyle-tier-row">
-                    <button className="pyramid-freestyle-node" onClick={() => setActiveDetail(TECH_STACK[0])}>
-                      <img className="node-img-logo" src={TECH_STACK[0].logo} alt={TECH_STACK[0].name} />
-                      <span className="node-hover-tag">{TECH_STACK[0].name}</span>
+                    <button className="pyramid-freestyle-node" onClick={() => setActiveDetail(TECH_STACK[0])} aria-label={TECH_STACK[0].name}>
+                      <img className="node-img-logo" src={TECH_STACK[0].logo} alt="" />
+                      <span className={`node-hover-tag ${dmMono.className}`}>{TECH_STACK[0].name}</span>
                     </button>
                   </div>
 
-                  {/* Tier 2: Slope (2 Nodes) */}
                   <div className="freestyle-tier-row">
                     {[TECH_STACK[1], TECH_STACK[2]].map(node => (
-                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
-                        <img className="node-img-logo" src={node.logo} alt={node.name} />
-                        <span className="node-hover-tag">{node.name}</span>
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)} aria-label={node.name}>
+                        <img className="node-img-logo" src={node.logo} alt="" />
+                        <span className={`node-hover-tag ${dmMono.className}`}>{node.name}</span>
                       </button>
                     ))}
                   </div>
 
-                  {/* Tier 3: Core Inner (3 Nodes) */}
                   <div className="freestyle-tier-row">
                     {[TECH_STACK[3], TECH_STACK[4], TECH_STACK[5]].map(node => (
-                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
-                        <img className="node-img-logo" src={node.logo} alt={node.name} />
-                        <span className="node-hover-tag">{node.name}</span>
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)} aria-label={node.name}>
+                        <img className="node-img-logo" src={node.logo} alt="" />
+                        <span className={`node-hover-tag ${dmMono.className}`}>{node.name}</span>
                       </button>
                     ))}
                   </div>
 
-                  {/* Tier 4: Foundation (4 Nodes) */}
                   <div className="freestyle-tier-row">
                     {[TECH_STACK[6], TECH_STACK[7], TECH_STACK[8], TECH_STACK[9]].map(node => (
-                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
-                        <img className="node-img-logo" src={node.logo} alt={node.name} />
-                        <span className="node-hover-tag">{node.name}</span>
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)} aria-label={node.name}>
+                        <img className="node-img-logo" src={node.logo} alt="" />
+                        <span className={`node-hover-tag ${dmMono.className}`}>{node.name}</span>
                       </button>
                     ))}
                   </div>
 
-                  {/* Tier 5: Giant Base Floor Floor (5 Nodes) */}
                   <div className="freestyle-tier-row">
                     {[TECH_STACK[10], TECH_STACK[11], TECH_STACK[12], TECH_STACK[13], TECH_STACK[14]].map(node => (
-                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)}>
-                        <img className="node-img-logo" src={node.logo} alt={node.name} />
-                        <span className="node-hover-tag">{node.name}</span>
+                      <button key={node.id} className="pyramid-freestyle-node" onClick={() => setActiveDetail(node)} aria-label={node.name}>
+                        <img className="node-img-logo" src={node.logo} alt="" />
+                        <span className={`node-hover-tag ${dmMono.className}`}>{node.name}</span>
                       </button>
                     ))}
                   </div>
-
                 </div>
               </div>
             </div>
           </section>
 
-          {/* SECTION 2: HUMAN LANGUAGES (PREMIUM HORIZONTAL CARD SECTION) */}
+          {/* HUMAN LANGUAGES */}
           <section id="skills-languages" style={sec("var(--bg-void)")}>
             <div style={W}>
               <div style={{marginBottom:"1rem"}}>
@@ -1156,34 +1190,31 @@ export default function BerkePortfolio() {
               </div>
               <SHead label="" title="Premium Linguistics<br/><em style='color:var(--accent);font-style:italic'>Human Languages</em>"/>
 
-              {/* Grid Horizontal Layout Clean Definition without Triangle */}
               <div className="lang-horizontal-grid">
                 {HUMAN_LANGS.map(lang => (
                   <div key={lang.id} className="lang-premium-card reveal-card" onClick={() => setActiveDetail(lang)}>
                     <div className="lang-meta-left">
                       <div className="lang-flag-box">{lang.icon}</div>
                       <div>
-                        <div className="lang-title-text">{lang.name}</div>
-                        <div className="lang-badge-status">{lang.type}</div>
+                        <div style={{fontSize: "1.5rem", fontWeight: 700, color: "var(--text-main)"}}>{lang.name}</div>
+                        <div className={`${dmMono.className} lang-badge-status`}>{lang.type}</div>
                       </div>
                     </div>
-                    <div style={{fontSize:"0.85rem", color:"var(--accent)", opacity: 0.7}}>
+                    <div style={{fontSize:"0.85rem", color:"var(--accent)", opacity: 0.85, fontWeight: 500}}>
                       View Detail ↗
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* OVERVIEW DATA METRICS FIELD ROW */}
               <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1.5rem",marginTop:"6rem"}} className="two-col">
                 {[["15","Skills Mastered",""],["6","Projects Shipped",""],["2","Years Coding","+"],["4","Human Languages",""]].map(([n,l,s])=>(
                   <div key={l} style={{background:"var(--bg-card)",borderRadius:20,padding:"1.5rem",textAlign:"center",border:"1px solid var(--border)",boxShadow:"var(--shadow)"}}>
-                    <div className="counter-anim" data-to={parseInt(n)} data-suffix={s} style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"3rem",fontWeight:700,color:"var(--accent)"}}>{n}{s}</div>
-                    <div style={{fontFamily:"'DM Mono',monospace",fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.08em",marginTop:".4rem"}}>{l}</div>
+                    <div className="counter-anim" data-to={parseInt(n)} data-suffix={s} style={{fontSize:"3rem",fontWeight:700,color:"var(--accent)"}}>{n}{s}</div>
+                    <div className={`${dmMono.className}`} style={{fontSize:".65rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.08em",marginTop:".4rem"}}>{l}</div>
                   </div>
                 ))}
               </div>
-
             </div>
           </section>
 
@@ -1204,12 +1235,12 @@ export default function BerkePortfolio() {
                       {t.icon}
                     </div>
                     <div className="tl-content">
-                      <div style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:"5rem"}}>{t.year}</div>
-                      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontWeight:700,color:"var(--text-main)",marginBottom:".3rem"}}>{t.role}</div>
-                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".9rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>{t.company}</div>
+                      <div className={`${dmMono.className}`} style={{fontSize:".75rem",fontWeight:600,color:"var(--accent)",letterSpacing:"0.14em",marginBottom:".5rem"}}>{t.year}</div>
+                      <div style={{fontSize:"1.4rem",fontWeight:700,color:"var(--text-main)",marginBottom:".3rem"}}>{t.role}</div>
+                      <div style={{fontSize:".9rem",color:"var(--text-muted)",marginBottom:"1.2rem"}}>{t.company}</div>
                       <ul style={{listStyle:"none",display:"flex",flexDirection:"column",gap:".7rem"}}>
                         {t.points.map((pt,j)=>(
-                          <li key={j} style={{display:"flex",gap:".8rem",fontFamily:"'Outfit',sans-serif",fontSize:"0.9rem",color:"var(--text-dim)",lineHeight:1.75}}>
+                          <li key={j} style={{display:"flex",gap:".8rem",fontSize:"0.95rem",color:"var(--text-dim)",lineHeight:1.75}}>
                             <div style={{width:6,height:6,background:"var(--accent)",borderRadius:"50%",flexShrink:0,marginTop:".6rem"}}/>
                             {pt}
                           </li>
@@ -1225,10 +1256,10 @@ export default function BerkePortfolio() {
           {/* QUOTE */}
           <section id="quote" style={{...sec("var(--bg-card)"),textAlign:"center",overflow:"hidden",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",padding:"8rem 2rem"}}>
             <div style={{position:"absolute",width:600,height:600,background:"radial-gradient(circle,rgba(232,163,79,0.08),transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none"}}/>
-            <p className="q-text" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(1.8rem,4vw,3.2rem)",fontStyle:"italic",fontWeight:500,color:"var(--text-main)",lineHeight:1.4,maxWidth:850,margin:"0 auto 2rem"}}>
+            <p className="q-text" style={{fontSize:"clamp(1.8rem,4vw,3.2rem)",fontStyle:"italic",fontWeight:500,color:"var(--text-main)",lineHeight:1.4,maxWidth:850,margin:"0 auto 2rem"}}>
               "Technology should not just be functional — it should create genuine impact for the people who use it."
             </p>
-            <p className="q-author" style={{fontFamily:"'DM Mono',monospace",fontSize:".8rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.18em"}}>
+            <p className={`q-author ${dmMono.className}`} style={{fontSize:".8rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.18em"}}>
               — Berke Jaisyurrohman · IT Student & Developer
             </p>
           </section>
@@ -1241,16 +1272,16 @@ export default function BerkePortfolio() {
                 {ACHIEVEMENTS.map(a=>(
                   <div key={a.title} className="ach-card tilt-card reveal-card">
                     <div style={{fontSize:"2.2rem",marginBottom:"1.2rem"}}>{a.icon}</div>
-                    <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.25rem",fontWeight:600,color:"var(--text-main)",marginBottom:".5rem"}}>{a.title}</div>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:".86rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{a.desc}</p>
-                    <span className="ach-badge">{a.badge}</span>
+                    <div style={{fontSize:"1.25rem",fontWeight:600,color:"var(--text-main)",marginBottom:".5rem"}}>{a.title}</div>
+                    <p style={{fontSize:".86rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"1.2rem"}}>{a.desc}</p>
+                    <span className={`ach-badge ${dmMono.className}`} style={{color:"var(--accent)", fontSize: "0.75rem", fontWeight: 500}}>{a.badge}</span>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* PREMIUM CONTACT SECTION */}
+          {/* OPTIMIZED CONTACT SECTION (DENGAN REFRESH TAMPILAN) */}
           <section id="contact" style={{...sec("var(--bg-void)"), overflow:"hidden"}}>
             <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(232,163,79,0.08),transparent 75%)",top:-100,right:-100,pointerEvents:"none"}}/>
             <div style={{position:"absolute",width:500,height:500,background:"radial-gradient(circle,rgba(95,200,155,0.06),transparent 75%)",bottom:-150,left:-150,pointerEvents:"none"}}/>
@@ -1258,19 +1289,19 @@ export default function BerkePortfolio() {
             <div style={W}>
               <div className="premium-contact-wrapper">
                 
-                {/* LEFT SIDE PANEL */}
+                {/* LEFT PANEL: INFO DETAILS */}
                 <div className="contact-glass-panel reveal-card">
                   <div>
                     <SLabel text="Let's Connect"/>
-                    <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,4.2vw,3.8rem)",fontWeight:700,color:"var(--text-main)",lineHeight:1.1,marginBottom:"1.5rem"}}>
+                    <h2 style={{fontSize:"clamp(2.5rem,4.2vw,3.8rem)",fontWeight:700,color:"var(--text-main)",lineHeight:1.1,marginBottom:"1.5rem"}}>
                       Ready to Build<br/><em style={{color:"var(--accent)",fontStyle:"italic"}}>Something Great?</em>
                     </h2>
-                    <p style={{fontFamily:"'Outfit',sans-serif",fontSize:"1rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"3rem",maxWidth:"440px"}}>
+                    <p style={{fontSize:"1rem",color:"var(--text-dim)",lineHeight:1.8,marginBottom:"3rem",maxWidth:"440px"}}>
                       Always open to digital innovations, systems architecture designs, or mobile developments challenge. Let's start the dialogue.
                     </p>
                   </div>
 
-                  <div style={{display:"flex",flexDirection:"column",gap:"1.1rem"}}>
+                  <div style={{display:"flex",flexDirection:"column",gap:"1.2rem"}}>
                     {[
                       ["✉️","Email","berkejaisyurrohman95@gmail.com","mailto:berkejaisyurrohman95@gmail.com"],
                       ["📱","Phone","+62 895-0614-7763","tel:+6289506147763"],
@@ -1280,24 +1311,26 @@ export default function BerkePortfolio() {
                       <a key={lbl} href={linkUrl} target={linkUrl.startsWith("http")?"_blank":"_self"} className="contact-hub-link">
                         <div className="hub-icon-box">{ico}</div>
                         <div>
-                          <div style={{fontFamily:"'DM Mono',monospace",fontSize:".62rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:2}}>{lbl}</div>
-                          <div style={{fontFamily:"'Outfit',sans-serif",fontSize:".95rem",fontWeight:500,color:"var(--text-main)"}}>{val}</div>
+                          <div className={`${dmMono.className}`} style={{fontSize:".68rem",fontWeight:600,color:"var(--text-muted)",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:2}}>{lbl}</div>
+                          <div style={{fontSize:".95rem",fontWeight:500,color:"var(--text-main)"}}>{val}</div>
                         </div>
                       </a>
                     ))}
                   </div>
                 </div>
 
-                {/* RIGHT SIDE PANEL */}
+                {/* RIGHT PANEL: FORM INPUT */}
                 <div className="contact-form-panel reveal-card">
                   <div style={{display:"flex",flexDirection:"column",gap:"1.5rem"}}>
                     {["Name","Email","Subject"].map(f=>(
                       <div key={f}>
-                        <input suppressHydrationWarning type={f==="Email"?"email":"text"} className="cf-in" placeholder={f==="Name"?"Your full name":f==="Email"?"your@email.com":"Project architectural scope..."}/>
+                        <label htmlFor={`input-${f.toLowerCase()}`} style={{display:"block", fontSize:"0.85rem", fontWeight:500, marginBottom:"0.5rem", color:"var(--text-dim)"}}>{f}</label>
+                        <input id={`input-${f.toLowerCase()}`} type={f==="Email"?"email":"text"} className="cf-in" placeholder={f==="Name"?"Your full name":f==="Email"?"your@email.com":"Project architectural scope..."}/>
                       </div>
                     ))}
                     <div>
-                      <textarea suppressHydrationWarning className="cf-in" rows={5} placeholder="Describe your project idea or message summary..."/>
+                      <label htmlFor="input-message" style={{display:"block", fontSize:"0.85rem", fontWeight:500, marginBottom:"0.5rem", color:"var(--text-dim)"}}>Message</label>
+                      <textarea id="input-message" className="cf-in" rows={5} placeholder="Describe your project idea or message summary..."/>
                     </div>
                     
                     <button 
@@ -1312,14 +1345,14 @@ export default function BerkePortfolio() {
                         color:"var(--bg-void)",
                         border:"none",
                         borderRadius:50,
-                        fontFamily:"'Outfit',sans-serif",
                         fontSize:".95rem",
                         fontWeight:600,
                         opacity:sendStatus==="sending"?.65:1,
                         marginTop:".5rem",
                         boxShadow: sendStatus==="sent"?"0 8px 20px rgba(95,200,155,0.3)":"none",
                         cursor: "pointer",
-                        transition: "all 0.3s ease"
+                        transition: "all 0.3s ease",
+                        minHeight: "48px"
                       }}
                     >
                       {sendStatus==="idle"?"Send Message ✦":sendStatus==="sending"?"Sending Package…":"Sent Successfully! ✓"}
@@ -1333,9 +1366,9 @@ export default function BerkePortfolio() {
 
           {/* FOOTER */}
           <footer style={{background:"var(--bg-void)",borderTop:"1px solid var(--border)",padding:"1.8rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"1rem",position:"relative",zIndex:3}}>
-            <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>© 2026 <span style={{color:"var(--text-main)"}}>Berke Jaisyurrohman</span>. Bekasi, Indonesia.</p>
-            <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)"}}>Built with <span style={{color:"var(--accent)"}}>Next.js</span> · <span style={{color:"var(--gold)"}}>GSAP</span> · <span style={{color:"var(--cyan)"}}>Interactive Workspace ✓</span></p>
-            <p style={{fontFamily:"'DM Mono',monospace",fontSize:".7rem",fontWeight:500,color:"var(--text-muted)",display:"flex",alignItems:"center",gap:".5rem"}}><span style={{color:"var(--sage)"}}>●</span> Available for collaboration</p>
+            <p className={`${dmMono.className}`} style={{fontSize:".75rem",fontWeight:500,color:"var(--text-muted)"}}>© 2026 <span style={{color:"var(--text-main)"}}>Berke Jaisyurrohman</span>. Bekasi, Indonesia.</p>
+            <p className={`${dmMono.className}`} style={{fontSize:".75rem",fontWeight:500,color:"var(--text-muted)"}}>Built with <span style={{color:"var(--accent)"}}>Next.js</span> · <span style={{color:"var(--gold)"}}>GSAP</span> · <span style={{color:"var(--cyan)"}}>Interactive Workspace ✓</span></p>
+            <p className={`${dmMono.className}`} style={{fontSize:".75rem",fontWeight:500,color:"var(--text-muted)",display:"flex",alignItems:"center",gap:".5rem"}}><span style={{color:"var(--sage)"}}>●</span> Available for collaboration</p>
           </footer>
 
         </div>
