@@ -15,50 +15,113 @@
   padding-inline: 1.25rem;
 }
 
-#skills-tech .pyramid-freestyle-canvas {
-  min-height: 0 !important;
-  padding: 1.5rem 0 0 !important;
-  overflow: visible !important;
-  border-radius: 0 !important;
+.projects-heading-active {
+  width: fit-content;
+  color: var(--text-main) !important;
+  cursor: default;
+  transition: filter 0.35s ease, transform 0.35s ease;
+  text-shadow: 0 0 24px rgba(var(--accent-rgb), 0.16);
 }
 
-#skills-tech .pyramid-freestyle-canvas::before,
+.projects-heading-active em {
+  position: relative;
+  display: inline-block;
+  color: var(--accent) !important;
+  text-shadow: 0 0 26px rgba(var(--accent-rgb), 0.38);
+}
+
+.projects-heading-active em::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.14em;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: scaleX(0.35);
+  opacity: 0.65;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.projects-heading-active:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+
+.projects-heading-active:hover em::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+#skills-tech .pyramid-freestyle-canvas {
+  min-height: 720px !important;
+  padding: 4rem 0 !important;
+  overflow: hidden !important;
+  border-radius: 40px !important;
+}
+
+#skills-tech .pyramid-freestyle-canvas::before {
+  display: block !important;
+  width: min(86%, 820px) !important;
+  height: 92% !important;
+  border: 1px solid rgba(var(--accent-rgb), 0.18) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--accent-rgb), 0.07) 0%,
+    rgba(var(--accent-rgb), 0.01) 100%
+  ) !important;
+}
+
 #skills-tech .canvas-particle {
-  display: none !important;
+  display: block !important;
 }
 
 #skills-tech .pyramid-freestyle-grid {
   width: 100%;
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1rem !important;
-  align-items: stretch !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 30px !important;
 }
 
-#skills-tech .freestyle-tier-row,
+#skills-tech .freestyle-tier-row {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: clamp(16px, 2.4vw, 36px) !important;
+}
+
 #skills-tech .docker-skill-slot {
-  display: contents !important;
+  display: flex;
 }
 
 #skills-tech .pyramid-freestyle-node {
-  width: 100% !important;
-  min-width: 0;
-  height: 118px !important;
-  border-radius: 20px !important;
-  padding: 1.35rem !important;
+  width: 95px !important;
+  min-width: 95px;
+  height: 95px !important;
+  border-radius: 24px !important;
+  padding: 18px !important;
   overflow: visible;
 }
 
 #skills-tech .pyramid-freestyle-node:hover,
 #skills-tech .pyramid-freestyle-node:focus-visible {
-  transform: translateY(-7px) !important;
+  transform: scale(1.18) translateY(-8px) !important;
   outline: none;
 }
 
 #skills-tech .pyramid-freestyle-node .node-img-logo {
-  width: 58px !important;
-  height: 58px !important;
-  filter: grayscale(0.15) opacity(0.82) !important;
+  width: 100% !important;
+  height: 100% !important;
+  filter: grayscale(0.2) opacity(0.76) !important;
+}
+
+#skills-tech .pyramid-freestyle-node .node-img-logo[data-brand-white="true"] {
+  filter: none !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.18)) !important;
 }
 
 #skills-tech .pyramid-freestyle-node:hover .node-img-logo,
@@ -66,8 +129,13 @@
   filter: grayscale(0) opacity(1) !important;
 }
 
+#skills-tech .pyramid-freestyle-node:hover .node-img-logo[data-brand-white="true"],
+#skills-tech .pyramid-freestyle-node:focus-visible .node-img-logo[data-brand-white="true"] {
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.42)) !important;
+}
+
 #skills-tech .node-hover-tag {
-  bottom: -24px !important;
+  bottom: -32px !important;
 }
 
 .docker-skill-node {
@@ -83,36 +151,60 @@
 .portfolio-skill-dialog-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100000;
-  display: grid;
-  place-items: center;
-  padding: 1.25rem;
-  background: rgba(3, 4, 9, 0.76);
-  backdrop-filter: blur(14px);
+  z-index: 2999;
+  background: rgba(5, 5, 8, 0.6);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.portfolio-skill-dialog-backdrop.backdrop-active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .portfolio-skill-dialog {
-  width: min(520px, 100%);
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 26px;
-  padding: 2rem;
-  background: #111322;
-  color: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 3000;
+  width: min(440px, 100vw);
+  height: 100vh;
+  padding: 3.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-void));
+  color: var(--text-main);
+  border-left: 1px solid var(--border);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  transform: translateX(105%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-skill-dialog.drawer-active {
+  transform: translateX(0);
 }
 
 .portfolio-skill-dialog img {
-  width: 68px;
-  height: 68px;
+  width: 82px;
+  height: 82px;
   object-fit: contain;
-  margin-bottom: 1.25rem;
+  margin: 4rem 0 1.5rem;
+}
+
+.portfolio-skill-dialog .skill-eyebrow {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
 }
 
 .portfolio-skill-dialog h3 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
   line-height: 1;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
 }
 
 .portfolio-skill-dialog .skill-type {
@@ -120,31 +212,47 @@
   font-size: 0.72rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.4rem;
 }
 
 .portfolio-skill-dialog p {
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.8;
+  color: var(--text-dim);
+  line-height: 1.85;
 }
 
 .portfolio-skill-dialog-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: var(--border);
+  color: var(--text-main);
   font-size: 1.15rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-skill-dialog-close:hover {
+  background: var(--accent);
+  color: var(--bg-void);
+  transform: rotate(90deg);
 }
 
 @media (max-width: 980px) {
-  #skills-tech .pyramid-freestyle-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  #skills-tech .pyramid-freestyle-canvas {
+    min-height: 640px !important;
+  }
+
+  #skills-tech .freestyle-tier-row {
+    gap: 14px !important;
+  }
+
+  #skills-tech .pyramid-freestyle-node {
+    width: 78px !important;
+    min-width: 78px;
+    height: 78px !important;
+    padding: 14px !important;
   }
 }
 
@@ -155,26 +263,52 @@
     letter-spacing: 0.01em !important;
   }
 
+  #skills-tech .pyramid-freestyle-canvas {
+    min-height: 560px !important;
+    padding: 3rem 0 !important;
+  }
+
+  #skills-tech .pyramid-freestyle-canvas::before {
+    width: 98% !important;
+  }
+
   #skills-tech .pyramid-freestyle-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem !important;
+    gap: 22px !important;
+    transform: scale(0.88);
+  }
+
+  #skills-tech .freestyle-tier-row {
+    gap: 8px !important;
   }
 
   #skills-tech .pyramid-freestyle-node {
-    height: 105px !important;
+    width: 56px !important;
+    min-width: 56px;
+    height: 56px !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
   }
 
   #skills-tech .node-hover-tag {
     opacity: 1 !important;
     transform: none !important;
-    bottom: -20px !important;
-    font-size: 0.6rem !important;
+    bottom: -19px !important;
+    font-size: 0.52rem !important;
+    padding: 2px 6px !important;
+  }
+
+  .portfolio-skill-dialog {
+    width: 100%;
+    padding: 2rem 1.5rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #skills-tech .pyramid-freestyle-node,
-  #skills-tech .node-img-logo {
+  #skills-tech .node-img-logo,
+  .projects-heading-active,
+  .projects-heading-active em::after,
+  .portfolio-skill-dialog {
     transition: none !important;
   }
 }
