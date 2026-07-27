@@ -1,0 +1,180 @@
+/* Portfolio polish overrides */
+
+.liquid-text {
+  width: min(92vw, 1200px);
+  font-size: clamp(4.25rem, 13vw, 12rem) !important;
+  line-height: 0.82;
+  text-align: center;
+  letter-spacing: 0.025em !important;
+  white-space: nowrap;
+  text-wrap: balance;
+  filter: drop-shadow(0 0 28px rgba(232, 163, 79, 0.18));
+}
+
+.preloader {
+  padding-inline: 1.25rem;
+}
+
+#skills-tech .pyramid-freestyle-canvas {
+  min-height: 0 !important;
+  padding: 1.5rem 0 0 !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+}
+
+#skills-tech .pyramid-freestyle-canvas::before,
+#skills-tech .canvas-particle {
+  display: none !important;
+}
+
+#skills-tech .pyramid-freestyle-grid {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem !important;
+  align-items: stretch !important;
+}
+
+#skills-tech .freestyle-tier-row,
+#skills-tech .docker-skill-slot {
+  display: contents !important;
+}
+
+#skills-tech .pyramid-freestyle-node {
+  width: 100% !important;
+  min-width: 0;
+  height: 118px !important;
+  border-radius: 20px !important;
+  padding: 1.35rem !important;
+  overflow: visible;
+}
+
+#skills-tech .pyramid-freestyle-node:hover,
+#skills-tech .pyramid-freestyle-node:focus-visible {
+  transform: translateY(-7px) !important;
+  outline: none;
+}
+
+#skills-tech .pyramid-freestyle-node .node-img-logo {
+  width: 58px !important;
+  height: 58px !important;
+  filter: grayscale(0.15) opacity(0.82) !important;
+}
+
+#skills-tech .pyramid-freestyle-node:hover .node-img-logo,
+#skills-tech .pyramid-freestyle-node:focus-visible .node-img-logo {
+  filter: grayscale(0) opacity(1) !important;
+}
+
+#skills-tech .node-hover-tag {
+  bottom: -24px !important;
+}
+
+.docker-skill-node {
+  border-color: rgba(36, 150, 237, 0.35) !important;
+}
+
+.docker-skill-node:hover,
+.docker-skill-node:focus-visible {
+  border-color: #2496ed !important;
+  box-shadow: 0 0 36px rgba(36, 150, 237, 0.22) !important;
+}
+
+.portfolio-skill-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(3, 4, 9, 0.76);
+  backdrop-filter: blur(14px);
+}
+
+.portfolio-skill-dialog {
+  width: min(520px, 100%);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  padding: 2rem;
+  background: #111322;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+}
+
+.portfolio-skill-dialog img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  margin-bottom: 1.25rem;
+}
+
+.portfolio-skill-dialog h3 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+
+.portfolio-skill-dialog .skill-type {
+  color: #2496ed;
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+
+.portfolio-skill-dialog p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+}
+
+.portfolio-skill-dialog-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+@media (max-width: 980px) {
+  #skills-tech .pyramid-freestyle-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .liquid-text {
+    width: 100%;
+    font-size: clamp(3rem, 17vw, 5.5rem) !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  #skills-tech .pyramid-freestyle-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem !important;
+  }
+
+  #skills-tech .pyramid-freestyle-node {
+    height: 105px !important;
+  }
+
+  #skills-tech .node-hover-tag {
+    opacity: 1 !important;
+    transform: none !important;
+    bottom: -20px !important;
+    font-size: 0.6rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #skills-tech .pyramid-freestyle-node,
+  #skills-tech .node-img-logo {
+    transition: none !important;
+  }
+}
