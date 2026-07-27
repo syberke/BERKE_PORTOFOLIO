@@ -29,14 +29,29 @@ function fallbackLogo(label) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
+function whiteBrandLogo(label) {
+  const isVercel = label.toLowerCase().includes("vercel");
+  const svg = isVercel
+    ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path fill="#fff" d="M64 18 116 108H12L64 18Z"/></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="51" fill="none" stroke="#fff" stroke-width="8"/><path fill="#fff" d="M39 39h12l38 50V39h10v64H88L49 52v51H39V39Z"/></svg>`;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 function makeLogosResilient() {
   document.querySelectorAll(".node-img-logo").forEach((image) => {
     const button = image.closest("button");
     const label = button?.getAttribute("aria-label") || "Technology";
+    const normalizedLabel = label.toLowerCase();
 
     image.alt = `${label} logo`;
     image.loading = "lazy";
     image.decoding = "async";
+
+    if (normalizedLabel.includes("next.js") || normalizedLabel.includes("vercel")) {
+      image.src = whiteBrandLogo(label);
+      image.dataset.brandWhite = "true";
+    }
 
     if (image.dataset.fallbackReady === "true") return;
     image.dataset.fallbackReady = "true";
@@ -52,6 +67,7 @@ function makeLogosResilient() {
 function replaceCopy() {
   const skillSection = document.querySelector("#skills-tech");
   const languageSection = document.querySelector("#skills-languages");
+  const projectsSection = document.querySelector("#projects");
 
   const skillLabel = skillSection?.querySelector(
     ".freestyle-trigger-hook .scramble-text"
@@ -64,7 +80,12 @@ function replaceCopy() {
   if (skillHeading && !skillHeading.dataset.copyPolished) {
     skillHeading.dataset.copyPolished = "true";
     skillHeading.innerHTML =
-      "Tools &amp; Technologies<br/><em style='color:var(--accent);font-style:italic'>I Work With</em>";
+      "Tech Stack<br/><em style='color:var(--accent);font-style:italic'>Ecosystem</em>";
+  }
+
+  const projectHeading = projectsSection?.querySelector("h2");
+  if (projectHeading) {
+    projectHeading.classList.add("projects-heading-active");
   }
 
   const languageLabel = languageSection?.querySelector(".scramble-text");
@@ -78,6 +99,13 @@ function replaceCopy() {
     languageHeading.innerHTML =
       "Languages<br/><em style='color:var(--accent);font-style:italic'>I Use</em>";
   }
+
+  document.querySelectorAll("#skills-languages [style*='font-size']").forEach((node) => {
+    if (node.textContent?.trim() === "2") {
+      const parentText = node.parentElement?.textContent || "";
+      if (parentText.includes("Years Coding")) node.textContent = "3";
+    }
+  });
 }
 
 export default function PortfolioEnhancer() {
@@ -95,14 +123,16 @@ export default function PortfolioEnhancer() {
       const grid = document.querySelector(
         "#skills-tech .pyramid-freestyle-grid"
       );
+      const rows = grid?.querySelectorAll(".freestyle-tier-row");
+      const finalRow = rows?.[rows.length - 1];
 
-      if (grid && !grid.querySelector(".docker-skill-slot")) {
+      if (finalRow && !finalRow.querySelector(".docker-skill-slot")) {
         mountNode = document.createElement("div");
         mountNode.className = "docker-skill-slot";
-        grid.appendChild(mountNode);
+        finalRow.appendChild(mountNode);
         setDockerMount(mountNode);
-      } else if (grid) {
-        setDockerMount(grid.querySelector(".docker-skill-slot"));
+      } else if (finalRow) {
+        setDockerMount(finalRow.querySelector(".docker-skill-slot"));
       }
     };
 
@@ -155,41 +185,40 @@ export default function PortfolioEnhancer() {
   return (
     <>
       {dockerButton}
-      {showDocker && (
-        <div
-          className="portfolio-skill-dialog-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setShowDocker(false);
-          }}
+      <div
+        className={`portfolio-skill-dialog-backdrop ${showDocker ? "backdrop-active" : ""}`}
+        role="presentation"
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setShowDocker(false);
+        }}
+      />
+      <aside
+        className={`portfolio-skill-dialog ${showDocker ? "drawer-active" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!showDocker}
+        aria-labelledby="docker-skill-title"
+      >
+        <button
+          type="button"
+          className="portfolio-skill-dialog-close"
+          aria-label="Close Docker detail"
+          onClick={() => setShowDocker(false)}
         >
-          <section
-            className="portfolio-skill-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="docker-skill-title"
-          >
-            <button
-              type="button"
-              className="portfolio-skill-dialog-close"
-              aria-label="Close Docker detail"
-              onClick={() => setShowDocker(false)}
-            >
-              ×
-            </button>
-            <img
-              src={DOCKER_SKILL.logo}
-              alt="Docker logo"
-              onError={(event) => {
-                event.currentTarget.src = dockerFallback;
-              }}
-            />
-            <h3 id="docker-skill-title">{DOCKER_SKILL.name}</h3>
-            <div className="skill-type">{DOCKER_SKILL.type}</div>
-            <p>{DOCKER_SKILL.description}</p>
-          </section>
-        </div>
-      )}
+          ×
+        </button>
+        <img
+          src={DOCKER_SKILL.logo}
+          alt="Docker logo"
+          onError={(event) => {
+            event.currentTarget.src = dockerFallback;
+          }}
+        />
+        <div className="skill-eyebrow">Technical Skill</div>
+        <h3 id="docker-skill-title">{DOCKER_SKILL.name}</h3>
+        <div className="skill-type">{DOCKER_SKILL.type}</div>
+        <p>{DOCKER_SKILL.description}</p>
+      </aside>
     </>
   );
 }
