@@ -1,4 +1,6 @@
 import "./globals.css";
+import "./polish.css";
+import PortfolioEnhancer from "./PortfolioEnhancer";
 
 export const metadata = {
   title: "Berke Jaisyurrohman — Portfolio",
@@ -8,7 +10,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <PortfolioEnhancer />
+        {children}
+      </body>
     </html>
   );
 }
