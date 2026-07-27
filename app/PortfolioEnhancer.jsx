@@ -149,9 +149,11 @@ function replaceCopy() {
   }
 
   const skillHeading = skillSection?.querySelector("h2");
+  const skillHeadingText = skillHeading?.textContent || "";
   if (
     skillHeading &&
-    !skillHeading.textContent?.includes("Tech Stack Ecosystem")
+    (skillHeadingText.includes("Giant Animated Triangle") ||
+      !skillHeadingText.includes("Ecosystem"))
   ) {
     skillHeading.innerHTML =
       "Tech Stack<br/><em style='color:var(--accent);font-style:italic'>Ecosystem</em>";
@@ -163,7 +165,7 @@ function replaceCopy() {
   }
 
   const languageHeading = languageSection?.querySelector("h2");
-  if (languageHeading && !languageHeading.textContent?.includes("Languages I Use")) {
+  if (languageHeading && !languageHeading.textContent?.includes("I Use")) {
     languageHeading.innerHTML =
       "Languages<br/><em style='color:var(--accent);font-style:italic'>I Use</em>";
   }
