@@ -15,50 +15,162 @@
   padding-inline: 1.25rem;
 }
 
-#skills-tech .pyramid-freestyle-canvas {
-  min-height: 0 !important;
-  padding: 1.5rem 0 0 !important;
-  overflow: visible !important;
-  border-radius: 0 !important;
+/* Projects heading: keep it bright and make it react to the cursor. */
+#projects h2.projects-title-interactive {
+  --title-x: 50%;
+  --title-y: 50%;
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  opacity: 1 !important;
+  color: var(--text-main) !important;
+  cursor: default;
+  outline: none;
+  transform: translateZ(0) !important;
+  text-shadow:
+    0 0 18px rgba(var(--accent-rgb), 0.13),
+    0 0 42px rgba(var(--accent-rgb), 0.08);
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    text-shadow 0.35s ease;
 }
 
-#skills-tech .pyramid-freestyle-canvas::before,
+#projects h2.projects-title-interactive::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -22% -10%;
+  border-radius: 40%;
+  pointer-events: none;
+  opacity: 0.3;
+  background: radial-gradient(
+    circle at var(--title-x) var(--title-y),
+    rgba(var(--accent-rgb), 0.34),
+    transparent 48%
+  );
+  filter: blur(22px);
+  transition: opacity 0.35s ease;
+}
+
+#projects h2.projects-title-interactive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 2rem;
+  width: 42%;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform: scaleX(0.35);
+  transform-origin: left;
+  opacity: 0.65;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s ease;
+}
+
+#projects h2.projects-title-interactive:hover,
+#projects h2.projects-title-interactive:focus-visible {
+  transform: translateY(-4px) !important;
+  text-shadow:
+    0 0 16px rgba(var(--accent-rgb), 0.38),
+    0 0 52px rgba(var(--accent-rgb), 0.2);
+}
+
+#projects h2.projects-title-interactive:hover::before,
+#projects h2.projects-title-interactive:focus-visible::before {
+  opacity: 0.72;
+}
+
+#projects h2.projects-title-interactive:hover::after,
+#projects h2.projects-title-interactive:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+#projects h2.projects-title-interactive span,
+#projects h2.projects-title-interactive .word,
+#projects h2.projects-title-interactive .word-wrap {
+  opacity: 1 !important;
+  transform: none !important;
+  color: inherit !important;
+}
+
+#projects h2.projects-title-interactive em,
+#projects h2.projects-title-interactive em span {
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent) !important;
+  text-shadow: 0 0 24px rgba(var(--accent-rgb), 0.34);
+}
+
+/* Keep the technology ecosystem triangular instead of a square card grid. */
+#skills-tech .pyramid-freestyle-canvas {
+  min-height: 720px !important;
+  padding: 3.5rem 0 4.5rem !important;
+  overflow: hidden !important;
+  border-radius: 40px !important;
+}
+
+#skills-tech .pyramid-freestyle-canvas::before {
+  display: block !important;
+  max-width: 850px !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--accent-rgb), 0.075) 0%,
+      rgba(var(--accent-rgb), 0.012) 100%
+    ) !important;
+  border: 1px solid rgba(var(--accent-rgb), 0.2) !important;
+  filter: drop-shadow(0 24px 70px rgba(var(--accent-rgb), 0.08));
+}
+
 #skills-tech .canvas-particle {
-  display: none !important;
+  display: block !important;
 }
 
 #skills-tech .pyramid-freestyle-grid {
-  width: 100%;
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1rem !important;
-  align-items: stretch !important;
+  width: 100% !important;
+  max-width: 850px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 30px !important;
 }
 
-#skills-tech .freestyle-tier-row,
+#skills-tech .freestyle-tier-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 30px !important;
+  width: auto !important;
+}
+
 #skills-tech .docker-skill-slot {
   display: contents !important;
 }
 
 #skills-tech .pyramid-freestyle-node {
-  width: 100% !important;
-  min-width: 0;
-  height: 118px !important;
-  border-radius: 20px !important;
-  padding: 1.35rem !important;
+  flex: 0 0 95px;
+  width: 95px !important;
+  min-width: 95px !important;
+  height: 95px !important;
+  border-radius: 24px !important;
+  padding: 18px !important;
   overflow: visible;
 }
 
 #skills-tech .pyramid-freestyle-node:hover,
 #skills-tech .pyramid-freestyle-node:focus-visible {
-  transform: translateY(-7px) !important;
+  transform: scale(1.18) translateY(-7px) !important;
   outline: none;
 }
 
 #skills-tech .pyramid-freestyle-node .node-img-logo {
-  width: 58px !important;
-  height: 58px !important;
-  filter: grayscale(0.15) opacity(0.82) !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  filter: grayscale(0.3) opacity(0.68) !important;
 }
 
 #skills-tech .pyramid-freestyle-node:hover .node-img-logo,
@@ -67,84 +179,213 @@
 }
 
 #skills-tech .node-hover-tag {
-  bottom: -24px !important;
+  bottom: -31px !important;
+}
+
+#skills-tech .monochrome-skill-node {
+  background: #0a0b12 !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+#skills-tech .monochrome-skill-node:hover,
+#skills-tech .monochrome-skill-node:focus-visible {
+  border-color: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: 0 0 34px rgba(255, 255, 255, 0.15) !important;
+}
+
+#skills-tech .monochrome-skill-logo,
+.premium-sidebar-drawer .monochrome-drawer-logo {
+  filter: brightness(0) invert(1) opacity(1) !important;
+}
+
+.premium-sidebar-drawer .monochrome-drawer-logo-shell {
+  padding: 14px;
+  border-radius: 20px;
+  background: #0a0b12;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .docker-skill-node {
-  border-color: rgba(36, 150, 237, 0.35) !important;
+  border-color: rgba(36, 150, 237, 0.42) !important;
 }
 
 .docker-skill-node:hover,
 .docker-skill-node:focus-visible {
   border-color: #2496ed !important;
-  box-shadow: 0 0 36px rgba(36, 150, 237, 0.22) !important;
+  box-shadow: 0 0 38px rgba(36, 150, 237, 0.26) !important;
 }
 
+/* Docker detail follows the same right-side drawer language as other skills. */
 .portfolio-skill-dialog-backdrop {
   position: fixed;
   inset: 0;
   z-index: 100000;
-  display: grid;
-  place-items: center;
-  padding: 1.25rem;
-  background: rgba(3, 4, 9, 0.76);
-  backdrop-filter: blur(14px);
+  background: rgba(3, 4, 9, 0.64);
+  backdrop-filter: blur(9px);
+  animation: portfolioBackdropIn 0.3s ease both;
 }
 
 .portfolio-skill-dialog {
-  width: min(520px, 100%);
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 26px;
-  padding: 2rem;
-  background: #111322;
-  color: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(440px, 92vw);
+  height: 100dvh;
+  overflow-y: auto;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  padding: 2.5rem;
+  background: var(--bg-card);
+  color: var(--text-main);
+  box-shadow: -22px 0 70px rgba(0, 0, 0, 0.38);
+  animation: portfolioDrawerIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.portfolio-skill-dialog img {
-  width: 68px;
-  height: 68px;
+.portfolio-skill-dialog-content {
+  min-height: calc(100dvh - 5rem);
+  display: flex;
+  flex-direction: column;
+  padding-top: 3.5rem;
+}
+
+.portfolio-skill-dialog-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.2rem;
+  filter: drop-shadow(0 0 15px rgba(36, 150, 237, 0.7));
+}
+
+.portfolio-skill-dialog-logo img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  margin-bottom: 1.25rem;
 }
 
 .portfolio-skill-dialog h3 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
-  line-height: 1;
-  margin-bottom: 0.6rem;
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-main);
 }
 
 .portfolio-skill-dialog .skill-type {
+  margin-top: 0.5rem;
   color: #2496ed;
-  font-size: 0.72rem;
-  letter-spacing: 0.13em;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 1.1rem;
+}
+
+.portfolio-skill-dialog-divider {
+  width: 50px;
+  height: 2px;
+  margin: 2.5rem 0;
+  background: #2496ed;
 }
 
 .portfolio-skill-dialog p {
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.8;
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+
+.portfolio-skill-dialog-status {
+  margin-top: auto;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--bg-space);
+}
+
+.portfolio-status-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.portfolio-skill-dialog-status strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.portfolio-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2496ed;
+  box-shadow: 0 0 14px rgba(36, 150, 237, 0.65);
 }
 
 .portfolio-skill-dialog-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  top: 1.35rem;
+  right: 1.35rem;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  font-size: 1.15rem;
+  background: var(--bg-space);
+  color: var(--text-main);
+  font-size: 1rem;
   cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.portfolio-skill-dialog-close:hover,
+.portfolio-skill-dialog-close:focus-visible {
+  transform: rotate(8deg) scale(1.06);
+  border-color: #2496ed;
+  color: #2496ed;
+  outline: none;
+}
+
+@keyframes portfolioBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes portfolioDrawerIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 @media (max-width: 980px) {
+  #skills-tech .pyramid-freestyle-canvas {
+    min-height: 640px !important;
+  }
+
+  #skills-tech .pyramid-freestyle-grid,
+  #skills-tech .pyramid-freestyle-canvas::before {
+    max-width: 700px !important;
+  }
+
   #skills-tech .pyramid-freestyle-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px !important;
+  }
+
+  #skills-tech .freestyle-tier-row {
+    gap: 20px !important;
+  }
+
+  #skills-tech .pyramid-freestyle-node {
+    flex-basis: 80px;
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    padding: 15px !important;
   }
 }
 
@@ -155,26 +396,60 @@
     letter-spacing: 0.01em !important;
   }
 
+  #projects h2.projects-title-interactive::after {
+    bottom: 1.35rem;
+  }
+
+  #skills-tech .pyramid-freestyle-canvas {
+    min-height: 500px !important;
+    margin-inline: -1rem;
+    padding: 2.5rem 0 3.5rem !important;
+    border-radius: 26px !important;
+  }
+
   #skills-tech .pyramid-freestyle-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem !important;
+    gap: clamp(12px, 3vw, 18px) !important;
+  }
+
+  #skills-tech .freestyle-tier-row {
+    gap: clamp(5px, 1.7vw, 10px) !important;
   }
 
   #skills-tech .pyramid-freestyle-node {
-    height: 105px !important;
+    flex-basis: clamp(44px, 13vw, 62px);
+    width: clamp(44px, 13vw, 62px) !important;
+    min-width: clamp(44px, 13vw, 62px) !important;
+    height: clamp(44px, 13vw, 62px) !important;
+    padding: clamp(8px, 2.5vw, 12px) !important;
+    border-radius: clamp(13px, 4vw, 18px) !important;
+  }
+
+  #skills-tech .pyramid-freestyle-node:hover,
+  #skills-tech .pyramid-freestyle-node:focus-visible {
+    transform: scale(1.1) translateY(-4px) !important;
   }
 
   #skills-tech .node-hover-tag {
-    opacity: 1 !important;
-    transform: none !important;
-    bottom: -20px !important;
-    font-size: 0.6rem !important;
+    display: none !important;
+  }
+
+  .portfolio-skill-dialog {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .portfolio-skill-dialog-content {
+    min-height: calc(100dvh - 3rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  #projects h2.projects-title-interactive,
   #skills-tech .pyramid-freestyle-node,
-  #skills-tech .node-img-logo {
+  #skills-tech .node-img-logo,
+  .portfolio-skill-dialog,
+  .portfolio-skill-dialog-backdrop {
+    animation: none !important;
     transition: none !important;
   }
 }
