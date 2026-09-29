@@ -1,0 +1,71 @@
+{
+  "log": [
+    "Keyboard skip link reaches main content.",
+    "All desktop navigation, wordmark and primary project link navigate to existing anchors.",
+    "All four filters return expected project counts: 6/3/2/1.",
+    "Every project brief opens and closes with matching aria-expanded state.",
+    "Featured IQRA link opens its brief, including repeated clicks on the same hash.",
+    "All five technical groups expand and collapse.",
+    "Contact rejects empty/invalid email; valid input creates correctly encoded mailto draft. Handoff clicked with external handler intercepted; actual email sending intentionally not performed.",
+    "Editing clears stale drafts; clipboard success and blocked-clipboard fallback are visible.",
+    {
+      "externalLinks": [
+        {
+          "text": "GitHub ↗ (opens in a new tab)",
+          "href": "https://github.com/syberke",
+          "target": "_blank",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "text": "See my code on GitHub ↗ (opens in a new tab)",
+          "href": "https://github.com/syberke",
+          "target": "_blank",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "text": "berkejaisyurrohman95@gmail.com",
+          "href": "mailto:berkejaisyurrohman95@gmail.com",
+          "target": "",
+          "rel": ""
+        },
+        {
+          "text": "GitHub (opens in a new tab)",
+          "href": "https://github.com/syberke",
+          "target": "_blank",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "text": "+62 895-0614-7763",
+          "href": "tel:+6289506147763",
+          "target": "",
+          "rel": ""
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "axeViolations": []
+    },
+    {
+      "theme": "dark",
+      "axeViolations": []
+    },
+    "light 320px: no overflow",
+    "light 375px: no overflow",
+    "light 390px: no overflow",
+    "light 768px: no overflow",
+    "light 1024px: no overflow",
+    "light 1440px: no overflow",
+    "dark 320px: no overflow",
+    "dark 375px: no overflow",
+    "dark 390px: no overflow",
+    "dark 768px: no overflow",
+    "dark 1024px: no overflow",
+    "dark 1440px: no overflow",
+    "Mobile menu, Escape focus return and all navigation checked in both themes.",
+    "Theme toggle switches both ways and persists across reload.",
+    "200% root text sizing has no page overflow at 390px/1440px.",
+    "No browser console or page errors."
+  ],
+  "errors": []
+}
