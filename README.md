@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Berke Portfolio
 
-## Getting Started
+A project-led portfolio for Qiageng Berke Jaisyurrohman, built with Next.js 16 and React 19.
 
-First, run the development server:
+## Development
 
-```bash
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```sh
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Editing content
 
-## Learn More
+- `app/portfolio-data.js`: projects, stack groups, and services.
+- `app/page.jsx`: biography, education, contact details, and the page sections.
+- `app/globals.css`: responsive layout and light/dark tokens.
+- `components/site/`: navigation/theme, project filters/briefs, and contact draft form.
+- `app/fonts/`: self-hosted Manrope Latin variable font from `@fontsource-variable/manrope@5.3.0`, under the included SIL Open Font License.
 
-To learn more about Next.js, take a look at the following resources:
+The page is statically prerendered. Only interactive areas are client components. There are no runtime third-party font requests, animation engines, pointer-following effects, or canvas loops in the active route. Historical components and styles remain in the repository but are not imported by this page.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The theme follows the system preference until a visitor selects a theme, stored locally as `berke-theme`. Theme selection still works if browser storage is blocked.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact behavior
 
-## Deploy on Vercel
+The contact form validates its fields and prepares a `mailto:` draft. A second, explicit link opens the visitor's email application. It does **not** send mail or claim delivery. No message is stored on a server. Copying the email address has visible success/failure feedback, and the email and phone links are usable directly. A configured email application is needed for `mailto:`; otherwise visitors can copy the address and send manually.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Content accuracy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Content comes from the previous portfolio. No project-specific repository or demo links were supplied, so the redesign does not invent them. The GitHub profile link is real. Research projects and encryption prototypes are described conservatively; production usage, security guarantees, and outcome metrics are not asserted. The IQRA visual is a labeled structural diagram, not a product screenshot.
+
+See `docs/design-notes.md` for design rationale and `docs/verification.md` for validation evidence.

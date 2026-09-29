@@ -1,0 +1,89 @@
+{
+  "tool": "Lighthouse 13.5.0",
+  "testedAt": "2026-09-29T00:59:25.465Z",
+  "environment": "Local Next.js production build; Lighthouse default mobile simulation. Lab result, not deployed field data.",
+  "categories": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "value": 756.364,
+      "unit": "millisecond",
+      "display": "0.8 s"
+    },
+    "largest-contentful-paint": {
+      "value": 1806.364,
+      "unit": "millisecond",
+      "display": "1.8 s"
+    },
+    "total-blocking-time": {
+      "value": 79,
+      "unit": "millisecond",
+      "display": "80 ms"
+    },
+    "cumulative-layout-shift": {
+      "value": 0,
+      "unit": "unitless",
+      "display": "0"
+    },
+    "speed-index": {
+      "value": 756.364,
+      "unit": "millisecond",
+      "display": "0.8 s"
+    },
+    "total-byte-weight": {
+      "value": 190905,
+      "unit": "byte",
+      "display": "Total size was 186 KiB"
+    }
+  },
+  "failedAudits": [
+    {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "display": "1.8 s"
+    },
+    {
+      "id": "total-blocking-time",
+      "title": "Total Blocking Time",
+      "display": "80 ms"
+    },
+    {
+      "id": "max-potential-fid",
+      "title": "Max Potential First Input Delay",
+      "display": "130 ms"
+    },
+    {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "display": "2.2 s"
+    },
+    {
+      "id": "unused-javascript",
+      "title": "Reduce unused JavaScript",
+      "display": "Est savings of 58 KiB"
+    },
+    {
+      "id": "forced-reflow-insight",
+      "title": "Forced reflow"
+    },
+    {
+      "id": "legacy-javascript-insight",
+      "title": "Legacy JavaScript",
+      "display": "Est savings of 13 KiB"
+    },
+    {
+      "id": "network-dependency-tree-insight",
+      "title": "Network dependency tree"
+    },
+    {
+      "id": "render-blocking-insight",
+      "title": "Render-blocking requests",
+      "display": "Est savings of 90 ms"
+    }
+  ]
+}
