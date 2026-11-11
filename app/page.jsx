@@ -33,7 +33,7 @@ export default function Portfolio() {
           <div className="section-marker" data-reveal><span>01 / ABOUT ME</span><span>THE HUMAN SIDE OF THE CODE</span></div>
           <div className="about-grid">
             <div className="about-visual" data-reveal>
-              <div className="about-photo-frame"><img src="/images/portrait-placeholder.svg" alt="Stylized placeholder portrait; replace with Berke's photo" loading="lazy" /><span className="about-photo-corner corner-one"/><span className="about-photo-corner corner-two"/><span className="about-photo-overlay">A MIND ALWAYS<br/><b>IN MOTION.</b></span></div>
+              <div className="about-photo-frame"><img src="/images/berke-portrait.png" alt="Portrait of Berke Jaisyurrohman" loading="lazy" /><span className="about-photo-corner corner-one"/><span className="about-photo-corner corner-two"/><span className="about-photo-overlay">A MIND ALWAYS<br/><b>IN MOTION.</b></span></div>
               <span className="about-stamp">CREATIVE BY CURIOSITY / BUILT BY CODE</span>
             </div>
             <div className="about-text">
