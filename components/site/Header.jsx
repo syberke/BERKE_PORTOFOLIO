@@ -3,109 +3,89 @@
 import { useEffect, useRef, useState } from "react";
 
 const links = [
+  ["About", "about"],
   ["Projects", "projects"],
   ["Skills", "skills-tech"],
-  ["About", "about"],
+  ["Journey", "journey"],
   ["Services", "services"],
   ["Contact", "contact"],
 ];
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState("hero");
+  const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState("dark");
   const menuButton = useRef(null);
 
   useEffect(() => {
-    function closeOnEscape(event) {
-      if (event.key === "Escape" && menuOpen) {
-        setMenuOpen(false);
+    setTheme(document.documentElement.dataset.theme || "dark");
+    const nodes = ["hero", ...links.map(([, id]) => id)]
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const inView = entries.filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (inView[0]) setActive(inView[0].target.id);
+      },
+      { rootMargin: "-24% 0px -45% 0px", threshold: [0, 0.1, 0.4, 0.75] },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    function onKey(event) {
+      if (event.key === "Escape" && open) {
+        setOpen(false);
         menuButton.current?.focus();
       }
     }
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [menuOpen]);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   function toggleTheme() {
-    const root = document.documentElement;
-    const current =
-      root.dataset.theme ||
-      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("berke-theme", next);
-    } catch {
-      /* Theme still works when storage is unavailable. */
-    }
+    const next = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    setTheme(next);
+    try { localStorage.setItem("berke-theme", next); } catch { /* storage optional */ }
   }
 
   return (
-    <header className="site-header">
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
-      <div className="shell header-inner">
-        <a className="wordmark" href="#hero" aria-label="Berke.dev home">
-          Berke<span>.dev</span>
-        </a>
-        <nav
-          id="main-navigation"
-          className={menuOpen ? "navigation is-open" : "navigation"}
-          aria-label="Main navigation"
-        >
-          {links.map(([label, id]) => (
-            <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>
-              {label}
-            </a>
-          ))}
+    <>
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <header className="site-header" id="site-header">
+        <nav className="nav-shell" aria-label="Primary navigation">
+          <a className="wordmark" href="#hero" onClick={() => setOpen(false)} aria-label="Berke.dev — back to home">
+            <span className="mark-square">B<span className="mark-period">.</span></span>
+            <span className="mark-name">BERKE<span className="mark-divider">/</span>DEV</span>
+          </a>
+          <div className={`nav-links ${open ? "is-open" : ""}`} id="main-navigation">
+            {links.map(([label, id]) => (
+              <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined} onClick={() => setOpen(false)}>
+                <span className="nav-dot" aria-hidden="true" />{label}
+              </a>
+            ))}
+          </div>
+          <div className="nav-actions">
+            <span className="availability"><span className="availability-dot" /> OPEN TO COLLABORATE</span>
+            <button className="theme-toggle" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} onClick={toggleTheme} type="button">
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+            <button ref={menuButton} className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-navigation" onClick={() => setOpen(!open)}>
+              {open ? "CLOSE" : "MENU"}<span className="menu-icon" aria-hidden="true">{open ? "×" : "≡"}</span>
+            </button>
+          </div>
         </nav>
-        <div className="header-actions">
-          <button
-            className="theme-toggle"
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Switch color theme"
-          >
-            <svg
-              className="theme-sun"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
-            </svg>
-            <svg
-              className="theme-moon"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z" />
-            </svg>
-            <span className="sr-only theme-sun">Switch to light theme</span>
-            <span className="sr-only theme-moon">Switch to dark theme</span>
-          </button>
-          <button
-            ref={menuButton}
-            className="menu-toggle"
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="main-navigation"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? "Close" : "Menu"}
-          </button>
-        </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
+}
+
+function SunIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></svg>;
+}
+function MoonIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z" /></svg>;
 }

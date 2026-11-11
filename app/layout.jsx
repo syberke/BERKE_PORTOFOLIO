@@ -1,26 +1,27 @@
-import localFont from "next/font/local";
 import "./globals.css";
 
-const manrope = localFont({
-  src: "./fonts/manrope-latin-wght-normal.woff2",
-  variable: "--font-manrope",
-  display: "swap",
-  weight: "200 800",
-});
-
 export const metadata = {
-  title: "Berke Jaisyurrohman | Full-Stack Developer",
+  metadataBase: new URL("https://github.com/syberke/BERKE_PORTOFOLIO"),
+  title: "Berke Jaisyurrohman — Creative Developer",
   description:
-    "Berke’s portfolio: web applications, mobile development, and security projects. Based in Bekasi, Indonesia. View project briefs, technical skills, and contact details.",
+    "Portfolio of Berke Jaisyurrohman, full-stack developer and IT student in Bekasi, Indonesia. Web, mobile, security and purposeful digital experiences.",
+  openGraph: {
+    title: "Berke Jaisyurrohman | Creative Developer",
+    description: "Thoughtful code. Extraordinary digital experiences.",
+    type: "website",
+  },
+  robots: { index: true, follow: true },
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem('berke-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()`;
+// Render selected theme before hydration to avoid a flash of the wrong palette.
+const themeInit = `(function(){try{var theme=localStorage.getItem('berke-theme');document.documentElement.dataset.theme=(theme==='light'||theme==='dark')?theme:'dark'}catch(e){document.documentElement.dataset.theme='dark'}})()`;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={manrope.variable} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <meta name="theme-color" content="#08090d" />
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>{children}</body>
     </html>

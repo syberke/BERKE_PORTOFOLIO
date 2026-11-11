@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 840" role="img" aria-label="Replaceable cinematic portrait placeholder">
+<defs>
+  <radialGradient id="halo" cx="50%" cy="38%" r="64%"><stop stop-color="#9baed6" stop-opacity=".3"/><stop offset=".55" stop-color="#40547f" stop-opacity=".08"/><stop offset="1" stop-color="#080a10" stop-opacity="0"/></radialGradient>
+  <linearGradient id="face" x1=".18" y1=".1" x2=".91" y2=".98"><stop stop-color="#b8c3d2"/><stop offset=".32" stop-color="#78869b"/><stop offset=".68" stop-color="#364153"/><stop offset="1" stop-color="#151a26"/></linearGradient>
+  <linearGradient id="jacket" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2e3b50"/><stop offset=".46" stop-color="#111722"/><stop offset="1" stop-color="#05080e"/></linearGradient>
+  <linearGradient id="shirt" x1=".1" y1="0" x2=".9" y2="1"><stop stop-color="#e1e6e7"/><stop offset="1" stop-color="#616e7a"/></linearGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="28"/></filter>
+  <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="19" flood-color="#07070c" flood-opacity=".7"/></filter>
+</defs>
+<ellipse cx="352" cy="386" rx="240" ry="305" fill="url(#halo)"/>
+<path d="M88 811q9-191 94-249 53-36 117-49l45-13 51 10q100 25 159 87 40 47 52 214Z" fill="#060b14" opacity=".7" filter="url(#blur)"/>
+<g filter="url(#shadow)">
+  <path d="M52 842c20-172 44-250 116-286 33-16 79-30 120-43l59-25 72 24c45 13 95 29 121 52 62 53 83 149 97 278Z" fill="url(#jacket)"/>
+  <path d="M242 532l102 62 99-68-24-31-129-7Z" fill="url(#shirt)"/>
+  <path d="M279 520l66 76-49 95-75-150ZM427 519l-83 77 59 95 70-155Z" fill="#161f2e"/>
+  <path d="M308 457h84l7 69-56 66-51-63Z" fill="url(#face)"/>
+  <path d="M200 274q-3-96 53-151 40-40 100-39 84 0 129 73 32 47 26 126l-10 103q-8 93-79 129-54 29-117-8-76-52-86-142Z" fill="url(#face)"/>
+  <path d="M207 287q-27-45-9-104 13-52 48-82 26-37 90-49 81-11 137 33 48 41 54 112 0 60-30 94l-19-55q-17-13-31-39-85 20-164-16-34 46-46 104l-10 54Z" fill="#121723"/>
+  <path d="M219 251q-1-73 50-128 40-42 110-48 57-6 104 36-31-14-59-14-62 1-113 41-48 32-92 113Z" fill="#353e50" opacity=".75"/>
+  <path d="M227 294q-34-21-34 29 1 57 35 61M490 288q37-26 31 31-6 51-32 60" fill="url(#face)" stroke="#2c3446" stroke-width="5"/>
+  <path d="M280 309q28-12 59-3M390 302q27-11 53-1" fill="none" stroke="#202a3a" stroke-width="8" stroke-linecap="round"/>
+  <path d="M284 329q26 11 48 0M392 326q25 12 48-1" fill="none" stroke="#192333" stroke-width="6" stroke-linecap="round"/>
+  <path d="M357 332q-3 43-12 71 12 9 29 0" fill="none" stroke="#384458" stroke-width="6" stroke-linecap="round"/>
+  <path d="M307 449q41 24 91-3" fill="none" stroke="#303b4c" stroke-width="7" stroke-linecap="round"/>
+  <path d="M210 283q18 143 85 219-85-40-101-152Z" fill="#c9d2da" opacity=".12"/>
+  <path d="M105 686q55-65 111-81l79 236H66Z" fill="#111927"/>
+  <path d="M566 674q-35-40-92-61L407 842h200Z" fill="#131b29"/>
+  <path d="M293 539l49 56-33 74-39-110ZM397 540l-54 55 41 74 31-111Z" fill="#91a4b7" opacity=".28"/>
+  <path d="M335 606l-17 100 21 68 25-68-12-100Z" fill="#0b111b"/>
+  <path d="M78 839h525" stroke="#ee5367" stroke-width="3" opacity=".45"/>
+</g>
+<text x="340" y="805" fill="#c0d0e9" font-family="Arial,sans-serif" font-size="12" letter-spacing="4" text-anchor="middle" opacity=".65">REPLACE WITH YOUR PHOTO</text>
+</svg>

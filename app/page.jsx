@@ -1,339 +1,86 @@
 import Header from "@/components/site/Header";
+import Hero from "@/components/site/Hero";
+import CustomCursor from "@/components/site/CustomCursor";
+import MotionDirector from "@/components/site/MotionDirector";
 import ProjectExplorer from "@/components/site/ProjectExplorer";
+import SkillConstellation from "@/components/site/SkillConstellation";
 import ContactForm from "@/components/site/ContactForm";
-import { projects, skillGroups, services } from "./portfolio-data";
+import { journey, projects, skillGroups, services } from "./portfolio-data";
+
+function WordHeading({ children, className = "" }) {
+  return <span className={className} data-word-reveal><span className="sr-only">{children}</span>{String(children).split(" ").map((word,i)=><span className="word-mask" key={`${word}-${i}`} aria-hidden="true"><span className="word">{word}&nbsp;</span></span>)}</span>;
+}
 
 export default function Portfolio() {
+  const distinctTools = [...new Set(projects.flatMap((project) => project.tools))];
   return (
     <>
       <Header />
+      <MotionDirector />
+      <CustomCursor />
       <main id="main-content">
-        <section
-          className="hero shell"
-          id="hero"
-          aria-labelledby="hero-heading"
-        >
-          <div className="hero-meta">
-            <span>Qiageng Berke Jaisyurrohman</span>
-            <span>Bekasi, Indonesia</span>
-          </div>
-          <div className="hero-layout">
-            <h1 id="hero-heading">
-              Thoughtful code.
-              <br />
-              <span>Useful software.</span>
-            </h1>
-            <div className="hero-intro">
-              <p className="role">
-                Full-stack developer
-                <br />& IT student.
-              </p>
-              <p>
-                I build web systems and mobile applications, with an interest in
-                how they work, how they connect, and how to keep them secure.
-              </p>
-              <a className="button button-primary" href="#projects">
-                View my projects <span aria-hidden="true">↓</span>
-              </a>
+        <Hero />
+        <section className="interlude" aria-label="Introduction" id="interlude">
+          <div className="interlude-orbit" aria-hidden="true">✳</div>
+          <p className="eyebrow" data-reveal>NOT JUST LINES OF CODE</p>
+          <p className="interlude-statement" data-word-reveal><span className="sr-only">Great experiences happen when engineering meets imagination.</span>
+            {"Great experiences happen when engineering meets imagination.".split(" ").map((word,i)=><span className="word-mask" key={i} aria-hidden="true"><span className="word">{word}&nbsp;</span></span>)}
+          </p>
+          <div className="interlude-rule" aria-hidden="true"><span /></div>
+        </section>
+
+        <section className="section about-section shell" id="about" aria-labelledby="about-heading">
+          <div className="section-marker" data-reveal><span>01 / ABOUT ME</span><span>THE HUMAN SIDE OF THE CODE</span></div>
+          <div className="about-grid">
+            <div className="about-visual" data-reveal>
+              <div className="about-photo-frame"><img src="/images/portrait-placeholder.svg" alt="Stylized placeholder portrait; replace with Berke's photo" loading="lazy" /><span className="about-photo-corner corner-one"/><span className="about-photo-corner corner-two"/><span className="about-photo-overlay">A MIND ALWAYS<br/><b>IN MOTION.</b></span></div>
+              <span className="about-stamp">CREATIVE BY CURIOSITY / BUILT BY CODE</span>
             </div>
-          </div>
-          <div className="hero-foot">
-            <p>Web development / Mobile / Cybersecurity</p>
-            <a
-              className="text-link"
-              href="https://github.com/syberke"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub <span aria-hidden="true">↗</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
+            <div className="about-text">
+              <p className="eyebrow" data-reveal><span className="red-cross">✳</span> INTRODUCTION / 001</p>
+              <h2 id="about-heading" className="display-title"><WordHeading>Beyond The Code.</WordHeading></h2>
+              <p className="about-lead" data-reveal>I’m Berke — an IT student and developer from Bekasi, Indonesia, interested in making technology <em>useful, understandable, and human.</em></p>
+              <p className="body-copy" data-reveal>Since studying Network Information Systems & Applications at SMK TI Bazma in 2023, I’ve explored projects that grow from real environments: dormitory attendance, school monitoring, community assistance and Qur’an learning.</p>
+              <p className="body-copy" data-reveal>My approach combines curiosity across design, full-stack engineering, mobile technology, and security fundamentals. Each project is an opportunity to learn and make something that matters.</p>
+              <div className="fact-grid" data-reveal>
+                <div><strong>{String(projects.length).padStart(2,"0")}<b>+</b></strong><span>DOCUMENTED PROJECTS</span></div>
+                <div><strong>{String(distinctTools.length).padStart(2,"0")}<b>+</b></strong><span>TOOLS USED IN PROJECTS</span></div>
+                <div><strong>2023</strong><span>IT STUDIES BEGAN</span></div>
+              </div>
+              <div className="about-quick-facts" data-reveal><span>BASED IN <b>BEKASI, ID</b></span><span>EDUCATION <b>SMK TI BAZMA</b></span><span>LANGUAGES <b>ID · EN · BASIC DE/JP</b></span></div>
+            </div>
           </div>
         </section>
 
-        <section className="featured shell" aria-labelledby="featured-heading">
-          <div className="featured-copy">
-            <div className="section-kicker">
-              <span>Featured project</span>
-              <span>2024 / Web</span>
-            </div>
-            <h2 id="featured-heading">
-              A clearer picture
-              <br />
-              of school life.
-            </h2>
-            <p>
-              IQRA brings school monitoring and Qur’an memorization tracking
-              into one system for teachers, students, and parents.
-            </p>
-            <a className="text-link" href="#project-iqra">
-              Read the project brief <span aria-hidden="true">↗</span>
-            </a>
-            <div className="featured-stack">
-              React <span>/</span> Laravel <span>/</span> MySQL
-            </div>
-          </div>
-          <figure className="system-overview">
-            <figcaption>
-              <span>IQRA</span>
-              <span>System overview</span>
-            </figcaption>
-            <div className="system-roles">
-              <span>Teachers</span>
-              <span>Students</span>
-              <span>Parents</span>
-            </div>
-            <div className="system-connector" aria-hidden="true">
-              <span>↓</span>
-              <span>↓</span>
-              <span>↓</span>
-            </div>
-            <div className="system-core">
-              <span className="system-index">01 / APPLICATION</span>
-              <strong>School monitoring</strong>
-              <p>
-                A shared system.
-                <br />A view for every role.
-              </p>
-            </div>
-            <div className="system-output">
-              <span>Role-based dashboards</span>
-              <span>Qur’an progress</span>
-            </div>
-            <p className="diagram-note">
-              Project structure, not an application screenshot.
-            </p>
-          </figure>
-        </section>
-
-        <section
-          className="section shell"
-          id="projects"
-          aria-labelledby="projects-heading"
-        >
-          <div className="section-heading">
-            <div>
-              <p className="section-kicker">01 / Selected work</p>
-              <h2 id="projects-heading">
-                Built to solve
-                <br />
-                something real.
-              </h2>
-            </div>
-            <p>
-              School systems, community tools, and experiments in security. A
-              closer look at what I build.
-            </p>
+        <section className="section projects-section" id="projects" aria-labelledby="projects-heading">
+          <div className="shell">
+            <div className="section-marker" data-reveal><span>02 / SELECTED WORK</span><span>IDEAS INTO REALITY</span></div>
+            <div className="section-heading projects-heading"><div><p className="eyebrow" data-reveal><span className="red-cross">✳</span> A FEW THINGS I’VE BUILT</p><h2 id="projects-heading" className="display-title"><WordHeading>Proof of Curiosity.</WordHeading></h2></div><p data-reveal>Six explorations across web, mobile, and security. Real briefs, real learning, no invented results.</p></div>
           </div>
           <ProjectExplorer projects={projects} />
         </section>
 
-        <section
-          className="expertise-band"
-          id="skills-tech"
-          aria-labelledby="skills-heading"
-        >
-          <div className="shell expertise-layout">
-            <div className="expertise-intro">
-              <p className="section-kicker">02 / Technical toolkit</p>
-              <h2 id="skills-heading">
-                Behind
-                <br />
-                the build.
-              </h2>
-              <p>
-                From the interface to the database, these are the tools I work
-                with and study.
-              </p>
-              <a
-                className="text-link"
-                href="https://github.com/syberke"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                See my code on GitHub <span aria-hidden="true">↗</span>
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            </div>
-            <div className="skill-groups">
-              {skillGroups.map((group) => (
-                <details className="skill-group" key={group.name}>
-                  <summary>
-                    <span>
-                      <span className="skill-label">{group.label}</span>
-                      <strong>{group.name}</strong>
-                      <span className="skill-tools">
-                        {group.tools.join(" · ")}
-                      </span>
-                    </span>
-                    <span className="expand-symbol" aria-hidden="true">
-                      +
-                    </span>
-                  </summary>
-                  <p>{group.description}</p>
-                </details>
-              ))}
-            </div>
-          </div>
+        <section className="section skills-section shell" id="skills-tech" aria-labelledby="skills-heading">
+          <div className="section-marker" data-reveal><span>03 / TECHNICAL ARSENAL</span><span>THE TOOLS BEHIND THE WORK</span></div>
+          <div className="section-heading"><div><p className="eyebrow" data-reveal><span className="red-cross">✳</span> STACK & SKILLS</p><h2 className="display-title" id="skills-heading"><WordHeading>Built With Purpose.</WordHeading></h2></div><p data-reveal>Tools change. Curiosity stays. Explore the technologies I work with and study.</p></div>
+          <SkillConstellation groups={skillGroups} />
         </section>
 
-        <section
-          className="section shell about-layout"
-          id="about"
-          aria-labelledby="about-heading"
-        >
-          <div>
-            <p className="section-kicker">03 / The person behind the code</p>
-            <h2 id="about-heading">
-              Curious by nature.
-              <br />
-              Developer by practice.
-            </h2>
-            <div className="about-copy">
-              <p>
-                I’m Berke, an IT student from Bekasi. I started studying Network
-                Information Systems & Applications at SMK TI Bazma in 2023.
-              </p>
-              <p>
-                My projects grew out of the world around me: attendance in a
-                dormitory, school monitoring, and social assistance. I’m
-                interested in writing understandable code and making technology
-                useful to a community.
-              </p>
-            </div>
-            <dl className="profile-facts">
-              <div>
-                <dt>Based in</dt>
-                <dd>Bekasi, Indonesia</dd>
-              </div>
-              <div>
-                <dt>Education</dt>
-                <dd>SMK TI Bazma, Bogor</dd>
-              </div>
-              <div>
-                <dt>Languages</dt>
-                <dd>
-                  Indonesian · English
-                  <br />
-                  <span>Basic German & Japanese</span>
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div className="journey">
-            <h3>Learning through building.</h3>
-            <ol>
-              <li>
-                <span className="journey-year">2025</span>
-                <div>
-                  <h4>KajianQu research</h4>
-                  <p>
-                    Exploring Qur’an learning tools, Arabic text recognition,
-                    and mobile development through a personal project.
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span className="journey-year">2024</span>
-                <div>
-                  <h4>Projects at SMK TI Bazma</h4>
-                  <p>
-                    School monitoring, social assistance management, e-commerce,
-                    and an encryption prototype.
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span className="journey-year">2023</span>
-                <div>
-                  <h4>Foundations in IT</h4>
-                  <p>
-                    Web development, databases, networking, and cybersecurity.
-                    An attendance application became an early hands-on project.
-                  </p>
-                </div>
-              </li>
-            </ol>
-          </div>
+        <section className="section journey-section" id="journey" aria-labelledby="journey-heading">
+          <div className="shell"><div className="section-marker" data-reveal><span>04 / THE JOURNEY</span><span>ALWAYS A WORK IN PROGRESS</span></div><div className="journey-layout"><div className="journey-intro"><p className="eyebrow" data-reveal><span className="red-cross">✳</span> EXPERIENCE & LEARNING</p><h2 id="journey-heading" className="display-title"><WordHeading>Still Becoming.</WordHeading></h2><p className="body-copy" data-reveal>Every milestone is a chapter, not a finish line. My journey is shaped by the problems I choose to explore.</p><div className="journey-deco" aria-hidden="true">↘</div></div><ol className="timeline"><span className="timeline-track" aria-hidden="true"/><span className="timeline-progress" aria-hidden="true"/>{journey.map((step,index)=><li key={step.year} className="timeline-item" data-reveal><span className="timeline-node"/><span className="timeline-year">{step.year}</span><div><span className="timeline-index">CHAPTER / 0{index+1}</span><h3>{step.title}</h3><p>{step.description}</p></div></li>)}</ol></div></div>
         </section>
 
-        <section
-          className="shell services-section"
-          id="services"
-          aria-labelledby="services-heading"
-        >
-          <div className="section-heading">
-            <div>
-              <p className="section-kicker">04 / Areas of work</p>
-              <h2 id="services-heading">Where I can contribute.</h2>
-            </div>
-          </div>
-          <div className="service-list">
-            {services.map((service, index) => (
-              <article key={service.name}>
-                <span className="service-number">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3>{service.name}</h3>
-                  <p>{service.description}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+        <section className="section services-section shell" id="services" aria-labelledby="services-heading">
+          <div className="section-marker" data-reveal><span>05 / WHAT I DO</span><span>HOW I CAN HELP</span></div>
+          <div className="section-heading"><div><p className="eyebrow" data-reveal><span className="red-cross">✳</span> CAPABILITIES</p><h2 id="services-heading" className="display-title"><WordHeading>From Thought to Thing.</WordHeading></h2></div><p data-reveal>Interdisciplinary development, grounded in purpose, collaboration, and a willingness to learn.</p></div>
+          <div className="service-grid">{services.map((service,i)=><article className="service-card" data-reveal key={service.name}><span className="service-number">0{i+1} / 06 <span>↗</span></span><div><h3>{service.name}</h3><p>{service.description}</p></div></article>)}</div>
         </section>
 
-        <section
-          className="contact-section"
-          id="contact"
-          aria-labelledby="contact-heading"
-        >
-          <div className="shell contact-layout">
-            <div>
-              <p className="section-kicker">05 / Contact</p>
-              <h2 id="contact-heading">
-                Have a problem
-                <br />
-                worth solving?
-              </h2>
-              <p className="contact-intro">
-                Tell me what you’re working on. I’m interested in development
-                projects, learning opportunities, and collaborations.
-              </p>
-              <a
-                className="contact-email"
-                href="mailto:berkejaisyurrohman95@gmail.com"
-              >
-                berkejaisyurrohman95@gmail.com
-              </a>
-              <div className="contact-links">
-                <a
-                  href="https://github.com/syberke"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub<span className="sr-only"> (opens in a new tab)</span>
-                </a>
-                <a href="tel:+6289506147763">+62 895-0614-7763</a>
-              </div>
-            </div>
-            <ContactForm />
-          </div>
+        <section className="contact-section" id="contact" aria-labelledby="contact-heading">
+          <div className="contact-glow" aria-hidden="true"/><div className="shell contact-shell"><div className="section-marker" data-reveal><span>06 / SAY HELLO</span><span>THE NEXT CHAPTER STARTS HERE</span></div><p className="eyebrow" data-reveal><span className="red-cross">✳</span> HAVE AN IDEA IN MIND?</p><h2 id="contact-heading" className="contact-giant" data-reveal>LET’S BUILD<br/><em>SOMETHING</em><br/>EXTRAORDINARY<span>.</span></h2><div className="contact-bottom"><div className="contact-left" data-reveal><p>Have an interesting challenge, a collaboration in mind, or just want to talk tech? I’d love to hear about it.</p><a href="mailto:berkejaisyurrohman95@gmail.com" className="contact-email">berkejaisyurrohman95@gmail.com ↗</a><div className="social-links"><a href="https://github.com/syberke" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="tel:+6289506147763">PHONE ↗</a></div></div><div className="contact-right" data-reveal><ContactForm /></div></div></div>
         </section>
       </main>
-      <footer className="shell footer">
-        <a
-          className="wordmark"
-          href="#hero"
-          aria-label="Berke.dev, back to top"
-        >
-          Berke<span>.dev</span>
-        </a>
-        <p>Berke Jaisyurrohman · Software & systems</p>
-        <a className="text-link" href="#hero">
-          Back to top <span aria-hidden="true">↑</span>
-        </a>
-      </footer>
+      <footer className="footer shell"><a className="footer-wordmark" href="#hero" aria-label="Back to top">BERKE<span>.</span>DEV</a><span>© {new Date().getFullYear()} BERKE JAISYURROHMAN</span><span>CRAFTED WITH CURIOSITY <b>✳</b></span><a href="#hero" className="back-to-top">BACK TO TOP ↑</a></footer>
     </>
   );
 }
