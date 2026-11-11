@@ -16,6 +16,25 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState("dark");
   const menuButton = useRef(null);
+  const progressBar = useRef(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      if (progressBar.current) progressBar.current.style.transform = `scaleX(${Math.min(1, window.scrollY / maxScroll)})`;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     setTheme(document.documentElement.dataset.theme || "dark");
@@ -56,6 +75,7 @@ export default function Header() {
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className="site-header" id="site-header">
+        <span ref={progressBar} className="page-progress" aria-hidden="true" />
         <nav className="nav-shell" aria-label="Primary navigation">
           <a className="wordmark" href="#hero" onClick={() => setOpen(false)} aria-label="Berke.dev — back to home">
             <span className="mark-square">B<span className="mark-period">.</span></span>
