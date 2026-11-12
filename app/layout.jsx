@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./nano.css";
 
 export const metadata = {
   metadataBase: new URL("https://github.com/syberke/BERKE_PORTOFOLIO"),
@@ -13,7 +14,6 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
-// Render selected theme before hydration to avoid a flash of the wrong palette.
 const themeInit = `(function(){try{var theme=localStorage.getItem('berke-theme');document.documentElement.dataset.theme=(theme==='light'||theme==='dark')?theme:'dark'}catch(e){document.documentElement.dataset.theme='dark'}})()`;
 
 export default function RootLayout({ children }) {

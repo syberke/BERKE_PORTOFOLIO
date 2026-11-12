@@ -1,0 +1,148 @@
+/* Stage 4: cursor-scoped nano-suit. This stylesheet intentionally overrides
+   the old Stage 3 full-frame transformation without removing legacy components. */
+.portrait-interactive {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  isolation: isolate;
+  touch-action: pan-y;
+}
+.portrait-cutout {
+  clip-path: none !important;
+  mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%) !important;
+  overflow: visible !important;
+}
+.portrait-cutout::after { display: none !important; }
+.portrait-cutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  transform: translateZ(18px) scale(.985);
+  filter: drop-shadow(0 20px 38px rgba(4,6,14,.52)) drop-shadow(0 0 20px rgba(55,106,174,.12));
+}
+.portrait-shell > .nano-field { transform: translateZ(1px); }
+.nano-field {
+  --nano-x: 50%;
+  --nano-y: 40%;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity .34s cubic-bezier(.22,.7,.24,1);
+  will-change: opacity;
+  contain: layout paint;
+  mask-image: linear-gradient(#000 0%, #000 83%, transparent 100%);
+  -webkit-mask-image: linear-gradient(#000 0%, #000 83%, transparent 100%);
+}
+.nano-field.nano-live { opacity: 1; }
+.nano-suit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .96;
+  pointer-events: none;
+  filter: saturate(1.14) drop-shadow(0 0 8px rgba(239,56,85,.28));
+  -webkit-mask-image: radial-gradient(circle 116px at var(--nano-x) var(--nano-y), #000 0%, #000 24%, rgba(0,0,0,.92) 49%, transparent 100%);
+  mask-image: radial-gradient(circle 116px at var(--nano-x) var(--nano-y), #000 0%, #000 24%, rgba(0,0,0,.92) 49%, transparent 100%);
+}
+.nano-field.nano-burst .nano-suit {
+  -webkit-mask-image: radial-gradient(circle 159px at var(--nano-x) var(--nano-y), #000 0%, #000 17%, rgba(0,0,0,.75) 45%, transparent 100%);
+  mask-image: radial-gradient(circle 159px at var(--nano-x) var(--nano-y), #000 0%, #000 17%, rgba(0,0,0,.75) 45%, transparent 100%);
+}
+.nano-particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.nano-reactor,
+.nano-reactor-ring,
+.nano-cursor-note {
+  position: absolute;
+  left: var(--nano-x);
+  top: var(--nano-y);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.nano-reactor {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff4f6;
+  box-shadow: 0 0 7px 3px rgba(255,255,255,.4),0 0 22px 8px rgba(254,51,86,.72);
+}
+.nano-reactor-ring {
+  width: 62px;
+  height: 62px;
+  border: 1px solid rgba(255,161,177,.78);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgba(240,50,87,.04),inset 0 0 20px rgba(242,58,85,.11);
+}
+.nano-reactor-ring::before,
+.nano-reactor-ring::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255,255,255,.28);
+  animation: nano-rotate 9s linear infinite;
+}
+.nano-reactor-ring::after { inset: -11px; border-color: rgba(247,73,101,.38); animation-direction: reverse; }
+.nano-cursor-note {
+  top: calc(var(--nano-y) + 47px);
+  padding: 5px 8px;
+  background: rgba(9,12,18,.78);
+  border: 1px solid rgba(242,67,100,.29);
+  color: #ffc9d2;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: 8px;
+  letter-spacing: .17em;
+  white-space: nowrap;
+}
+@keyframes nano-rotate { to { rotate: 360deg; } }
+.portrait-interactive:hover .portrait-shine,
+.portrait-interactive:hover .spider-transformation { animation: none !important; }
+.portrait-hint {
+  bottom: 9% !important;
+  padding: 11px 13px !important;
+  border-radius: 100px;
+  background: rgba(10,13,22,.82) !important;
+  backdrop-filter: blur(12px);
+  font-size: 9px !important;
+  letter-spacing: .13em !important;
+  opacity: .82 !important;
+}
+.portrait-interactive:hover .portrait-hint,
+.portrait-interactive:focus-visible .portrait-hint { opacity: .28 !important; }
+.portrait-aura {
+  opacity: .45 !important;
+  transform: translateZ(24px) scale(.94) !important;
+}
+.portrait-interactive:focus-visible { outline: 2px solid #9ecbff; outline-offset: 8px; }
+.portrait-interactive:focus-visible .nano-field { opacity: 1; }
+/* Subtle editorial details; no fixed full-portrait effect or page-wide particles. */
+.hero-letter-two { -webkit-text-stroke-color: rgba(231,239,255,.45); }
+@media (pointer: coarse) {
+  .portrait-hint { display: block !important; bottom: 8% !important; }
+  .portrait-hint { font-size: 8px !important; }
+  .nano-reactor-ring { width: 76px; height: 76px; }
+}
+@media (max-width: 660px) {
+  .portrait-hint { padding: 8px 11px !important; }
+  .portrait-scene { max-width: 100%; }
+  .nano-cursor-note { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nano-field { transition: none !important; }
+  .nano-reactor-ring::before, .nano-reactor-ring::after { animation: none !important; }
+  .nano-particles { display: none; }
+  .portrait-interactive { transform: none !important; }
+  .portrait-orbit { animation: none !important; }
+}
+@supports not ((mask-image: radial-gradient(circle, #000, transparent)) or (-webkit-mask-image: radial-gradient(circle, #000, transparent))) {
+  /* Never reveal the entire suit on older browsers: a safe visual fallback. */
+  .nano-suit { display: none; }
+}
