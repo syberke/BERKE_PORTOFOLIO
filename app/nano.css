@@ -42,6 +42,8 @@
 }
 .nano-field.nano-live { opacity: 1; }
 .nano-suit {
+  object-fit: contain;
+  object-position: center bottom;
   position: absolute;
   inset: 0;
   width: 100%;

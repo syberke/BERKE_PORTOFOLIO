@@ -6,6 +6,7 @@ import ProjectExplorer from "@/components/site/ProjectExplorer";
 import SkillConstellation from "@/components/site/SkillConstellation";
 import ContactForm from "@/components/site/ContactForm";
 import { journey, projects, skillGroups, services } from "./portfolio-data";
+import { portfolioMedia } from "./portfolio-media";
 
 function WordHeading({ children, className = "" }) {
   return <span className={className} data-word-reveal><span className="sr-only">{children}</span>{String(children).split(" ").map((word,i)=><span className="word-mask" key={`${word}-${i}`} aria-hidden="true"><span className="word">{word}&nbsp;</span></span>)}</span>;
@@ -33,7 +34,7 @@ export default function Portfolio() {
           <div className="section-marker" data-reveal><span>01 / ABOUT ME</span><span>THE HUMAN SIDE OF THE CODE</span></div>
           <div className="about-grid">
             <div className="about-visual" data-reveal>
-              <div className="about-photo-frame"><img src="/images/creative-portrait.svg" alt="Ilustrasi editorial creative developer dengan blazer gelap dan kacamata" loading="lazy" /><span className="about-photo-corner corner-one"/><span className="about-photo-corner corner-two"/><span className="about-photo-overlay">A MIND ALWAYS<br/><b>IN MOTION.</b></span></div>
+              <div className="about-photo-frame"><img src={portfolioMedia.person} alt="Ilustrasi editorial creative developer dengan blazer gelap dan kacamata" loading="lazy" /><span className="about-photo-corner corner-one"/><span className="about-photo-corner corner-two"/><span className="about-photo-overlay">A MIND ALWAYS<br/><b>IN MOTION.</b></span></div>
               <span className="about-stamp">CREATIVE BY CURIOSITY / BUILT BY CODE</span>
             </div>
             <div className="about-text">
