@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { portfolioMedia } from "@/app/portfolio-media";
 
 /**
  * Localized nano-suit reveal. No whole-photo takeover and no permanent transformation.
@@ -249,47 +250,7 @@ export default function NanoCursorField({ portraitRef }) {
 
   return (
     <span className="nano-field" ref={rootRef} aria-hidden="true">
-      <svg className="nano-suit" viewBox="0 0 600 760" preserveAspectRatio="xMidYMid meet" focusable="false">
-        <defs>
-          <linearGradient id="nano-red" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#f24f71" />
-            <stop offset=".36" stopColor="#cb203d" />
-            <stop offset=".75" stopColor="#650d26" />
-            <stop offset="1" stopColor="#20071e" />
-          </linearGradient>
-          <radialGradient id="nano-core" cx=".45" cy=".33" r=".69">
-            <stop stopColor="#ff8096" stopOpacity=".48"/>
-            <stop offset=".7" stopColor="#e31437" stopOpacity=".16"/>
-            <stop offset="1" stopColor="#070c16" stopOpacity="0"/>
-          </radialGradient>
-          <pattern id="nano-hex" width="28" height="24" patternUnits="userSpaceOnUse">
-            <path d="M7 1 21 1 28 12 21 23 7 23 0 12Z" fill="none" stroke="#300913" strokeOpacity=".83" strokeWidth="2.2"/>
-            <path d="M7 1 21 1 28 12" fill="none" stroke="#ff9cab" strokeOpacity=".45" strokeWidth=".9"/>
-          </pattern>
-          <clipPath id="nano-figure">
-            <path d="M222 452 209 473 145 486Q79 513 55 567L9 748h584l-38-184q-16-48-79-76l-81-26-20-30-41 28-82 10Z" />
-            <path d="M183 251q0-103 112-117 117 12 126 110l-8 113q-19 73-91 98-29 8-51-2-63-32-82-102Z" />
-            <path d="M190 255Q151 185 214 135q24-65 100-63 99 3 116 84 24 30-8 120l-16-42q-4-36-23-67-44 9-79-9-48 31-100 13l-12 62Z" />
-            <path d="M229 422q70 39 140 0l-4 54q-60 52-130 0Z" />
-          </clipPath>
-        </defs>
-        <g clipPath="url(#nano-figure)">
-          <rect width="600" height="760" fill="url(#nano-red)" />
-          <rect width="600" height="760" fill="url(#nano-core)" />
-          <rect width="600" height="760" fill="url(#nano-hex)" />
-          <g fill="none" stroke="#1c0617" strokeWidth="3" strokeOpacity=".66">
-            <path d="M300 145v420M168 290q130 76 264 0M160 345q135 75 279 0M160 404q145 60 281 0M73 580q231 90 460 0M38 678q260 70 522 0"/>
-            <path d="M300 145q-110 130-225 250M300 145q110 130 229 251M300 234 93 566M300 234l212 333M300 325 42 699M300 325l262 379"/>
-          </g>
-          <path d="M221 253q35-20 66 7-8 35-35 39-34 1-39-31Z" fill="#edf7ff" stroke="#18111f" strokeWidth="7" />
-          <path d="M314 260q36-27 68-7l7 15q-7 32-39 31-26-4-36-39Z" fill="#edf7ff" stroke="#18111f" strokeWidth="7"/>
-          <path d="M234 270q21-10 37 0m60 0q21-10 38 0" stroke="#a9d7ff" strokeWidth="3" fill="none" />
-          <g stroke="#1a0b1a" strokeWidth="5" fill="none" strokeLinecap="round">
-            <path d="M301 553v55m-16-48 16 17 16-17-16-8Z" fill="#190b1b" />
-            <path d="m296 565-33-20-17 6m50 26-35-2-21 24m56 1-42 17-13 26m65-78 33-20 17 6m-50 26 35-2 21 24m-56 1 42 17 13 26"/>
-          </g>
-        </g>
-      </svg>
+      <img className="nano-suit" src={portfolioMedia.spider} alt="" draggable="false" />
       <canvas className="nano-particles" ref={canvasRef} />
       <span className="nano-reactor" />
       <span className="nano-reactor-ring" />

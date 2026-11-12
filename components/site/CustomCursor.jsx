@@ -33,8 +33,8 @@ export default function CustomCursor() {
       // Switch while approaching the actual portrait, not when hovering any link.
       const near = Boolean(rect && e.clientX >= rect.left - 36 && e.clientX <= rect.right + 36 && e.clientY >= rect.top - 28 && e.clientY <= rect.bottom + 28);
       s.mode = near;
-      cursorDot.dataset.mode = near ? "spider" : "default";
-      cursorRing.dataset.mode = near ? "spider" : "default";
+      cursorDot.dataset.mode = near ? "nano" : "default";
+      cursorRing.dataset.mode = near ? "nano" : "default";
       s.angle = Math.max(-20, Math.min(20, (s.x - s.lastX) * 0.65));
       s.lastX = s.x;
       if (!visible) {
@@ -101,12 +101,6 @@ export default function CustomCursor() {
       <div className="cursor-ring" ref={ring} data-mode="default" />
       <div className="cursor-dot" ref={dot} data-mode="default">
         <span className="cursor-core" />
-        <svg className="spider-mask" viewBox="0 0 64 70" xmlns="http://www.w3.org/2000/svg">
-          <path d="M32 2C12 2 5 19 6 38c1 17 14 28 26 30 12-2 25-13 26-30C59 19 52 2 32 2Z" fill="#c51f32" stroke="#171119" strokeWidth="3"/>
-          <path d="M32 4v62M7 31l50 0M11 18l42 35M53 18 11 53M19 7l13 24L45 7M16 60l16-29 16 29" stroke="#15191f" strokeWidth="2.2" fill="none" opacity=".85" />
-          <path d="M11 28C17 24 23 25 30 33 26 42 20 45 11 41c-3-4-3-9 0-13ZM53 28C47 24 41 25 34 33c4 9 10 12 19 8 3-4 3-9 0-13Z" fill="white" stroke="#131923" strokeWidth="2.5"/>
-          <path d="M12 33c5-1 11 1 15 3M52 33c-5-1-11 1-15 3" stroke="#b8e5ff" strokeWidth="1.5" fill="none"/>
-        </svg>
       </div>
     </div>
   );

@@ -35,12 +35,12 @@ export default function MotionDirector() {
         gsap.utils.toArray("[data-reveal]").forEach((el) => {
           gsap.fromTo(el,
             { opacity: 0, y: 46 },
-            { opacity: 1, y: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%", end: "bottom 12%", toggleActions: "play reverse play reverse" } },
+            { opacity: 1, y: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%", once: true, toggleActions: "play none none none" } },
           );
         });
         gsap.utils.toArray("[data-word-reveal]").forEach((el) => {
           const words = el.querySelectorAll(".word");
-          gsap.from(words, { opacity: 0, yPercent: 110, stagger: 0.055, duration: 0.95, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 86%", toggleActions: "play reverse play reverse" } });
+          gsap.from(words, { opacity: 0, yPercent: 110, stagger: 0.055, duration: 0.95, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 86%", once: true, toggleActions: "play none none none" } });
         });
         gsap.utils.toArray(".parallax-art").forEach((el) => {
           gsap.fromTo(el, { yPercent: -6 }, { yPercent: 8, ease: "none", scrollTrigger: { trigger: el.closest(".project-art") || el, start: "top bottom", end: "bottom top", scrub: true } });

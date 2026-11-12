@@ -150,14 +150,10 @@ img,svg{display:block;max-width:100%}
 .cursor-core{width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #dbe9ff,0 0 22px rgba(235,245,255,.5);transition:opacity .2s}
 .cursor-ring{width:34px;height:34px;border:1px solid rgba(230,235,250,.7);border-radius:50%;transition:width .26s,height .26s,border-color .26s,opacity .2s,transform .18s;box-shadow:0 0 21px rgba(234,244,255,.12)}
 .cursor-ring::before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.14);border-radius:50%;opacity:.5}
-.cursor-dot[data-mode="spider"]{width:52px;height:58px}
-.cursor-dot[data-mode="spider"] .cursor-core{opacity:0}
-.cursor-ring[data-mode="spider"]{width:84px;height:84px;border-color:rgba(236,63,89,.7);border-style:dashed;box-shadow:0 0 28px rgba(237,42,77,.2)}
-.cursor-ring[data-mode="spider"]::before{border-color:rgba(255,255,255,.18);animation:ring-spin 8s linear infinite reverse}
-@keyframes ring-spin{to{transform:rotate(360deg)}}
-.spider-mask{position:absolute;inset:0;width:100%;height:100%;opacity:0;transform:scale(.35);transition:opacity .25s,transform .32s cubic-bezier(.2,1.3,.35,1);filter:drop-shadow(0 3px 10px rgba(206,22,59,.5))}
-.cursor-dot[data-mode="spider"] .spider-mask{opacity:1;transform:scale(1);animation:spider-bob 1.5s ease-in-out infinite}
-@keyframes spider-bob{50%{translate:0 -3px}}
+.cursor-dot[data-mode="nano"]{width:20px;height:20px}
+.cursor-dot[data-mode="nano"] .cursor-core{width:9px;height:9px;opacity:1;background:#ff6e86;box-shadow:0 0 10px rgba(255,126,150,.95),0 0 24px rgba(245,44,89,.6)}
+.cursor-ring[data-mode="nano"]{width:64px;height:64px;border-color:rgba(255,114,145,.8);border-style:solid;box-shadow:0 0 26px rgba(234,46,86,.18),inset 0 0 18px rgba(245,75,110,.12)}
+.cursor-ring[data-mode="nano"]::before{border-color:rgba(255,225,232,.3)}
 .cursor-trail{position:absolute;inset:0;overflow:visible}.trail-line{fill:none;stroke:rgba(255,236,240,.5);stroke-width:1.15;stroke-linecap:round;stroke-dasharray:2 6;filter:drop-shadow(0 0 6px rgba(255,255,255,.18))}.web-shot{fill:none;stroke:#ecf1ff;stroke-width:2;opacity:0;stroke-linecap:round}
 @keyframes web-fire{from{stroke-dashoffset:100;opacity:1}to{stroke-dashoffset:0;opacity:0}}
 /* interlude, about */

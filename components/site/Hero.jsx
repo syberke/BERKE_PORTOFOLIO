@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import NanoCursorField from "./NanoCursorField";
+import { portfolioMedia } from "@/app/portfolio-media";
 
 const roles = ["Full-stack Developer", "Creative Technologist", "Digital Experience Maker"];
 
@@ -82,7 +83,7 @@ export default function Hero() {
               <span className="portrait-shell">
                 <span className="portrait-cutout">
                   <img
-                    src="/images/creative-portrait.svg"
+                    src={portfolioMedia.person}
                     alt="Ilustrasi editorial creative developer dengan blazer gelap dan kacamata"
                     draggable="false"
                     fetchPriority="high"
