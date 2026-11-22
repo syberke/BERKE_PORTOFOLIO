@@ -59,6 +59,15 @@ export default function Hero() {
         <span className="red-cross">✳</span> INDEPENDENT DEVELOPER <span className="hero-overline-divider">—</span> BEKASI, INDONESIA
       </div>
       <div className="hero-stage">
+        <span className="atelier-hero-arc" aria-hidden="true" />
+        <span className="atelier-hero-stamp" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="berke-orbit-type" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1 -88 0" /></defs>
+            <text><textPath href="#berke-orbit-type">CRAFTED WITH INTENTION  •  BUILT WITH CURIOSITY  •  </textPath></text>
+          </svg>
+          <span className="stamp-center">✳</span>
+        </span>
+        <span className="atelier-hero-corners" aria-hidden="true" />
         <div className="hero-lettering" aria-hidden="true">
           <span className="hero-letter hero-letter-one">CREATIVE</span>
           <span className="hero-letter hero-letter-two">DEVELOPER</span>
@@ -103,6 +112,7 @@ export default function Hero() {
           <span className="orbit-coordinate coord-bottom" aria-hidden="true">NANOBOTS / LOCALIZED INTERACTION</span>
         </div>
       </div>
+      <span className="atelier-hero-serial atelier-side-index" aria-hidden="true">EXPERIENCE / DESIGN × DEVELOPMENT / 001</span>
       <div className="hero-content hero-enter">
         <div className="hero-identity">
           <span className="eyebrow"><span className="micro-line" /> THE PERSON BEHIND THE PIXELS</span>
