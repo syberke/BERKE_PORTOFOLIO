@@ -12,6 +12,7 @@ export default function ProjectExplorer({ projects }) {
   const [filter, setFilter] = useState("All");
   const [opened, setOpened] = useState(null);
   const trackRef = useRef(null);
+  const progressRef = useRef(null);
   const visible = projects.filter((project) => filter === "All" || project.category === filter);
 
   useEffect(() => {
@@ -37,6 +38,29 @@ export default function ProjectExplorer({ projects }) {
     openHash();
     return () => { window.removeEventListener("hashchange", openHash); document.removeEventListener("click", followLink); };
   }, [projects]);
+
+
+  // A native, keyboard-and-touch-friendly gallery with honest scroll progress.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    let frame = 0;
+    const paint = () => {
+      frame = 0;
+      const extent = Math.max(0, track.scrollWidth - track.clientWidth);
+      const fraction = extent > 0 ? Math.max(0, Math.min(1, track.scrollLeft / extent)) : 1;
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${fraction})`;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(paint); };
+    paint();
+    track.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      track.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [filter, projects]);
 
   function chooseFilter(next) {
     setFilter(next);
@@ -75,6 +99,7 @@ export default function ProjectExplorer({ projects }) {
         {visible.map((project) => (
           <article key={project.id} id={`project-${project.id}`} className={`project-card project-${project.id}`}>
             <div className={`project-art art-${project.id}`}>
+              <span className="atelier-art-number" aria-hidden="true">{project.number}</span>
               <ProjectArt project={project}/>
               <div className="project-art-top"><span>{project.number} / {project.category.toUpperCase()}</span><span>SELECTED WORK © {project.year}</span></div>
               <span className="art-side-label">{project.context.toUpperCase()}</span>
@@ -100,7 +125,8 @@ export default function ProjectExplorer({ projects }) {
           </article>
         ))}
       </div>
-      <div className="showcase-hint"><span>DRAG, SWIPE OR USE ARROWS TO EXPLORE</span><span>← —— →</span></div>
+      <div className="showcase-hint"><span>SWIPE / TRACKPAD / ARROWS TO EXPLORE</span><span>← —— →</span></div>
+      <div className="atelier-track-progress" aria-hidden="true"><span ref={progressRef} /></div>
     </div>
   );
 }

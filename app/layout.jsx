@@ -1,5 +1,6 @@
 import "./globals.css";
 import "./nano.css";
+import "./atelier.css";
 
 export const metadata = {
   metadataBase: new URL("https://github.com/syberke/BERKE_PORTOFOLIO"),
